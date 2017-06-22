@@ -2,8 +2,7 @@ var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: ['./src/Index.js'],
-    // context: path.join(__dirname, 'your-app'),
+    entry: ['./src/index.js'],
 
     output: {
         path: distPath = path.resolve('.', 'dist'),
