@@ -2,14 +2,39 @@ import axios from "axios";
 import { browserHistory } from 'react-router'
 
 import {
+    SHOW_LOGIN,
+    HIDE_LOGIN,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
+    LOGIN_FAILURE,
     LOGOUT
 } from '../constant/User'
 
 import {
     ROUTING
 } from '../constant/Routing'
+
+export function showLogin(payload) {
+    return (dispatch) => {
+        dispatch({
+            type: SHOW_LOGIN,
+            payload:{
+                showLogin: true
+            }
+        });
+    }
+}
+
+export function hideLogin(payload) {
+    return (dispatch) => {
+        dispatch({
+            type: HIDE_LOGIN,
+            payload:{
+                showLogin: false
+            }
+        });
+    }
+}
 
 export function login(payload) {
     return (dispatch) => {
@@ -27,7 +52,8 @@ export function login(payload) {
                 dispatch({
                     type: LOGIN_SUCCESS,
                     payload: {
-                        isAuthenticated: true
+                        isAuthenticated: true,
+                        showLogin: false
                     }
                 });
 
@@ -40,7 +66,12 @@ export function login(payload) {
                 });
             })
             .catch(function (error) {
-                alert(error.response.data.errorMessage);
+                dispatch({
+                    type: LOGIN_FAILURE,
+                    payload: {
+                        errorMessage: "Неправильный логин или пароль"
+                    }
+                });
             });
     }
 }
