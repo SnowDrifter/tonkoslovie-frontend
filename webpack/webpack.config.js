@@ -49,6 +49,7 @@ module.exports = {
         contentBase: './src',
         inline: true,
         historyApiFallback: true,
+        disableHostCheck: true
     },
     plugins: [
         new CopyWebpackPlugin([
