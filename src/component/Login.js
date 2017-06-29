@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
 import * as UserActions from '../action/Auth'
-import style from './login.less'
+import style from './Login.less'
 
 class Login extends React.Component {
 

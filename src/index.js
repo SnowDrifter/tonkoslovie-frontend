@@ -2,6 +2,7 @@ import App from './container/App.js';
 import Registration from "./component/Registration.js";
 import Err404 from "./component/Err404.js";
 import Admin from "./component/Admin.js";
+import Word from "./component/Words.js";
 import React from 'react'
 import {render} from 'react-dom'
 import {Router, Route, Link, browserHistory} from 'react-router'
@@ -20,6 +21,7 @@ render((
                     <Route path="/registration" component={Registration}/>
                     <Route authorize={['ROLE_ADMIN']} component={RestrictedContainer}>
                         <Route path="/admin" component={Admin}/>
+                        <Route path="/admin/words" component={Word}/>
                     </Route>
                     <Route path="*" component={Err404} status={404}/>
                 </Route>
