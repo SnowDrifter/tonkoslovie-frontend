@@ -2,7 +2,20 @@ import React from "react";
 import axios from "axios";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form, Glyphicon, ButtonGroup, ButtonToolbar} from "react-bootstrap";
+import {
+    Panel,
+    FormGroup,
+    Row,
+    Col,
+    ControlLabel,
+    FormControl,
+    Button,
+    Modal,
+    Form,
+    Glyphicon,
+    ButtonGroup,
+    ButtonToolbar
+} from "react-bootstrap";
 import {Link} from 'react-router'
 import Word from './Word'
 
@@ -70,8 +83,9 @@ class Words extends React.Component {
                     rowHeight={50}
                     rowsCount={words.length}
                     width={1140}
-                    height={400}
+                    height={800}
                     headerHeight={30}>
+
                     <Column
                         header={<Cell>№</Cell>}
                         cell={({rowIndex}) => (
@@ -107,10 +121,14 @@ class Words extends React.Component {
                         cell={({rowIndex}) => (
                             <Cell>
                                 <ButtonToolbar>
-                                <ButtonGroup>
-                                    <Button bsSize="small" onClick={() => this.showEditWord(words[rowIndex])}><Glyphicon glyph="pencil"/></Button>
-                                    <Button bsSize="small" onClick={() => this.deleteWord(words[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
-                                </ButtonGroup>
+                                    <ButtonGroup>
+                                        <Button bsSize="small"
+                                                onClick={() => this.showEditWord(words[rowIndex])}><Glyphicon
+                                            glyph="pencil"/></Button>
+                                        <Button bsSize="small" onClick={() => this.deleteWord(words[rowIndex].id)}
+                                                className="pull-right" bsStyle="danger"> <Glyphicon
+                                            glyph="remove"/></Button>
+                                    </ButtonGroup>
                                 </ButtonToolbar>
                             </Cell>
                         )}

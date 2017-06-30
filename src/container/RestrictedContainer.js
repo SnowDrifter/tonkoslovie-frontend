@@ -1,13 +1,13 @@
 import React from 'react';
 import RouteHandler from './RouterHandler';
 import {AuthorizedComponent} from 'react-router-role-authorization';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 class RestrictedContainer extends AuthorizedComponent {
     constructor(props) {
         super(props);
-        this.userRoles = props.user.user.roles.split(", ");
-        this.notAuthorizedPath = '/';
+        this.userRoles = props.user.user.roles ? props.user.user.roles.split(", ") : null;
+        this.notAuthorizedPath = '/accessDenied';
     }
 
     render() {

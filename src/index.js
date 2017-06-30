@@ -1,6 +1,7 @@
 import App from './container/App.js';
 import Registration from "./component/Registration.js";
 import Err404 from "./component/Err404.js";
+import Err403 from "./component/Err403.js";
 import Admin from "./component/Admin.js";
 import Word from "./component/Words.js";
 import React from 'react'
@@ -23,6 +24,7 @@ render((
                         <Route path="/admin" component={Admin}/>
                         <Route path="/admin/words" component={Word}/>
                     </Route>
+                    <Route path="/accessDenied" component={Err403} status={403}/>
                     <Route path="*" component={Err404} status={404}/>
                 </Route>
             </Router>
