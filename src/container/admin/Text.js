@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {
     Panel,
     FormGroup,
@@ -16,7 +15,8 @@ import {
     Glyphicon
 } from "react-bootstrap";
 import style from './Text.less'
-import TextPartEditor from '../../component/admin/TextPartEditor'
+import EditPartModal from '../../component/admin/EditPartModal'
+import CreatePartModal from '../../component/admin/CreatePartModal'
 import * as  partTypes from '../../component/admin/TextPartTypes'
 
 class Text extends React.Component {
@@ -25,8 +25,9 @@ class Text extends React.Component {
         super(props);
 
         this.state = {
-            showEditor: false,
-            editorTitle: null,
+            showEditPartModal: false,
+            showCreatePartModal: false,
+            modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
             textParts: [
@@ -49,54 +50,56 @@ class Text extends React.Component {
             ]
         };
 
-        this.hideEditor = this.hideEditor.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.saveTextPart = this.saveTextPart.bind(this);
         this.editTextPart = this.editTextPart.bind(this);
         this.removeTextPart = this.removeTextPart.bind(this);
     }
 
     saveText() {
-
+        alert("Сохранено");
     }
 
-    hideEditor() {
-        this.setState({showEditor: false});
+    hideModal() {
+        this.setState({showEditPartModal: false, showCreatePartModal: false});
     }
 
     saveTextPart(index, textPart) {
         if (index) {
             let textParts = this.state.textParts;
             textParts[index] = textPart;
-            this.setState({showEditor: false, textParts: textParts, currentPart: null, currentPartIndex: null});
+            this.setState({textParts: textParts, currentPart: null, currentPartIndex: null});
         } else {
-            this.setState({
-                showEditor: false,
-                textParts: this.state.textParts.concat(textPart)
-            });
+            this.setState({textParts: this.state.textParts.concat(textPart)});
         }
+
+        this.hideModal();
+    }
+
+    addLineBreak(){
+            this.setState({textParts: this.state.textParts.concat({
+            type: partTypes.LINE_BREAK
+        })});
     }
 
     editTextPart(key) {
         let textPart = this.state.textParts[key];
-        this.setState({showEditor: true, editorTitle: "Редактирование", currentPart: textPart, currentPartIndex: key});
+        this.setState({
+            showEditPartModal: true,
+            modalTitle: "Редактирование",
+            currentPart: textPart,
+            currentPartIndex: key
+        });
     }
 
     removeTextPart(key) {
         this.setState({textParts: this.state.textParts.filter((value, index) => index != key)});
     }
 
-    addTextPart() {
+    showCreatePartModal() {
         this.setState({
-            showEditor: true, editorTitle: "Добавление текста", currentPart: {
+            showCreatePartModal: true, modalTitle: "Добавление текста", currentPart: {
                 type: partTypes.TEXT
-            }
-        });
-    }
-
-    addQuestionPart() {
-        this.setState({
-            showEditor: true, editorTitle: "Добавление вопроса", currentPart: {
-                type: partTypes.QUESTION
             }
         });
     }
@@ -106,9 +109,13 @@ class Text extends React.Component {
 
         this.state.textParts.map((part, index) => {
             if (part.type == partTypes.TEXT) {
-                components.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart} editPart={this.editTextPart}/>);
+                components.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart}
+                                          editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.QUESTION) {
-                components.push(<QuestionPart key={index} index={index} data={part.data} removePart={this.removeTextPart} editPart={this.editTextPart}/>);
+                components.push(<QuestionPart key={index} index={index} data={part.data}
+                                              removePart={this.removeTextPart} editPart={this.editTextPart}/>);
+            } else if (part.type == partTypes.LINE_BREAK) {
+                components.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
             }
         });
 
@@ -117,15 +124,20 @@ class Text extends React.Component {
                 {components}
             </Jumbotron>
 
-            <TextPartEditor showEditor={this.state.showEditor}
-                            editorTitle={this.state.editorTitle}
-                            currentPartIndex={this.state.currentPartIndex}
-                            currentPart={this.state.currentPart}
-                            hideEditor={this.hideEditor}
-                            saveTextPart={this.saveTextPart}/>
+            <EditPartModal showModal={this.state.showEditPartModal}
+                           modalTitle={this.state.modalTitle}
+                           currentPartIndex={this.state.currentPartIndex}
+                           currentPart={this.state.currentPart}
+                           hideModal={this.hideModal}
+                           saveTextPart={this.saveTextPart}/>
 
-            <Button onClick={this.addTextPart.bind(this)}>Добавить текст</Button>
-            <Button onClick={this.addQuestionPart.bind(this)}>Добавить вопрос</Button>
+            <CreatePartModal showModal={this.state.showCreatePartModal}
+                             modalTitle={this.state.modalTitle}
+                             hideModal={this.hideModal}
+                             saveTextPart={this.saveTextPart}/>
+
+            <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
+            <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
             <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
         </Panel>
     }
@@ -137,8 +149,10 @@ class TextPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall" bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
+                    glyph="pencil"/></Button>
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
+                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
             </ButtonGroup>
         </div>
     }
@@ -150,11 +164,26 @@ class QuestionPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall" bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
+                    glyph="pencil"/></Button>
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
+                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
             </ButtonGroup>
         </div>
     }
 }
+
+class LineBreakPart extends React.Component {
+    render() {
+        return <div className="line-break-part ">
+            ¶
+            <ButtonGroup className="button-block">
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
+                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+            </ButtonGroup>
+        </div>
+    }
+}
+
 
 export default Text;
