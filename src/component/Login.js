@@ -16,9 +16,8 @@ class Login extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({ showLogin: props.user.user.showLogin });
+        this.setState({ showLogin: props.user.showLogin });
     }
-
 
     sendLogin(event) {
         event.preventDefault();
@@ -76,7 +75,7 @@ class Login extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        user: state
+        user: state.user
     }
 }
 

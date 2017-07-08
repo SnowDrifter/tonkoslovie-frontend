@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {
     Panel,
     FormGroup,
@@ -14,10 +15,11 @@ import {
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
+import axios from "axios";
 import style from './Text.less'
-import EditPartModal from '../../component/admin/EditPartModal'
-import CreatePartModal from '../../component/admin/CreatePartModal'
-import * as  partTypes from '../../component/admin/TextPartTypes'
+import EditPartModal from './EditPartModal'
+import CreatePartModal from './CreatePartModal'
+import * as partTypes from  './TextPartTypes'
 
 class Text extends React.Component {
 
@@ -25,39 +27,49 @@ class Text extends React.Component {
         super(props);
 
         this.state = {
+            id: null,
             showEditPartModal: false,
             showCreatePartModal: false,
             modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
-            textParts: [
-                {
-                    type: partTypes.TEXT,
-                    data: "test1"
-                },
-                {
-                    type: partTypes.TEXT,
-                    data: "test2"
-                },
-                {
-                    type: partTypes.TEXT,
-                    data: "test3"
-                },
-                {
-                    type: partTypes.QUESTION,
-                    data: "question"
-                }
-            ]
+            textParts: []
         };
 
         this.hideModal = this.hideModal.bind(this);
         this.saveTextPart = this.saveTextPart.bind(this);
         this.editTextPart = this.editTextPart.bind(this);
         this.removeTextPart = this.removeTextPart.bind(this);
+
+        if (this.props.params.textId) {
+            this.loadText(this.props.params.textId)
+        }
+    }
+
+    loadText(textId) {
+        axios.get('http://localhost:8080/api/content/text', {
+            params: {
+                id: textId
+            }
+        }).then(response => {
+            const text = response.data;
+            this.setState({
+                id: text.id,
+                textParts: text.parts
+            });
+
+            ReactDOM.findDOMNode(this.title).value = text.title;
+        })
     }
 
     saveText() {
-        alert("Сохранено");
+        axios.post('http://localhost:8080/api/content/text', {
+            id: this.state.id,
+            title: ReactDOM.findDOMNode(this.title).value,
+            parts: this.state.textParts ? this.state.textParts : []
+        }).then(() => {
+            alert("Сохранено"); // TODO
+        })
     }
 
     hideModal() {
@@ -76,10 +88,12 @@ class Text extends React.Component {
         this.hideModal();
     }
 
-    addLineBreak(){
-            this.setState({textParts: this.state.textParts.concat({
-            type: partTypes.LINE_BREAK
-        })});
+    addLineBreak() {
+        this.setState({
+            textParts: this.state.textParts.concat({
+                type: partTypes.LINE_BREAK
+            })
+        });
     }
 
     editTextPart(key) {
@@ -121,6 +135,15 @@ class Text extends React.Component {
 
         return <Panel>
             <Jumbotron>
+                <FormGroup>
+                    <ControlLabel>Заголовок</ControlLabel>
+                    <FormControl
+                        inputRef={title => {
+                            this.title = title
+                        }}
+                    />
+                </FormGroup>
+
                 {components}
             </Jumbotron>
 
@@ -184,6 +207,5 @@ class LineBreakPart extends React.Component {
         </div>
     }
 }
-
 
 export default Text;
