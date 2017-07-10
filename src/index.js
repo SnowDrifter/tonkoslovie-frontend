@@ -6,6 +6,8 @@ import Admin from "./container/admin/Admin.js";
 import Words from "./container/admin/Words.js";
 import Texts from "./container/admin/Texts.js";
 import Text from "./component/admin/Text.js";
+import Lessons from "./container/admin/Lessons.js";
+import Lesson from "./component/admin/Lesson.js";
 import React from 'react'
 import {render} from 'react-dom'
 import {Router, Route, Link, browserHistory} from 'react-router'
@@ -27,6 +29,8 @@ render((
                         <Route path="/admin/words" component={Words}/>
                         <Route path="/admin/text(/:textId)" component={Text}/> {/*TODO: tmp */}
                         <Route path="/admin/texts" component={Texts}/>
+                        <Route path="/admin/lessons" component={Lessons}/>
+                        <Route path="/admin/lesson(/:lessonId)" component={Lesson}/>
                     </Route>
                     <Route path="/accessDenied" component={Err403} status={403}/>
                     <Route path="*" component={Err404} status={404}/>

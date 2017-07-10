@@ -1,13 +1,13 @@
 import React from "react";
-import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button} from "react-bootstrap";
+import {Jumbotron, PageHeader, Grid, Row, Col} from "react-bootstrap";
 
-class Admin extends React.Component  {
+class Admin extends React.Component {
     render() {
-        return (
-            <div>
-                Admin page, kek
-            </div>
-        );
+        return <Jumbotron>
+
+                    <h2 style={{textAlign: center}}>Страница находится в разработке</h2>
+
+        </Jumbotron>
     }
 }
 
