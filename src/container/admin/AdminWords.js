@@ -17,7 +17,7 @@ import {
     ButtonToolbar
 } from "react-bootstrap";
 import {Link} from 'react-router'
-import Word from '../../component/admin/Word'
+import Word from '../../component/admin/AdminWord'
 
 
 class Words extends React.Component {

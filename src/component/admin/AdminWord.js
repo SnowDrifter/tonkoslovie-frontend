@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
-import style from './Word.less'
+import style from './AdminWord.less'
 
 
 class Word extends React.Component {

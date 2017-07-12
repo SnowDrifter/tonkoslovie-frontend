@@ -16,7 +16,7 @@ import {
     Glyphicon
 } from "react-bootstrap";
 import axios from "axios";
-import style from './Text.less'
+import style from './AdminText.less'
 import EditPartModal from './EditPartModal'
 import CreatePartModal from './CreatePartModal'
 import * as partTypes from  './TextPartTypes'
