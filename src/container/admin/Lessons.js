@@ -48,13 +48,15 @@ class Lessons extends React.Component {
     }
 
     deleteLesson(lessonId) {
-        axios.delete('http://localhost:8080/api/content/lesson', {
-            params: {
-                id: lessonId
-            }
-        }).then(() => {
-            this.updateLessons();
-        });
+        if(confirm("Удалить урок №" + lessonId + "?")) {
+            axios.delete('http://localhost:8080/api/content/lesson', {
+                params: {
+                    id: lessonId
+                }
+            }).then(() => {
+                this.updateLessons();
+            });
+        }
     }
 
     addNewLesson() {

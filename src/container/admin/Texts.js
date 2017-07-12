@@ -48,13 +48,15 @@ class Texts extends React.Component {
     }
 
     deleteText(textId) {
-        axios.delete('http://localhost:8080/api/content/text', {
-            params: {
-                id: textId
-            }
-        }).then(() => {
-            this.updateTexts();
-        });
+        if(confirm("Удалить текст №" + textId + "?")) {
+            axios.delete('http://localhost:8080/api/content/text', {
+                params: {
+                    id: textId
+                }
+            }).then(() => {
+                this.updateTexts();
+            });
+        }
     }
 
     addNewText() {

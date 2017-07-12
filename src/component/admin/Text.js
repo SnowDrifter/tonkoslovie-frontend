@@ -107,7 +107,9 @@ class Text extends React.Component {
     }
 
     removeTextPart(key) {
-        this.setState({textParts: this.state.textParts.filter((value, index) => index != key)});
+        if (confirm("Удалить фрагмент?")) {
+            this.setState({textParts: this.state.textParts.filter((value, index) => index != key)});
+        }
     }
 
     showCreatePartModal() {

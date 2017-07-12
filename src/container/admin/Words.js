@@ -59,15 +59,16 @@ class Words extends React.Component {
     }
 
     deleteWord(wordId) {
-        axios.delete('http://localhost:8080/api/content/word', {
-            params: {
-                id: wordId
-            }
-        })
-            .then(() => {
-                this.updateWords();
-            });
-
+        if (confirm("Удалить слово №" + wordId + "?")) {
+            axios.delete('http://localhost:8080/api/content/word', {
+                params: {
+                    id: wordId
+                }
+            })
+                .then(() => {
+                    this.updateWords();
+                });
+        }
     }
 
     showAddWord() {
