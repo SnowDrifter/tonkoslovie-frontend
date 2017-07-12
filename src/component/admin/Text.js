@@ -77,7 +77,7 @@ class Text extends React.Component {
     }
 
     saveTextPart(index, textPart) {
-        if (index) {
+        if (index || index == 0) {
             let textParts = this.state.textParts;
             textParts[index] = textPart;
             this.setState({textParts: textParts, currentPart: null, currentPartIndex: null});
