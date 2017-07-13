@@ -17,8 +17,6 @@ import {
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
 
 
 class Lessons extends React.Component {

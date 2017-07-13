@@ -1,5 +1,6 @@
 var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var webpack = require("webpack");
 
 module.exports = {
     entry: ['./src/index.js'],
@@ -54,6 +55,10 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: 'static' }
-        ])
+        ]),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        })
     ]
 };

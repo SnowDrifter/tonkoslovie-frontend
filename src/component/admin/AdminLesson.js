@@ -16,6 +16,12 @@ import {
     ListGroupItem
 } from "react-bootstrap";
 
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'font-awesome/css/font-awesome.css';
+import FroalaEditor from 'react-froala-wysiwyg';
+
 
 class Lesson extends React.Component {
 
@@ -34,6 +40,7 @@ class Lesson extends React.Component {
 
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
+        this.handTextChange = this.handTextChange.bind(this);
     }
 
     loadLesson(lessonId) {
@@ -45,7 +52,8 @@ class Lesson extends React.Component {
             const lesson = response.data;
             this.setState({
                 id: lesson.id,
-                relatedTexts: lesson.relatedTexts
+                relatedTexts: lesson.relatedTexts,
+                text: lesson.text
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -56,6 +64,7 @@ class Lesson extends React.Component {
         axios.post('http://localhost:8080/api/content/lesson', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
+            text: this.state.text,
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : []
         }).then(() => {
             alert("Сохранено"); // TODO
@@ -93,6 +102,13 @@ class Lesson extends React.Component {
         this.setState({relatedTexts: relatedTexts});
     }
 
+    handTextChange(text) {
+        console.log("handle" + text);
+        this.setState({
+            text: text
+        });
+    }
+
     render() {
         let texts = [];
 
@@ -114,8 +130,8 @@ class Lesson extends React.Component {
 
         return <Panel>
             <Jumbotron>
+                <h3>Заголовок</h3>
                 <FormGroup>
-                    <ControlLabel>Заголовок</ControlLabel>
                     <FormControl
                         inputRef={title => {
                             this.title = title
@@ -123,6 +139,17 @@ class Lesson extends React.Component {
                     />
                 </FormGroup>
 
+                <h3>Текст урока</h3>
+                <FroalaEditor
+                    tag='textarea'
+                    config={{
+                        placeholderText: 'Редактирование текста',
+                        charCounterCount: false,
+                        height: 500
+                    }}
+                    model={this.state.text}
+                    onModelChange={this.handTextChange}
+                />
 
                 <h3>Добавленные тексты</h3>
                 <ListGroup>
