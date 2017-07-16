@@ -1,25 +1,25 @@
-.part {
+.admin-part {
   display: inline-block;
   padding: 10px;
   margin: 2px;
   border-radius: 3px;
 }
 
-.question-part:extend(.part) {
+.admin-question-part:extend(.admin-part) {
   background-color: rgba(255, 0, 0, 0.25);
 }
 
-.text-part:extend(.part) {
+.admin-text-part:extend(.admin-part) {
   background-color: rgba(0, 224, 0, 0.29);
 }
 
-.line-break-part:extend(.part) {
+.admin-line-break-part:extend(.admin-part) {
   display: inline;
 
   background-color: rgba(0, 41, 224, 0.29);
 }
 
-.line-break-part:after {
+.admin-line-break-part:after {
   content: "\A";
   white-space: pre;
 }

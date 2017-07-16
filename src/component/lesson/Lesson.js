@@ -7,6 +7,7 @@ import {
     ListGroup,
     ListGroupItem
 } from "react-bootstrap";
+import DOMPurify from 'dompurify'
 
 class Lesson extends React.Component {
 
@@ -17,7 +18,9 @@ class Lesson extends React.Component {
             id: undefined,
             title: undefined,
             text: undefined,
-            relatedTexts: []
+            relatedTexts: [],
+            loaded: false,
+            failed: false
         };
 
         this.loadLesson(this.props.params.lessonId);
@@ -34,12 +37,18 @@ class Lesson extends React.Component {
                 id: lesson.id,
                 title: lesson.title,
                 text: lesson.text,
-                relatedTexts: lesson.relatedTexts
+                relatedTexts: lesson.relatedTexts,
+                loaded: true
+            });
+        }).catch(() => {
+            this.setState({
+                failed: true
             });
         })
     }
 
     render() {
+        // TODO: add failure load message
         let texts = [];
 
         this.state.relatedTexts.map((text, index) => {
@@ -48,20 +57,26 @@ class Lesson extends React.Component {
             </ListGroupItem>);
         });
 
-
-        return <Panel>
+        // TODO: replace create content to function
+        let content = <Panel>
             <Jumbotron>
                 <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-                <div className="content" dangerouslySetInnerHTML={{__html: this.state.text}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html:  DOMPurify.sanitize(this.state.text)}}></div>
 
-                <h3>Тексты</h3>
+                <h3>Тексты:</h3>
                 <ListGroup>
                     {texts}
                 </ListGroup>
 
             </Jumbotron>
-        </Panel>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return content;
+        } else {
+            return null;
+        }
     }
 }
 

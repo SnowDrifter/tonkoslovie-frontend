@@ -4,6 +4,7 @@ import Err404 from "./component/Err404.js";
 import Err403 from "./component/Err403.js";
 import Lessons from "./container/lesson/Lessons.js";
 import Lesson from "./component/lesson/Lesson.js";
+import Text from "./component/lesson/Text.js";
 import Contacts from "./container/Contacts.js";
 import About from "./container/About.js";
 import Admin from "./container/admin/Admin.js";
@@ -38,6 +39,7 @@ render((
                     </Route>
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson(/:lessonId)" component={Lesson}/>
+                    <Route path="/text(/:textId)" component={Text}/>
                     <Route path="/contacts" component={Contacts}/>
                     <Route path="/about" component={About}/>
                     <Route path="/accessDenied" component={Err403}/>

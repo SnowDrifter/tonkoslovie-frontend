@@ -19,7 +19,7 @@ import axios from "axios";
 import style from './AdminText.less'
 import EditPartModal from './EditPartModal'
 import CreatePartModal from './CreatePartModal'
-import * as partTypes from  './TextPartTypes'
+import * as partTypes from  '../TextPartTypes'
 
 class Text extends React.Component {
 
@@ -170,7 +170,7 @@ class Text extends React.Component {
 
 class TextPart extends React.Component {
     render() {
-        return <div className="text-part">
+        return <div className="admin-text-part">
             {this.props.data}
 
             <ButtonGroup className="button-block">
@@ -185,7 +185,7 @@ class TextPart extends React.Component {
 
 class QuestionPart extends React.Component {
     render() {
-        return <div className="question-part">
+        return <div className="admin-question-part">
             {this.props.data}
 
             <ButtonGroup className="button-block">
@@ -200,7 +200,7 @@ class QuestionPart extends React.Component {
 
 class LineBreakPart extends React.Component {
     render() {
-        return <div className="line-break-part ">
+        return <div className="admin-line-break-part ">
             ¶
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"

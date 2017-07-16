@@ -14,7 +14,7 @@ import {
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
-import * as  partTypes from '../../component/admin/TextPartTypes'
+import * as  partTypes from '../TextPartTypes'
 
 class EditPartModal extends React.Component {
     constructor(props) {
