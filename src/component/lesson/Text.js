@@ -96,6 +96,7 @@ class LessonText extends React.Component {
                             type="text"
                             bsSize="small"
                             disabled={disabled}
+                            placeholder={part.placeholder}
                         />
                         <FormControl.Feedback />
                     </FormGroup>);

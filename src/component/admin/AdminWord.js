@@ -38,7 +38,7 @@ class Word extends React.Component {
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.modalTitle}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="word-modal-body">
+                <Modal.Body className="admin-word-modal-body">
                     <Form>
                         <FormGroup>
                             <Row>

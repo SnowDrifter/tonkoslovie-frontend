@@ -21,7 +21,7 @@ class CreatePartModal extends React.Component {
         super(props);
 
         this.state = {
-            type: partTypes.TEXT,
+            type: partTypes.TEXT
         }
     }
 
@@ -29,7 +29,8 @@ class CreatePartModal extends React.Component {
         let textPart = {};
         textPart.type = ReactDOM.findDOMNode(this.type).value;
         textPart.data = ReactDOM.findDOMNode(this.data).value;
-        this.props.saveTextPart(null, textPart)
+        this.props.saveTextPart(null, textPart);
+        this.setState({type: partTypes.TEXT})
     }
 
     changeType() {
@@ -40,7 +41,7 @@ class CreatePartModal extends React.Component {
         let body;
         let type = this.state.type;
 
-        if (type == partTypes.QUESTION || type == partTypes.TEXT){
+        if (type == partTypes.TEXT) {
             body = <FormGroup controlId="formInlineName">
                 <ControlLabel>Текст</ControlLabel>
                 <FormControl
@@ -50,19 +51,37 @@ class CreatePartModal extends React.Component {
                     componentClass="textarea"
                 />
             </FormGroup>
+        } else if (type == partTypes.QUESTION) {
+            body = <div>
+                <FormGroup>
+                    <ControlLabel>Текст</ControlLabel>
+                    <FormControl
+                        inputRef={data => {
+                            this.data = data
+                        }}
+                        componentClass="textarea"
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>Подсказка</ControlLabel>
+                    <FormControl
+                        inputRef={placeholder => {
+                            this.placeholder = placeholder
+                        }}
+                    />
+                </FormGroup>
+            </div>
         }
 
         return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} bsSize="large">
             <Modal.Header closeButton>
                 <Modal.Title>{this.props.modalTitle}</Modal.Title>
             </Modal.Header>
-            <Modal.Body className="word-modal-body">
+            <Modal.Body className="admin-text-modal-body">
                 <Form>
                     <FormGroup>
                         <Row>
                             <Col md={12}>
-                                {body}
-
                                 <FormGroup>
                                     <FormControl componentClass="select" placeholder="select" inputRef={type => {
                                         this.type = type
@@ -71,6 +90,8 @@ class CreatePartModal extends React.Component {
                                         <option value={partTypes.QUESTION}>Вопрос</option>
                                     </FormControl>
                                 </FormGroup>
+
+                                {body}
                             </Col>
                         </Row>
                     </FormGroup>
