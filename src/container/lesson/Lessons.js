@@ -36,6 +36,7 @@ class Lessons extends React.Component {
         });
 
         return <Jumbotron>
+            <h3>Уроки</h3>
             <ListGroup>
                 {texts}
             </ListGroup>

@@ -64,7 +64,7 @@ class Lesson extends React.Component {
 
                 <div className="content" dangerouslySetInnerHTML={{__html:  DOMPurify.sanitize(this.state.text)}}></div>
 
-                <h3>Тексты:</h3>
+                <h3>Тексты</h3>
                 <ListGroup>
                     {texts}
                 </ListGroup>
