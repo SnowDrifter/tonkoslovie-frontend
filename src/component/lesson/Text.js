@@ -20,6 +20,7 @@ import {
 import axios from "axios";
 import * as partTypes from  '../TextPartTypes'
 import styles from './Text.less';
+import Helmet from "react-helmet";
 
 class LessonText extends React.Component {
 
@@ -73,6 +74,7 @@ class LessonText extends React.Component {
 
     render() {
         let components = [];
+        let title = this.state.title + " | Тонкословие";
 
         this.state.textParts.map((part, index) => {
             switch(part.type) {
@@ -106,6 +108,7 @@ class LessonText extends React.Component {
         });
 
         return <Panel>
+            <Helmet title={title}/>
             <PageHeader>{this.state.title}</PageHeader>
 
             <Jumbotron style={{textAlign: "justify"}} >

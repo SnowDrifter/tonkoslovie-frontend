@@ -8,6 +8,7 @@ import {
     ListGroupItem
 } from "react-bootstrap";
 import DOMPurify from 'dompurify'
+import Helmet from "react-helmet";
 
 class Lesson extends React.Component {
 
@@ -50,6 +51,7 @@ class Lesson extends React.Component {
     render() {
         // TODO: add failure load message
         let texts = [];
+        let title = this.state.title + " | Тонкословие";
 
         this.state.relatedTexts.map((text, index) => {
             texts.push(<ListGroupItem key={index} href={"/text/" + text.id}>
@@ -59,6 +61,8 @@ class Lesson extends React.Component {
 
         // TODO: replace create content to function
         let content = <Panel>
+            <Helmet title={title}/>
+
             <Jumbotron>
                 <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 

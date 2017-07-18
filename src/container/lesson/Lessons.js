@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import {Jumbotron, ListGroupItem, ListGroup} from "react-bootstrap";
+import Helmet from "react-helmet";
 
 class Lessons extends React.Component {
 
@@ -30,17 +31,21 @@ class Lessons extends React.Component {
         let texts = [];
 
         this.state.lessons.map((text, index) => {
-            texts.push(<ListGroupItem  href={"/lesson/" + text.id} key={index}>
+            texts.push(<ListGroupItem href={"/lesson/" + text.id} key={index}>
                 {text.title}
             </ListGroupItem>);
         });
 
-        return <Jumbotron>
-            <h3>Уроки</h3>
-            <ListGroup>
-                {texts}
-            </ListGroup>
-        </Jumbotron>
+        return <div>
+            <Helmet title="Уроки | Тонкословие"/>
+
+            <Jumbotron>
+                <h3>Уроки</h3>
+                <ListGroup>
+                    {texts}
+                </ListGroup>
+            </Jumbotron>
+        </div>
     }
 }
 
