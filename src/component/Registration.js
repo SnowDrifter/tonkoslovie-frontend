@@ -32,19 +32,17 @@ class Registration extends React.Component {
             email: email,
             firstName: firstName,
             lastName: lastName
-        })
-            .then((response) => {
-                console.log(response);
-                this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
-            })
-            .catch((error) => {
-                let errorMessage = error.response.data.errorMessage;
-                this.setState({
-                    disableSubmit: false,
-                    showErrorModal: true,
-                    modalErrorText: errorMessage ? errorMessage : "Во время регистрации произошла ошибка!"
-                });
+        }).then((response) => {
+            console.log(response);
+            this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
+        }).catch((error) => {
+            let errorMessage = error.response.data.errorMessage;
+            this.setState({
+                disableSubmit: false,
+                showErrorModal: true,
+                modalErrorText: errorMessage ? errorMessage : "Во время регистрации произошла ошибка!"
             });
+        });
     }
 
     hideSuccessModal() {

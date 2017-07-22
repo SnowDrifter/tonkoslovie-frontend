@@ -37,7 +37,6 @@ class Lesson extends React.Component {
         if (this.props.params.lessonId) {
             this.loadLesson(this.props.params.lessonId)
         }
-
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
         this.handTextChange = this.handTextChange.bind(this);
@@ -67,7 +66,7 @@ class Lesson extends React.Component {
             text: this.state.text,
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : []
         }).then(() => {
-            alert("Сохранено"); // TODO
+            alert("Сохранено");
         })
     }
 
@@ -84,6 +83,17 @@ class Lesson extends React.Component {
                 foundTexts: texts
             });
         })
+    }
+
+    checkTextAlreadyAdded(text){
+        let alreadyAdded = false;
+        this.state.relatedTexts.forEach(function(oldText, index, array){
+            if(oldText.id == text.id) {
+                alreadyAdded = true;
+            }
+        });
+
+        return alreadyAdded;
     }
 
     addText(index) {
@@ -103,7 +113,6 @@ class Lesson extends React.Component {
     }
 
     handTextChange(text) {
-        console.log("handle" + text);
         this.setState({
             text: text
         });
@@ -122,11 +131,17 @@ class Lesson extends React.Component {
 
         let foundTexts = [];
 
-        this.state.foundTexts.map((text, index) => {
-            foundTexts.push(<ListGroupItem onClick={() => this.addText(index)} key={index}>
-                {text.title}
-            </ListGroupItem>);
-        });
+        if(this.state.foundTexts.length > 0) {
+            this.state.foundTexts.map((text, index) => {
+                if(!this.checkTextAlreadyAdded(text)) {
+                    foundTexts.push(<ListGroupItem onClick={() => this.addText(index)} key={index}>
+                        {text.title}
+                    </ListGroupItem>);
+                }
+            });
+        } else {
+            foundTexts.push(<span key={0}>Ничего не найдено</span>);
+        }
 
         return <Panel>
             <Jumbotron>
@@ -169,6 +184,7 @@ class Lesson extends React.Component {
                         />
                     </FormGroup>
 
+                    Варианты:
                     <ListGroup>
                         {foundTexts}
                     </ListGroup>
