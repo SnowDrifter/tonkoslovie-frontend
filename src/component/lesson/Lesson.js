@@ -49,7 +49,6 @@ class Lesson extends React.Component {
     }
 
     render() {
-        // TODO: add failure load message
         let texts = [];
         let title = this.state.title + " | Тонкословие";
 
@@ -66,7 +65,7 @@ class Lesson extends React.Component {
             <Jumbotron>
                 <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-                <div className="content" dangerouslySetInnerHTML={{__html:  DOMPurify.sanitize(this.state.text)}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.text)}}></div>
 
                 <h3>Тексты</h3>
                 <ListGroup>
@@ -78,6 +77,8 @@ class Lesson extends React.Component {
 
         if (this.state.loaded) {
             return content;
+        } else if (this.state.failed){
+            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Урок не найден</h2></Jumbotron>;
         } else {
             return null;
         }

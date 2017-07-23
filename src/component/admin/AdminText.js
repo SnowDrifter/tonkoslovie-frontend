@@ -10,6 +10,8 @@ import {
     Button,
     ButtonToolbar,
     ButtonGroup,
+    FieldGroup,
+    ProgressBar,
     Modal,
     Form,
     Jumbotron,
@@ -33,7 +35,8 @@ class Text extends React.Component {
             modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
-            textParts: []
+            textParts: [],
+            progressUploadFile: null
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -120,25 +123,49 @@ class Text extends React.Component {
         });
     }
 
+    uploadSound() {
+        const sound = this.sound.files[0];
+        if(sound == undefined) {
+            alert("Выберите файл");
+            return;
+        }
+
+        const data = new FormData();
+        data.append('file', sound);
+
+        var config = {
+            onUploadProgress:(progressEvent) => {
+                this.setState({progressUploadFile:  Math.round((progressEvent.loaded * 100) / progressEvent.total)});
+            }
+        };
+
+        axios.post('http://localhost:8080/api/media/upload/sound', data, config).then(() => {
+            // TODO
+        }).catch(() => {
+            this.setState({progressUploadFile: null});
+            alert("Произошла ошибка во время загрузки");
+        });
+    }
+
     render() {
-        let components = [];
+        let elements = [];
 
         this.state.textParts.map((part, index) => {
             if (part.type == partTypes.TEXT) {
-                components.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart}
+                elements.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart}
                                           editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.QUESTION) {
-                components.push(<QuestionPart key={index} index={index} data={part.data}
+                elements.push(<QuestionPart key={index} index={index} data={part.data}
                                               removePart={this.removeTextPart} editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.LINE_BREAK) {
-                components.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
+                elements.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
             }
         });
 
         return <Panel>
             <Jumbotron>
                 <FormGroup>
-                    <ControlLabel>Заголовок</ControlLabel>
+                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
                     <FormControl
                         inputRef={title => {
                             this.title = title
@@ -146,7 +173,26 @@ class Text extends React.Component {
                     />
                 </FormGroup>
 
-                {components}
+                <FormGroup>
+                    <ControlLabel><h4>Звуковая дорожка</h4></ControlLabel>
+                    <FormControl
+                        type="file"
+                        inputRef={sound => {
+                            this.sound = sound
+                        }}
+                    />
+                </FormGroup>
+                <Button bsSize="small" onClick={this.uploadSound.bind(this)}>Загрузить файл</Button>
+                <ProgressBar striped
+                             className="admin-text-progressbar"
+                             active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
+                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             bsStyle="success"
+                             now={this.state.progressUploadFile}
+                             label={(this.state.progressUploadFile) +  "%"} />
+
+                <h4>Элементы текста</h4>
+                {elements}
             </Jumbotron>
 
             <EditPartModal showModal={this.state.showEditPartModal}
