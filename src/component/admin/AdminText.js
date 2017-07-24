@@ -22,6 +22,7 @@ import style from './AdminText.less'
 import EditPartModal from './EditPartModal'
 import CreatePartModal from './CreatePartModal'
 import * as partTypes from  '../TextPartTypes'
+import ReactPlayer from 'react-player'
 
 class Text extends React.Component {
 
@@ -36,7 +37,8 @@ class Text extends React.Component {
             currentPart: null,
             currentPartIndex: null,
             textParts: [],
-            progressUploadFile: null
+            progressUploadFile: null,
+            soundFileName: null
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -58,7 +60,8 @@ class Text extends React.Component {
             const text = response.data;
             this.setState({
                 id: text.id,
-                textParts: text.parts
+                textParts: text.parts,
+                soundFileName: text.soundFileName
             });
 
             ReactDOM.findDOMNode(this.title).value = text.title;
@@ -69,7 +72,8 @@ class Text extends React.Component {
         axios.post('http://localhost:8080/api/content/text', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
-            parts: this.state.textParts ? this.state.textParts : []
+            parts: this.state.textParts ? this.state.textParts : [],
+            soundFileName: this.state.soundFileName
         }).then(() => {
             alert("Сохранено"); // TODO
         })
@@ -123,28 +127,46 @@ class Text extends React.Component {
         });
     }
 
+    deleteSoundFile() {
+        if (confirm("Удалить звуковую дорожку?")) {
+            axios.delete('http://localhost:8080/api/media/sound', {
+                params: {
+                    fileName: this.state.soundFileName
+                }
+            })
+                .then(() => {
+                    this.setState({soundFileName: null});
+                    this.saveText();
+                });
+        }
+    }
+
     uploadSound() {
         const sound = this.sound.files[0];
-        if(sound == undefined) {
+        if (sound == undefined) {
             alert("Выберите файл");
             return;
         }
 
         const data = new FormData();
         data.append('file', sound);
+        data.append('textId', this.state.id);
 
-        var config = {
-            onUploadProgress:(progressEvent) => {
-                this.setState({progressUploadFile:  Math.round((progressEvent.loaded * 100) / progressEvent.total)});
+        let config = {
+            onUploadProgress: (progressEvent) => {
+                this.setState({progressUploadFile: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
             }
         };
 
-        axios.post('http://localhost:8080/api/media/upload/sound', data, config).then(() => {
-            // TODO
-        }).catch(() => {
-            this.setState({progressUploadFile: null});
-            alert("Произошла ошибка во время загрузки");
-        });
+        axios.post('http://localhost:8080/api/media/sound', data, config)
+            .then((response) => {
+                this.setState({soundFileName: response.data.fileName});
+                this.saveText();
+            })
+            .catch(() => {
+                this.setState({progressUploadFile: null});
+                alert("Произошла ошибка во время загрузки");
+            });
     }
 
     render() {
@@ -153,26 +175,28 @@ class Text extends React.Component {
         this.state.textParts.map((part, index) => {
             if (part.type == partTypes.TEXT) {
                 elements.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart}
-                                          editPart={this.editTextPart}/>);
+                                        editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.QUESTION) {
                 elements.push(<QuestionPart key={index} index={index} data={part.data}
-                                              removePart={this.removeTextPart} editPart={this.editTextPart}/>);
+                                            removePart={this.removeTextPart} editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.LINE_BREAK) {
                 elements.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
             }
         });
 
-        return <Panel>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
+        let soundComponent;
 
+        if (this.state.soundFileName) {
+            soundComponent = <div>
+                <h4>Звуковая дорожка</h4>
+                <ReactPlayer
+                    height={25}
+                    controls={true}
+                    url={'http://localhost/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                <Button onClick={this.deleteSoundFile.bind(this)}>Удалить дорожку</Button>
+            </div>
+        } else {
+            soundComponent = <div>
                 <FormGroup>
                     <ControlLabel><h4>Звуковая дорожка</h4></ControlLabel>
                     <FormControl
@@ -189,7 +213,22 @@ class Text extends React.Component {
                              style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
                              bsStyle="success"
                              now={this.state.progressUploadFile}
-                             label={(this.state.progressUploadFile) +  "%"} />
+                             label={(this.state.progressUploadFile) + "%"}/>
+            </div>
+        }
+
+        return <Panel>
+            <Jumbotron>
+                <FormGroup>
+                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                    <FormControl
+                        inputRef={title => {
+                            this.title = title
+                        }}
+                    />
+                </FormGroup>
+
+                {soundComponent}
 
                 <h4>Элементы текста</h4>
                 {elements}

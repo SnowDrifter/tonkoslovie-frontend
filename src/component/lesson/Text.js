@@ -21,6 +21,7 @@ import axios from "axios";
 import * as partTypes from  '../TextPartTypes'
 import styles from './Text.less';
 import Helmet from "react-helmet";
+import ReactPlayer from 'react-player'
 
 class LessonText extends React.Component {
 
@@ -28,8 +29,9 @@ class LessonText extends React.Component {
         super(props);
 
         this.state = {
-            title: undefined,
-            textParts: []
+            title: null,
+            textParts: [],
+            soundFileName: null
         };
 
         this.checkAnswers = this.checkAnswers.bind(this);
@@ -49,7 +51,8 @@ class LessonText extends React.Component {
             this.setState({
                 id: text.id,
                 title: text.title,
-                textParts: text.parts
+                textParts: text.parts,
+                soundFileName: text.soundFileName
             });
         })
     }
@@ -107,16 +110,30 @@ class LessonText extends React.Component {
             }
         });
 
+        let soundComponent;
+        if(this.state.soundFileName) {
+            soundComponent =  <div className="center-block">
+                <h4>Прослушать текст</h4>
+                <ReactPlayer
+                height={25}
+                controls={true}
+                url={'http://localhost/tonkoslovie/sounds/' + this.state.soundFileName}/>
+            </div>
+        }
+
         return <Panel>
             <Helmet title={title}/>
             <PageHeader>{this.state.title}</PageHeader>
 
-            <Jumbotron style={{textAlign: "justify"}} >
+            <Jumbotron style={{textAlign: "justify"}}>
                 <form className="form-inline">
                     {components}
-                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right" bsStyle="success">Проверить</Button>
+                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
+                            bsStyle="success">Проверить</Button>
                 </form>
             </Jumbotron>
+
+            {soundComponent}
         </Panel>
     }
 }
