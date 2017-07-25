@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {Jumbotron, ListGroupItem, ListGroup} from "react-bootstrap";
+import {ListGroupItem, ListGroup, Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 
 class Lessons extends React.Component {
@@ -39,12 +39,11 @@ class Lessons extends React.Component {
         return <div>
             <Helmet title="Уроки | Тонкословие"/>
 
-            <Jumbotron>
-                <h3>Уроки</h3>
+            <Panel header="Уроки">
                 <ListGroup>
                     {texts}
                 </ListGroup>
-            </Jumbotron>
+            </Panel>
         </div>
     }
 }

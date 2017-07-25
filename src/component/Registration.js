@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {browserHistory} from 'react-router'
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
-
+import style from './Registration.less'
 
 class Registration extends React.Component {
     constructor(props) {
@@ -57,7 +57,7 @@ class Registration extends React.Component {
     render() {
         let title = "Регистрация";
 
-        return <div>
+        return <div className="registration-body">
             <Panel header={title}>
                 <form>
                     <FormGroup onSubmit={this.sendRegistration.bind(this)}>
