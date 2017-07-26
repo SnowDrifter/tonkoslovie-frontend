@@ -117,7 +117,7 @@ class LessonText extends React.Component {
                 <ReactPlayer
                 height={25}
                 controls={true}
-                url={'http://localhost/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
             </div>
         }
 

@@ -14,8 +14,8 @@
     ]
   },
   "scripts": {
-    "local-dev": "set API_ENDPOINT=http://localhost:8080&& webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
-    "dev": "API_ENDPOINT=http://88.198.165.206:8080 webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
+    "local-dev": "set API_ENDPOINT=http://localhost:8080&& set NGINX_ENDPOINT=http://localhost&& webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
+    "dev": "API_ENDPOINT=http://88.198.165.206:8080 NGINX_ENDPOINT=http://localhost webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
     "build": "webpack -d"
   },
   "keywords": [],
