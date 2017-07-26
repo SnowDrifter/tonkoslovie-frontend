@@ -16,11 +16,10 @@ import {
     ListGroupItem
 } from "react-bootstrap";
 
-import 'froala-editor/js/froala_editor.pkgd.min.js';
-import 'froala-editor/css/froala_style.min.css';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'font-awesome/css/font-awesome.css';
-import FroalaEditor from 'react-froala-wysiwyg';
+import {Editor} from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import {convertToRaw, ContentState, convertFromHTML, EditorState} from 'draft-js';
 
 
 class Lesson extends React.Component {
@@ -31,7 +30,8 @@ class Lesson extends React.Component {
         this.state = {
             id: undefined,
             relatedTexts: [],
-            foundTexts: []
+            foundTexts: [],
+            text: ""
         };
 
         if (this.props.params.lessonId) {
@@ -49,10 +49,17 @@ class Lesson extends React.Component {
             }
         }).then(response => {
             const lesson = response.data;
+
+            const blocksFromHTML = convertFromHTML(lesson.text);
+            const contentState = ContentState.createFromBlockArray(
+                blocksFromHTML.contentBlocks,
+                blocksFromHTML.entityMap
+            );
+
             this.setState({
                 id: lesson.id,
                 relatedTexts: lesson.relatedTexts,
-                text: lesson.text
+                text: EditorState.createWithContent(contentState)
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -63,7 +70,7 @@ class Lesson extends React.Component {
         client.post('/api/content/lesson', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
-            text: this.state.text,
+            text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : []
         }).then(() => {
             alert("Сохранено");
@@ -85,10 +92,10 @@ class Lesson extends React.Component {
         })
     }
 
-    checkTextAlreadyAdded(text){
+    checkTextAlreadyAdded(text) {
         let alreadyAdded = false;
-        this.state.relatedTexts.forEach(function(oldText, index, array){
-            if(oldText.id == text.id) {
+        this.state.relatedTexts.forEach(function (oldText, index, array) {
+            if (oldText.id == text.id) {
                 alreadyAdded = true;
             }
         });
@@ -131,9 +138,9 @@ class Lesson extends React.Component {
 
         let foundTexts = [];
 
-        if(this.state.foundTexts.length > 0) {
+        if (this.state.foundTexts.length > 0) {
             this.state.foundTexts.map((text, index) => {
-                if(!this.checkTextAlreadyAdded(text)) {
+                if (!this.checkTextAlreadyAdded(text)) {
                     foundTexts.push(<ListGroupItem onClick={() => this.addText(index)} key={index}>
                         {text.title}
                     </ListGroupItem>);
@@ -155,16 +162,15 @@ class Lesson extends React.Component {
                 </FormGroup>
 
                 <h3>Текст урока</h3>
-                <FroalaEditor
-                    tag='textarea'
-                    config={{
-                        placeholderText: 'Редактирование текста',
-                        charCounterCount: false,
-                        height: 500
-                    }}
-                    model={this.state.text}
-                    onModelChange={this.handTextChange}
-                />
+                <Panel>
+                    <Editor
+                        editorState={this.state.text}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editorClassName"
+                        onEditorStateChange={this.handTextChange}
+                    />
+                </Panel>
 
                 <h3>Добавленные тексты</h3>
                 <ListGroup>
