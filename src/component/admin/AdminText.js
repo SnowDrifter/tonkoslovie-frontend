@@ -17,7 +17,7 @@ import {
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
-import axios from "axios";
+import client from "../../util/client";
 import style from './AdminText.less'
 import EditPartModal from './EditPartModal'
 import CreatePartModal from './CreatePartModal'
@@ -52,7 +52,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        axios.get('http://localhost:8080/api/content/text', {
+        client.get('/api/content/text', {
             params: {
                 id: textId
             }
@@ -69,7 +69,7 @@ class Text extends React.Component {
     }
 
     saveText() {
-        axios.post('http://localhost:8080/api/content/text', {
+        client.post('/api/content/text', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             parts: this.state.textParts ? this.state.textParts : [],
@@ -129,7 +129,7 @@ class Text extends React.Component {
 
     deleteSoundFile() {
         if (confirm("Удалить звуковую дорожку?")) {
-            axios.delete('http://localhost:8080/api/media/sound', {
+            client.delete('/api/media/sound', {
                 params: {
                     fileName: this.state.soundFileName
                 }
@@ -158,7 +158,7 @@ class Text extends React.Component {
             }
         };
 
-        axios.post('http://localhost:8080/api/media/sound', data, config)
+        client.post('/api/media/sound', data, config)
             .then((response) => {
                 this.setState({soundFileName: response.data.fileName});
                 this.saveText();

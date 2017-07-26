@@ -17,7 +17,7 @@ import {
     Row,
     Col
 } from "react-bootstrap";
-import axios from "axios";
+import client from "../../util/client";
 import * as partTypes from  '../TextPartTypes'
 import styles from './Text.less';
 import Helmet from "react-helmet";
@@ -42,7 +42,7 @@ class LessonText extends React.Component {
     }
 
     loadText(textId) {
-        axios.get('http://localhost:8080/api/content/text', {
+        client.get('/api/content/text', {
             params: {
                 id: textId
             }

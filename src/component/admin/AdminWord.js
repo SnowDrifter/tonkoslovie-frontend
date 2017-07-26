@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
+import client from "../../util/client";
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import style from './AdminWord.less'
 
@@ -19,7 +19,7 @@ class Word extends React.Component {
         let russianText = ReactDOM.findDOMNode(this.russianText).value;
         let polishText = ReactDOM.findDOMNode(this.polishText).value;
 
-        axios.post('http://localhost:8080/api/content/word', {
+        client.post('/api/content/word', {
             id: this.props.word.id,
             russianText: russianText,
             polishText: polishText

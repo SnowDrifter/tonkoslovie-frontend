@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import client from "../../util/client";
 import {browserHistory} from 'react-router'
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -40,7 +40,7 @@ class Texts extends React.Component {
     }
 
     updateTexts() {
-        axios.get('http://localhost:8080/api/content/texts')
+        client.get('/api/content/texts')
             .then(response => {
                 const texts = response.data;
                 this.setState({texts: texts})
@@ -49,7 +49,7 @@ class Texts extends React.Component {
 
     deleteText(textId) {
         if(confirm("Удалить текст №" + textId + "?")) {
-            axios.delete('http://localhost:8080/api/content/text', {
+            client.delete('/api/content/text', {
                 params: {
                     id: textId
                 }

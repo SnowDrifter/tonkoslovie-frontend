@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+import client from "../util/client";
 import {browserHistory} from 'react-router'
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
 import style from './Registration.less'
@@ -26,7 +26,7 @@ class Registration extends React.Component {
         const firstName = ReactDOM.findDOMNode(this.firstName).value;
         const lastName = ReactDOM.findDOMNode(this.lastName).value;
 
-        axios.post('http://localhost:8080/registration', {
+        client.post('/registration', {
             username: username,
             password: password,
             email: email,

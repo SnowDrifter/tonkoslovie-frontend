@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import client from "../../util/client";
 import {
     Panel,
     PageHeader,
@@ -28,7 +28,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        axios.get('http://localhost:8080/api/content/lesson', {
+        client.get('/api/content/lesson', {
             params: {
                 id: lessonId
             }

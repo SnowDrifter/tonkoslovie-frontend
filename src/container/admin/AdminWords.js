@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import client from "../../util/client";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import {
@@ -42,7 +42,7 @@ class Words extends React.Component {
     }
 
     updateWords() {
-        axios.get('http://localhost:8080/api/content/words')
+        client.get('/api/content/words')
             .then(response => {
                 const words = response.data;
                 this.setState({words});
@@ -60,7 +60,7 @@ class Words extends React.Component {
 
     deleteWord(wordId) {
         if (confirm("Удалить слово №" + wordId + "?")) {
-            axios.delete('http://localhost:8080/api/content/word', {
+            client.delete('/api/content/word', {
                 params: {
                     id: wordId
                 }

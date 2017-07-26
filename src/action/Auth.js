@@ -1,4 +1,4 @@
-import axios from "axios";
+import client from "../util/client";
 import { browserHistory } from 'react-router'
 
 import {
@@ -42,7 +42,7 @@ export function login(payload) {
             type: LOGIN_REQUEST
         });
 
-        axios.post('http://localhost:8080/login', {
+        client.post('/login', {
             username: payload.username,
             password: payload.password
         })

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
+import client from "../../util/client";
 import {
     Panel,
     Jumbotron,
@@ -43,7 +43,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        axios.get('http://localhost:8080/api/content/lesson', {
+        client.get('/api/content/lesson', {
             params: {
                 id: lessonId
             }
@@ -60,7 +60,7 @@ class Lesson extends React.Component {
     }
 
     saveLesson() {
-        axios.post('http://localhost:8080/api/content/lesson', {
+        client.post('/api/content/lesson', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             text: this.state.text,
@@ -73,7 +73,7 @@ class Lesson extends React.Component {
     searchText() {
         let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
 
-        axios.get('http://localhost:8080/api/content/texts/findByTitle', {
+        client.get('/api/content/texts/findByTitle', {
             params: {
                 title: searchTitle
             }

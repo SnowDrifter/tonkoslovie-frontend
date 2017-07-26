@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import client from "../../util/client";
 import {ListGroupItem, ListGroup, Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 
@@ -20,7 +20,7 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        axios.get('http://localhost:8080/api/content/lessons')
+        client.get('/api/content/lessons')
             .then(response => {
                 const lessons = response.data;
                 this.setState({lessons: lessons})

@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import client from "../../util/client";
 import {browserHistory} from 'react-router'
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -38,7 +38,7 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        axios.get('http://localhost:8080/api/content/lessons')
+        client.get('/api/content/lessons')
             .then(response => {
                 const lessons = response.data;
                 this.setState({lessons: lessons})
@@ -47,7 +47,7 @@ class Lessons extends React.Component {
 
     deleteLesson(lessonId) {
         if(confirm("Удалить урок №" + lessonId + "?")) {
-            axios.delete('http://localhost:8080/api/content/lesson', {
+            client.delete('/api/content/lesson', {
                 params: {
                     id: lessonId
                 }
