@@ -160,7 +160,7 @@ class Text extends React.Component {
 
         client.post('/api/media/sound', data, config)
             .then((response) => {
-                this.setState({soundFileName: response.data.fileName});
+                this.setState({soundFileName: response.data.fileName, progressUploadFile: null});
                 this.saveText();
             })
             .catch(() => {

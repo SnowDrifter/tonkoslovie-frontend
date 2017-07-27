@@ -13,7 +13,8 @@ import {
     Form,
     Glyphicon,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    ProgressBar
 } from "react-bootstrap";
 
 import {Editor} from 'react-draft-wysiwyg';
@@ -28,10 +29,12 @@ class Lesson extends React.Component {
         super(props);
 
         this.state = {
-            id: undefined,
+            id: null,
             relatedTexts: [],
             foundTexts: [],
-            text: ""
+            text: null,
+            previewFileName: null,
+            progressUploadFile: null
         };
 
         if (this.props.params.lessonId) {
@@ -59,7 +62,9 @@ class Lesson extends React.Component {
             this.setState({
                 id: lesson.id,
                 relatedTexts: lesson.relatedTexts,
-                text: EditorState.createWithContent(contentState)
+                text: EditorState.createWithContent(contentState),
+                previewFileName: lesson.previewImage,
+                progressUploadFile: null,
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -71,7 +76,8 @@ class Lesson extends React.Component {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
-            relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : []
+            relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
+            previewImage: this.state.previewFileName
         }).then(() => {
             alert("Сохранено");
         })
@@ -125,6 +131,51 @@ class Lesson extends React.Component {
         });
     }
 
+    uploadPreviewImage() {
+        const preview = this.preview.files[0];
+        if (preview == undefined) {
+            alert("Выберите файл");
+            return;
+        }
+
+        const data = new FormData();
+        data.append('file', preview);
+        data.append('lessonId', this.state.id);
+
+        let config = {
+            onUploadProgress: (progressEvent) => {
+                this.setState({progressUploadFile: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
+            }
+        };
+
+        client.post('/api/media/image', data, config)
+            .then((response) => {
+                this.setState({previewFileName: response.data.fileName, progressUploadFile: null});
+                this.saveLesson();
+            })
+            .catch(() => {
+                this.setState({progressUploadFile: null});
+                alert("Произошла ошибка во время загрузки");
+            });
+    }
+
+    deletePreview() {
+        if (confirm("Удалить превью?")) {
+            client.delete('/api/media/image', {
+                params: {
+                    fileName: this.state.previewFileName
+                }
+            })
+                .then(() => {
+                    this.setState({previewFileName: null});
+                    this.saveLesson();
+                })
+                .catch(() => {
+                    alert("Произошла ошибка во время удаления");
+                });
+        }
+    }
+
     render() {
         let texts = [];
 
@@ -150,6 +201,37 @@ class Lesson extends React.Component {
             foundTexts.push(<span key={0}>Ничего не найдено</span>);
         }
 
+        let previewComponent;
+
+        if (this.state.previewFileName) {
+            previewComponent = <div>
+                <h4>Превью</h4>
+                <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + this.state.previewFileName}/>
+                <br/>
+                <Button onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
+            </div>
+        } else {
+            previewComponent = <div>
+                <FormGroup>
+                    <ControlLabel><h4>Превью</h4></ControlLabel>
+                    <FormControl
+                        type="file"
+                        inputRef={preview => {
+                            this.preview = preview
+                        }}
+                    />
+                </FormGroup>
+                <Button bsSize="small" onClick={this.uploadPreviewImage.bind(this)}>Загрузить файл</Button>
+                <ProgressBar striped
+                             className="admin-text-progressbar"
+                             active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
+                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             bsStyle="success"
+                             now={this.state.progressUploadFile}
+                             label={(this.state.progressUploadFile) + "%"}/>
+            </div>
+        }
+
         return <Panel>
             <Jumbotron>
                 <h3>Заголовок</h3>
@@ -160,6 +242,8 @@ class Lesson extends React.Component {
                         }}
                     />
                 </FormGroup>
+
+                {previewComponent}
 
                 <h3>Текст урока</h3>
                 <Panel>
