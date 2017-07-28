@@ -33,10 +33,13 @@ class Lessons extends React.Component {
         let texts = [];
 
         this.state.lessons.map((lesson, index) => {
+            const preview = lesson.previewImage ?
+                <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage}/> : null;
+
             texts.push(
                 <Link key={index} to={"/lesson/" + lesson.id}>
                     <li>
-                        <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage}/>
+                        {preview}
                         <h3>{lesson.title}</h3>
                         <p>{lesson.annotation}</p>
                     </li>
