@@ -32,7 +32,7 @@ class Lesson extends React.Component {
             id: null,
             relatedTexts: [],
             foundTexts: [],
-            text: null,
+            text: EditorState.createEmpty(),
             previewFileName: null,
             progressUploadFile: null
         };
@@ -68,6 +68,7 @@ class Lesson extends React.Component {
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
+            ReactDOM.findDOMNode(this.annotation).value = lesson.annotation || "";
         })
     }
 
@@ -75,6 +76,7 @@ class Lesson extends React.Component {
         client.post('/api/content/lesson', {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
+            annotation: ReactDOM.findDOMNode(this.annotation).value,
             text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
             previewImage: this.state.previewFileName
@@ -244,6 +246,16 @@ class Lesson extends React.Component {
                 </FormGroup>
 
                 {previewComponent}
+
+                <h3>Аннотация</h3>
+                <FormGroup>
+                    <FormControl
+                        componentClass="textarea"
+                        inputRef={annotation => {
+                            this.annotation = annotation
+                        }}
+                    />
+                </FormGroup>
 
                 <h3>Текст урока</h3>
                 <Panel>
