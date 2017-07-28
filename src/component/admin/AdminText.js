@@ -74,8 +74,12 @@ class Text extends React.Component {
             title: ReactDOM.findDOMNode(this.title).value,
             parts: this.state.textParts ? this.state.textParts : [],
             soundFileName: this.state.soundFileName
-        }).then(() => {
-            alert("Сохранено"); // TODO
+        }).then((response) => {
+            this.setState({
+                id: response.data.id,
+            });
+
+            alert("Сохранено");
         })
     }
 

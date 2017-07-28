@@ -80,7 +80,11 @@ class Lesson extends React.Component {
             text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
             previewImage: this.state.previewFileName
-        }).then(() => {
+        }).then((response) => {
+            this.setState({
+                id: response.data.id,
+            });
+
             alert("Сохранено");
         })
     }
