@@ -32,7 +32,11 @@ class Lessons extends React.Component {
     render() {
         let texts = [];
 
-        this.state.lessons.map((lesson, index) => {
+        const lessons = this.state.lessons.sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+        });
+
+        lessons.map((lesson, index) => {
             const preview = lesson.previewImage ?
                 <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage}/> : null;
 

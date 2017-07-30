@@ -63,7 +63,7 @@ class Lesson extends React.Component {
             <Helmet title={title}/>
 
             <Jumbotron>
-                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+                <h2 style={{textAlign: "center"}}>{this.state.title}</h2>
 
                 <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.text)}}></div>
 
