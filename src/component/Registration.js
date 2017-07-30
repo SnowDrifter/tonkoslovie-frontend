@@ -13,7 +13,6 @@ import {
     Modal,
     OverlayTrigger,
     Overlay,
-    Tooltip,
     Popover
 } from "react-bootstrap";
 import style from './Registration.less'
@@ -28,21 +27,29 @@ class Registration extends React.Component {
             showErrorModal: false,
             modalErrorText: null,
 
-            usernameValidationState: null,
-            showUsernameValidationPopover: false,
-            usernameValidationMessage: null,
+            username: {
+                validationState: null,
+                showPopover: false,
+                message: null
+            },
 
-            passwordValidationState: null,
-            showPasswordValidationPopover: false,
-            passwordValidationMessage: null,
+            password: {
+                validationState: null,
+                showPopover: false,
+                message: null
+            },
 
-            confirmPasswordValidationState: null,
-            showConfirmPasswordValidationPopover: false,
-            confirmPasswordValidationMessage: null,
+            confirmPassword: {
+                validationState: null,
+                showPopover: false,
+                message: null
+            },
 
-            emailValidationState: null,
-            showEmailValidationPopover: false,
-            emailValidationMessage: null
+            email: {
+                validationState: null,
+                showPopover: false,
+                message: null
+            }
         };
     }
 
@@ -53,15 +60,19 @@ class Registration extends React.Component {
 
         if (username == '') {
             this.setState({
-                usernameValidationState: "error",
-                showUsernameValidationPopover: true,
-                usernameValidationMessage: "Поле должно быть заполнено"
+                username: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Поле должно быть заполнено"
+                }
             });
             success = false;
         } else {
             this.setState({
-                usernameValidationState: "success",
-                showUsernameValidationPopover: false
+                username: {
+                    validationState: "success",
+                    showPopover: false
+                }
             });
         }
 
@@ -71,43 +82,55 @@ class Registration extends React.Component {
 
         if (password == '') {
             this.setState({
-                passwordValidationState: "error",
-                showPasswordValidationPopover: true,
-                passwordValidationMessage: "Поле должно быть заполнено",
+                password: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Поле должно быть заполнено"
+                }
             });
             success = false;
         } else if (confirmPassword != '' && password !== confirmPassword) {
             this.setState({
-                passwordValidationState: "error",
-                showPasswordValidationPopover: true,
-                passwordValidationMessage: "Пароли должны совпадать",
+                password: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Пароли должны совпадать"
+                }
             });
             success = false;
         } else {
             this.setState({
-                passwordValidationState: "success",
-                showPasswordValidationPopover: false
+                password: {
+                    validationState: "success",
+                    showPopover: false
+                }
             });
         }
 
         if (confirmPassword == '') {
             this.setState({
-                confirmPasswordValidationState: "error",
-                showConfirmPasswordValidationPopover: true,
-                confirmPasswordValidationMessage: "Поле должно быть заполнено"
+                confirmPassword: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Поле должно быть заполнено"
+                }
             });
             success = false;
         } else if (password != '' && password !== confirmPassword) {
             this.setState({
-                confirmPasswordValidationState: "error",
-                showConfirmPasswordValidationPopover: true,
-                confirmPasswordValidationMessage: "Пароли должны совпадать",
+                confirmPassword: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Пароли должны совпадать"
+                }
             });
             success = false;
         } else {
             this.setState({
-                confirmPasswordValidationState: "success",
-                showConfirmPasswordValidationPopover: false
+                confirmPassword: {
+                    validationState: "success",
+                    showPopover: false
+                }
             });
         }
 
@@ -116,22 +139,28 @@ class Registration extends React.Component {
 
         if (email == '') {
             this.setState({
-                emailValidationState: "error",
-                showEmailValidationPopover: true,
-                emailValidationMessage: "Поле должно быть заполнено"
+                email: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Поле должно быть заполнено"
+                }
             });
             success = false;
         } else if (!emailPattern.test(email)) {
             this.setState({
-                emailValidationState: "error",
-                showEmailValidationPopover: true,
-                emailValidationMessage: "Неправильный формат электронной почты"
+                email: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Неправильный формат электронной почты"
+                }
             });
             success = false;
         } else {
             this.setState({
-                emailValidationState: "success",
-                showEmailValidationPopover: false
+                email: {
+                    validationState: "success",
+                    showPopover: false
+                }
             });
         }
 
@@ -160,11 +189,38 @@ class Registration extends React.Component {
                 console.log(response);
                 this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
             }).catch((error) => {
-                let errorMessage = error.response.data.errorMessage;
+                const response = error.response.data;
+                if (response.validationErrors) {
+                    response.validationErrors.forEach(error => {
+                        if (error.field == 'email') {
+                            this.setState({
+                                email: {
+                                    validationState: "error",
+                                    message: error.message,
+                                    showPopover: true
+                                }
+                            });
+                        }
+
+                        if (error.field == 'username') {
+                            this.setState({
+                                username: {
+                                    validationState: "error",
+                                    showPopover: true,
+                                    message: error.message,
+                                }
+                            });
+                        }
+                    });
+                } else if (response.errorMessage) {
+                    this.setState({
+                        showErrorModal: true,
+                        modalErrorText: response.errorMessage
+                    });
+                }
+
                 this.setState({
-                    disableSubmit: false,
-                    showErrorModal: true,
-                    modalErrorText: errorMessage ? errorMessage : "Во время регистрации произошла ошибка!"
+                    disableSubmit: false
                 });
             });
         }
@@ -188,11 +244,11 @@ class Registration extends React.Component {
                     <FormGroup onSubmit={this.sendRegistration.bind(this)}>
                         <Row>
                             <Col md={12}>
-                                <FormGroup validationState={this.state.usernameValidationState}>
+                                <FormGroup validationState={this.state.username.validationState}>
                                     <ControlLabel>Никнейм</ControlLabel>
-                                    <Overlay show={this.state.showUsernameValidationPopover}
+                                    <Overlay show={this.state.username.showPopover}
                                              target={() => ReactDOM.findDOMNode(this.username)} placement="left">
-                                        <Popover style={{width: 200}}>{this.state.usernameValidationMessage}</Popover>
+                                        <Popover id="usernamePopover" style={{width: 250}}>{this.state.username.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={username => {
@@ -206,11 +262,12 @@ class Registration extends React.Component {
 
                         <Row>
                             <Col md={12}>
-                                <FormGroup validationState={this.state.passwordValidationState}>
+                                <FormGroup validationState={this.state.password.validationState}>
                                     <ControlLabel>Пароль</ControlLabel>
-                                    <Overlay show={this.state.showPasswordValidationPopover}
+                                    <Overlay show={this.state.password.showPopover}
                                              target={() => ReactDOM.findDOMNode(this.password)} placement="left">
-                                        <Popover style={{width: 200}}>{this.state.passwordValidationMessage}</Popover>
+                                        <Popover id="passwordPopover"
+                                                 style={{width: 250}}>{this.state.password.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={password => {
@@ -222,12 +279,12 @@ class Registration extends React.Component {
 
                         <Row>
                             <Col md={12}>
-                                <FormGroup validationState={this.state.confirmPasswordValidationState}>
+                                <FormGroup validationState={this.state.confirmPassword.validationState}>
                                     <ControlLabel>Повторите пароль</ControlLabel>
-                                    <Overlay show={this.state.showConfirmPasswordValidationPopover}
+                                    <Overlay show={this.state.confirmPassword.showPopover}
                                              target={() => ReactDOM.findDOMNode(this.confirmPassword)} placement="left">
-                                        <Popover
-                                            style={{width: 200}}>{this.state.confirmPasswordValidationMessage}</Popover>
+                                        <Popover style={{width: 250}}
+                                                 id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={confirmPassword => {
@@ -239,11 +296,12 @@ class Registration extends React.Component {
 
                         <Row>
                             <Col md={12}>
-                                <FormGroup validationState={this.state.emailValidationState}>
+                                <FormGroup validationState={this.state.email.validationState}>
                                     <ControlLabel>Email</ControlLabel>
-                                    <Overlay show={this.state.showEmailValidationPopover}
+                                    <Overlay show={this.state.email.showPopover}
                                              target={() => ReactDOM.findDOMNode(this.email)} placement="left">
-                                        <Popover style={{width: 200}}>{this.state.emailValidationMessage}</Popover>
+                                        <Popover id="emailPopover"
+                                                 style={{width: 250}}>{this.state.email.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={email => {
