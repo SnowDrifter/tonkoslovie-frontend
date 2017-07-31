@@ -1,12 +1,14 @@
-var path = require('path');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var webpack = require("webpack");
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const webpack = require("webpack");
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
     entry: ['./src/index.js'],
 
     output: {
-        path: distPath = path.resolve('.', 'dist'),
+        path: path.resolve('./src'),
         publicPath: "/assets/",
         filename: 'bundle.js'
     },
@@ -54,7 +56,7 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin([
-            { from: 'static' }
+            {from: 'static'}
         ]),
         new webpack.ProvidePlugin({
             $: "jquery",
@@ -64,6 +66,41 @@ module.exports = {
             'process.env': {
                 'API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
                 'NGINX_ENDPOINT': JSON.stringify(process.env.NGINX_ENDPOINT),
-            }})
-    ]
+                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+            }
+        })
+    ],
+
+    cache: IS_PRODUCTION
+
 };
+
+if (IS_PRODUCTION) {
+    module.exports.plugins.push(
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            beautify: false,
+            sourceMap: false,
+            mangle: true,
+            compress: {
+                sequences: true,
+                booleans: true,
+                loops: true,
+                unused: true,
+                warnings: false,
+                drop_console: true,
+                unsafe: true,
+                screw_ie8: true
+            },
+            comments: false
+        }),
+        new CompressionPlugin({
+            algorithm: 'gzip',
+            regExp: /\.js$|\.html$/
+        }),
+        new webpack.optimize.OccurrenceOrderPlugin()
+    );
+}
