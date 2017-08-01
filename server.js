@@ -5,6 +5,7 @@ const webpackMiddleware = require("webpack-dev-middleware");
 const app = express();
 const compiler = webpack(config);
 const compression = require('compression');
+const cache = require('cache-control');
 
 
 const port = process.env.PORT || 3000;
@@ -17,6 +18,10 @@ app.use(webpackMiddleware(compiler, {
     stats: {
         colors: true
     }
+}));
+
+app.use(cache({
+    '/**': 100000
 }));
 
 app.get('/*', (req, res) => {

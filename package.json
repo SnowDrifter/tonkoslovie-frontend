@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "set API_ENDPOINT=http://localhost:8080&& set NGINX_ENDPOINT=http://localhost&& webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
-    "prod": "NODE_ENV=production&& API_ENDPOINT=http://88.198.165.206:8080&& NGINX_ENDPOINT=http://88.198.165.206&& node server.js",
+    "prod": "NODE_ENV=production API_ENDPOINT=http://88.198.165.206:8080 NGINX_ENDPOINT=http://88.198.165.206 node server.js",
     "build": "webpack -d"
   },
   "keywords": [],
@@ -24,6 +24,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bootstrap": "^3.3.7",
+    "cache-control": "^2.0.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.1",
     "dompurify": "^0.9.0",
