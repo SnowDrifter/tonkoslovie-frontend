@@ -77,7 +77,9 @@ export function login(payload) {
 }
 
 export function logout() {
+    localStorage.removeItem('token');
+
     return {
         type: LOGOUT
-    }
+    };
 }

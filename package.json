@@ -31,6 +31,7 @@
     "draft-js": "^0.10.1",
     "draftjs-to-html": "^0.7.4",
     "express": "^4.15.3",
+    "express-cache-response-directive": "^1.1.0",
     "fixed-data-table-2": "^0.7.17",
     "griddle-react": "0.7.1",
     "install": "^0.8.4",

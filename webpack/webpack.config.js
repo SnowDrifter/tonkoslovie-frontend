@@ -69,10 +69,7 @@ module.exports = {
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         })
-    ],
-
-    cache: IS_PRODUCTION
-
+    ]
 };
 
 if (IS_PRODUCTION) {

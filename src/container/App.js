@@ -1,7 +1,7 @@
 import React, {PropTypes} from "react";
 import Login from "../component/Login.js";
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Button} from "react-bootstrap";
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from '../action/Auth'
 
@@ -11,8 +11,7 @@ class App extends React.Component {
     };
 
     logout() {
-        localStorage.removeItem('token');
-        this.context.router.push("/");
+        this.props.actions.logout();
     }
 
     render() {
@@ -50,7 +49,7 @@ App.contextTypes = {
     router: PropTypes.object.isRequired
 };
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
     return {
         user: state.user
     }
