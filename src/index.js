@@ -5,6 +5,7 @@ import Err403 from "./component/Err403.js";
 import Lessons from "./container/lesson/Lessons.js";
 import Lesson from "./component/lesson/Lesson.js";
 import Text from "./component/lesson/Text.js";
+import Home from "./container/Home.js";
 import Contacts from "./container/Contacts.js";
 import About from "./container/About.js";
 import Admin from "./container/admin/Admin.js";
@@ -15,7 +16,7 @@ import AdminLessons from "./container/admin/AdminLessons.js";
 import AdminLesson from "./component/admin/AdminLesson.js";
 import React from 'react'
 import {render} from 'react-dom'
-import {Router, Route, Link, browserHistory} from 'react-router'
+import {Router, IndexRoute, Route, Link, browserHistory} from 'react-router'
 import {Provider} from 'react-redux'
 import configureStore from './store/configureStore'
 import RestrictedContainer from './container/RestrictedContainer'
@@ -28,6 +29,7 @@ render((
         <Provider store={store}>
             <Router history={browserHistory}>
                 <Route path="/" component={App}>
+                    <IndexRoute component={Home}/>
                     <Route path="/registration" component={Registration}/>
                     <Route authorize={['ROLE_ADMIN']} component={RestrictedContainer}>
                         <Route path="/admin" component={Admin}/>
