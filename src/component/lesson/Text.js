@@ -71,7 +71,7 @@ class LessonText extends React.Component {
         textParts.map((part, index) => {
             if (part.type == partTypes.QUESTION) {
                 let answer = ReactDOM.findDOMNode(this['form-' + index]).value;
-                if (answer.toLowerCase() == part.data) {
+                if (answer.toLowerCase() == part.data.toLowerCase()) {
                     part.ok = true;
                 } else {
                     part.error = true;
