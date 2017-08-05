@@ -46,10 +46,8 @@ class App extends React.Component {
                         <NavItem onClick={this.props.actions.showLogin}
                                  className={isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
 
-                        <LinkContainer to="/">
                             <NavItem onClick={this.logout.bind(this)}
                                      className={isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
-                        </LinkContainer>
                     </Nav>
                 </Navbar>
 

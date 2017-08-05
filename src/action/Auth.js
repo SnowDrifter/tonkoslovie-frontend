@@ -1,5 +1,5 @@
 import client from "../util/client";
-import { browserHistory } from 'react-router'
+import {browserHistory} from 'react-router'
 
 import {
     SHOW_LOGIN,
@@ -18,7 +18,7 @@ export function showLogin(payload) {
     return (dispatch) => {
         dispatch({
             type: SHOW_LOGIN,
-            payload:{
+            payload: {
                 showLogin: true
             }
         });
@@ -29,7 +29,7 @@ export function hideLogin(payload) {
     return (dispatch) => {
         dispatch({
             type: HIDE_LOGIN,
-            payload:{
+            payload: {
                 showLogin: false
             }
         });
@@ -79,7 +79,20 @@ export function login(payload) {
 export function logout() {
     localStorage.removeItem('token');
 
-    return {
-        type: LOGOUT
-    };
+    return (dispatch) => {
+        dispatch({
+            type: LOGOUT,
+            payload: {
+                isAuthenticated: false
+            }
+        });
+
+        dispatch({
+            type: ROUTING,
+            payload: {
+                method: 'replace',
+                nextUrl: '/'
+            }
+        });
+    }
 }

@@ -8,7 +8,6 @@ import {
 } from '../constant/User'
 import decode from 'jwt-decode';
 
-// TODO
 const initialState = ({
     user: localStorage.getItem('token') != undefined ? decode(localStorage.getItem('token')) : {},
     isAuthenticated: localStorage.getItem('token') != undefined,
@@ -29,13 +28,13 @@ export default function userstate(state = initialState, action) {
             return state;
 
         case LOGIN_SUCCESS:
-            return {...state, showLogin: action.payload.showLogin, isAuthenticated: action.payload.isAuthenticated}
+            return {...state, showLogin: action.payload.showLogin, isAuthenticated: action.payload.isAuthenticated};
 
         case LOGIN_FAILURE:
-            return {...state, errorMessage: action.payload.errorMessage};;
+            return {...state, errorMessage: action.payload.errorMessage};
 
         case LOGOUT:
-            return state;
+            return {...state, isAuthenticated: action.payload.isAuthenticated};
 
         default:
             return state
