@@ -29,6 +29,7 @@ class CreatePartModal extends React.Component {
         let textPart = {};
         textPart.type = ReactDOM.findDOMNode(this.type).value;
         textPart.data = ReactDOM.findDOMNode(this.data).value;
+        textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
         this.props.saveTextPart(null, textPart);
         this.setState({type: partTypes.TEXT})
     }

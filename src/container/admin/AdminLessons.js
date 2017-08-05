@@ -33,7 +33,7 @@ class Lessons extends React.Component {
         this.updateLessons = this.updateLessons.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateLessons();
     }
 
@@ -46,7 +46,7 @@ class Lessons extends React.Component {
     }
 
     deleteLesson(lessonId) {
-        if(confirm("Удалить урок №" + lessonId + "?")) {
+        if (confirm("Удалить урок №" + lessonId + "?")) {
             client.delete('/api/content/lesson', {
                 params: {
                     id: lessonId
