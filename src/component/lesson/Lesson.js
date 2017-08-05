@@ -53,7 +53,11 @@ class Lesson extends React.Component {
         let texts = [];
         let title = this.state.title + " | Тонкословие";
 
-        this.state.relatedTexts.map((text, index) => {
+        const sortedTexts = this.state.relatedTexts.sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+        });
+
+        sortedTexts.map((text, index) => {
             texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
         });
 
