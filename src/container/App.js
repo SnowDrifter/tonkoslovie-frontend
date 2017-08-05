@@ -4,6 +4,8 @@ import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Button} from "react-bootstr
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from '../action/Auth'
+import {LinkContainer} from 'react-router-bootstrap';
+import {Link} from 'react-router'
 
 class App extends React.Component {
     constructor(props) {
@@ -15,23 +17,39 @@ class App extends React.Component {
     }
 
     render() {
+        const isAuthenticated = this.props.user.isAuthenticated;
+
         return (
             <div>
                 <Navbar>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a href="/">Главная</a>
+                            <Link to="/"> Главная</Link>
                         </Navbar.Brand>
                     </Navbar.Header>
+
                     <Nav>
-                        <NavItem href="/lessons">Уроки</NavItem>
-                        <NavItem href="/about">О проекте</NavItem>
-                        <NavItem href="/contacts">Контакты</NavItem>
+                        <LinkContainer to="/lessons">
+                            <NavItem>Уроки</NavItem>
+                        </LinkContainer>
+                        <LinkContainer to="/about">
+                            <NavItem>О проекте</NavItem>
+                        </LinkContainer>
+                        <LinkContainer to="/contacts">
+                            <NavItem>Контакты</NavItem>
+                        </LinkContainer>
                     </Nav>
                     <Nav pullRight>
-                        <NavItem href="/registration" className={this.props.user.isAuthenticated ? 'hidden' : ''}>Регистрация</NavItem>
-                        <NavItem onClick={this.props.actions.showLogin} className={this.props.user.isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
-                        <NavItem href="/" onClick={this.logout.bind(this)} className={this.props.user.isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
+                        <LinkContainer to="/registration">
+                            <NavItem className={isAuthenticated ? 'hidden' : ''}>Регистрация</NavItem>
+                        </LinkContainer>
+                        <NavItem onClick={this.props.actions.showLogin}
+                                 className={isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
+
+                        <LinkContainer to="/">
+                            <NavItem onClick={this.logout.bind(this)}
+                                     className={isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
+                        </LinkContainer>
                     </Nav>
                 </Navbar>
 

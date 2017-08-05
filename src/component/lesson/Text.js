@@ -31,7 +31,9 @@ class LessonText extends React.Component {
         this.state = {
             title: null,
             textParts: [],
-            soundFileName: null
+            soundFileName: null,
+            loaded: false,
+            failed: false
         };
 
         this.checkAnswers = this.checkAnswers.bind(this);
@@ -52,7 +54,12 @@ class LessonText extends React.Component {
                 id: text.id,
                 title: text.title,
                 textParts: text.parts,
-                soundFileName: text.soundFileName
+                soundFileName: text.soundFileName,
+                loaded: true
+            });
+        }).catch(() => {
+            this.setState({
+                failed: true
             });
         })
     }
@@ -121,7 +128,7 @@ class LessonText extends React.Component {
             </div>
         }
 
-        return <Panel>
+        let content = <Panel>
             <Helmet title={title}/>
             <PageHeader>{this.state.title}</PageHeader>
 
@@ -134,7 +141,15 @@ class LessonText extends React.Component {
             </Jumbotron>
 
             {soundComponent}
-        </Panel>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return content;
+        } else if (this.state.failed) {
+            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Текст не найден</h2></Jumbotron>;
+        } else {
+            return null;
+        }
     }
 }
 

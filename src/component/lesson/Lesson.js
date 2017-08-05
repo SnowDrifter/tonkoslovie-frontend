@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import DOMPurify from 'dompurify'
 import Helmet from "react-helmet";
+import {Link} from 'react-router'
 
 class Lesson extends React.Component {
 
@@ -53,9 +54,7 @@ class Lesson extends React.Component {
         let title = this.state.title + " | Тонкословие";
 
         this.state.relatedTexts.map((text, index) => {
-            texts.push(<ListGroupItem key={index} href={"/text/" + text.id}>
-                {text.title}
-            </ListGroupItem>);
+            texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
         });
 
         // TODO: replace create content to function
@@ -77,7 +76,7 @@ class Lesson extends React.Component {
 
         if (this.state.loaded) {
             return content;
-        } else if (this.state.failed){
+        } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Урок не найден</h2></Jumbotron>;
         } else {
             return null;
