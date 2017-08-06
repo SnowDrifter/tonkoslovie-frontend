@@ -17,8 +17,8 @@ import {
     Row,
     Col
 } from "react-bootstrap";
-import client from "../../util/client";
-import * as partTypes from  '../TextPartTypes'
+import client from "../util/client";
+import * as partTypes from  './TextPartTypes'
 import styles from './Text.less';
 import Helmet from "react-helmet";
 import ReactPlayer from 'react-player'

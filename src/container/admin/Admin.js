@@ -1,19 +1,17 @@
 import React from "react";
 import {Link} from "react-router";
-import {Jumbotron, PageHeader, Grid, Row, Col} from "react-bootstrap";
+import {Panel, PageHeader, Grid, Row, Col} from "react-bootstrap";
 
 class Admin extends React.Component {
     render() {
-        return <Jumbotron>
-            <h3>Админка</h3>
+        return <Panel>
+            <PageHeader className="text-center">Админка</PageHeader>
 
-                <Link to="/admin/lessons" activeClassName='active'>Уроки</Link>
-                <br/>
-                <Link to="/admin/texts" activeClassName='active'>Тексты</Link>
-                <br/>
-                <Link to="/admin/words" activeClassName='active'>Слова</Link>
+                <Link to="/admin/lessons" activeClassName='active'><h3>Уроки</h3></Link>
+                <Link to="/admin/texts" activeClassName='active'><h3>Тексты</h3></Link>
+                <Link to="/admin/words" activeClassName='active'><h3>Слова</h3></Link>
 
-        </Jumbotron>
+        </Panel>
     }
 }
 

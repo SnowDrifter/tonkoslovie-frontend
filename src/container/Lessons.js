@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import client from "../util/client";
 import {ListGroupItem, ListGroup, Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";

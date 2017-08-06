@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import client from "../util/client";
 import {
     Panel,
     PageHeader,

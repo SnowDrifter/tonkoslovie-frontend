@@ -98,6 +98,16 @@ class Lessons extends React.Component {
                     />
 
                     <Column
+                        header={<Cell>Опубликован</Cell>}
+                        cell={({rowIndex}) => (
+                            <Cell>
+                                {lessons[rowIndex].published ? "Да" : "Нет"}
+                            </Cell>
+                        )}
+                        width={120}
+                    />
+
+                    <Column
                         cell={({rowIndex}) => (
                             <Cell>
                                 <ButtonToolbar>
