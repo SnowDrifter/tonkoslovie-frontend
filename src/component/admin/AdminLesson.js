@@ -14,7 +14,8 @@ import {
     Glyphicon,
     ListGroup,
     ListGroupItem,
-    ProgressBar
+    ProgressBar,
+    Checkbox
 } from "react-bootstrap";
 
 import {Editor} from 'react-draft-wysiwyg';
@@ -33,6 +34,7 @@ class Lesson extends React.Component {
             relatedTexts: [],
             foundTexts: [],
             text: EditorState.createEmpty(),
+            published: false,
             previewFileName: null,
             progressUploadFile: null
         };
@@ -63,8 +65,9 @@ class Lesson extends React.Component {
                 id: lesson.id,
                 relatedTexts: lesson.relatedTexts,
                 text: EditorState.createWithContent(contentState),
+                published: lesson.published,
                 previewFileName: lesson.previewImage,
-                progressUploadFile: null,
+                progressUploadFile: null
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -78,6 +81,7 @@ class Lesson extends React.Component {
             title: ReactDOM.findDOMNode(this.title).value,
             annotation: ReactDOM.findDOMNode(this.annotation).value,
             text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
+            published: this.state.published,
             relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
             previewImage: this.state.previewFileName
         }).then((response) => {
@@ -180,6 +184,10 @@ class Lesson extends React.Component {
                     alert("Произошла ошибка во время удаления");
                 });
         }
+    }
+
+    togglePublished() {
+        this.setState({published: !this.state.published});
     }
 
     render() {
@@ -295,6 +303,10 @@ class Lesson extends React.Component {
                         {foundTexts}
                     </ListGroup>
                 </Panel>
+
+                <Checkbox checked={this.state.published} onClick={this.togglePublished.bind(this)}>
+                    Опубликовать урок
+                </Checkbox>
 
             </Jumbotron>
             <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>

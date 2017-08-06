@@ -38,7 +38,7 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        client.get('/api/content/lessons')
+        client.get('/api/content/lessons?onlyPublished=false')
             .then(response => {
                 const lessons = response.data;
                 this.setState({lessons: lessons})
