@@ -1,8 +1,8 @@
 import React from "react";
-import {Panel} from "react-bootstrap";
+import {Jumbotron} from "react-bootstrap";
 
 const Er403 = () => {
-    return <Panel>Доступ запрещен</Panel>
+    return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Доступ запрещен</h2></Jumbotron>
 };
 
 export default Er403;

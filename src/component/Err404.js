@@ -1,8 +1,8 @@
 import React from "react";
-import {Panel} from "react-bootstrap";
+import {Jumbotron} from "react-bootstrap";
 
 const Er404 = () => {
-    return <Panel>Страница не найдена</Panel>
+    return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Страница не найдена</h2></Jumbotron>
 };
 
 export default Er404;

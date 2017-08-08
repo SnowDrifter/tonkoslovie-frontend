@@ -130,7 +130,7 @@ class LessonText extends React.Component {
 
         let content = <Panel>
             <Helmet title={title}/>
-            <PageHeader>{this.state.title}</PageHeader>
+            <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
             <Jumbotron style={{textAlign: "justify"}}>
                 <form className="form-inline">

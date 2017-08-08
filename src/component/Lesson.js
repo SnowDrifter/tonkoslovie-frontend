@@ -61,12 +61,9 @@ class Lesson extends React.Component {
             texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
         });
 
-        // TODO: replace create content to function
         let content = <Panel>
             <Helmet title={title}/>
-
-            <Jumbotron>
-                <h2 style={{textAlign: "center"}}>{this.state.title}</h2>
+                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
                 <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.text)}}></div>
 
@@ -74,8 +71,6 @@ class Lesson extends React.Component {
                 <ListGroup>
                     {texts}
                 </ListGroup>
-
-            </Jumbotron>
         </Panel>;
 
         if (this.state.loaded) {
