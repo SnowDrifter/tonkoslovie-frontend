@@ -1,5 +1,6 @@
 import client from "../util/client";
 import {browserHistory} from 'react-router'
+import axios from 'axios';
 
 import {
     SHOW_LOGIN,
@@ -42,12 +43,13 @@ export function login(payload) {
             type: LOGIN_REQUEST
         });
 
-        client.post('/login', {
+        client.post('/api/user/login', {
             username: payload.username,
             password: payload.password
         })
             .then(function (response) {
                 localStorage.setItem('token', response.data.token);
+                axios.defaults.headers.common['Authorization'] = response.data.token;
 
                 dispatch({
                     type: LOGIN_SUCCESS,
@@ -77,8 +79,6 @@ export function login(payload) {
 }
 
 export function logout() {
-    localStorage.removeItem('token');
-
     return (dispatch) => {
         dispatch({
             type: LOGOUT,
@@ -86,6 +86,11 @@ export function logout() {
                 isAuthenticated: false
             }
         });
+
+        client.get('/api/user/logout');
+
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
 
         dispatch({
             type: ROUTING,

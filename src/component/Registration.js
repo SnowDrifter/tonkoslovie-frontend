@@ -179,14 +179,13 @@ class Registration extends React.Component {
             const firstName = ReactDOM.findDOMNode(this.firstName).value;
             const lastName = ReactDOM.findDOMNode(this.lastName).value;
 
-            client.post('/registration', {
+            client.post('/api/user/registration', {
                 username: username,
                 password: password,
                 email: email,
                 firstName: firstName,
                 lastName: lastName
             }).then((response) => {
-                console.log(response);
                 this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
             }).catch((error) => {
                 const response = error.response.data;
@@ -246,8 +245,7 @@ class Registration extends React.Component {
                             <Col md={12}>
                                 <FormGroup validationState={this.state.username.validationState}>
                                     <ControlLabel>Никнейм</ControlLabel>
-                                    <Overlay show={this.state.username.showPopover}
-                                             target={() => ReactDOM.findDOMNode(this.username)} placement="left">
+                                    <Overlay show={this.state.username.showPopover} target={() => ReactDOM.findDOMNode(this.username)} placement="left">
                                         <Popover id="usernamePopover" style={{width: 250}}>{this.state.username.message}</Popover>
                                     </Overlay>
 
@@ -264,10 +262,8 @@ class Registration extends React.Component {
                             <Col md={12}>
                                 <FormGroup validationState={this.state.password.validationState}>
                                     <ControlLabel>Пароль</ControlLabel>
-                                    <Overlay show={this.state.password.showPopover}
-                                             target={() => ReactDOM.findDOMNode(this.password)} placement="left">
-                                        <Popover id="passwordPopover"
-                                                 style={{width: 250}}>{this.state.password.message}</Popover>
+                                    <Overlay show={this.state.password.showPopover} target={() => ReactDOM.findDOMNode(this.password)} placement="left">
+                                        <Popover id="passwordPopover" style={{width: 250}}>{this.state.password.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={password => {
@@ -281,10 +277,8 @@ class Registration extends React.Component {
                             <Col md={12}>
                                 <FormGroup validationState={this.state.confirmPassword.validationState}>
                                     <ControlLabel>Повторите пароль</ControlLabel>
-                                    <Overlay show={this.state.confirmPassword.showPopover}
-                                             target={() => ReactDOM.findDOMNode(this.confirmPassword)} placement="left">
-                                        <Popover style={{width: 250}}
-                                                 id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
+                                    <Overlay show={this.state.confirmPassword.showPopover} target={() => ReactDOM.findDOMNode(this.confirmPassword)} placement="left">
+                                        <Popover style={{width: 250}} id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={confirmPassword => {
@@ -298,10 +292,8 @@ class Registration extends React.Component {
                             <Col md={12}>
                                 <FormGroup validationState={this.state.email.validationState}>
                                     <ControlLabel>Email</ControlLabel>
-                                    <Overlay show={this.state.email.showPopover}
-                                             target={() => ReactDOM.findDOMNode(this.email)} placement="left">
-                                        <Popover id="emailPopover"
-                                                 style={{width: 250}}>{this.state.email.message}</Popover>
+                                    <Overlay show={this.state.email.showPopover} target={() => ReactDOM.findDOMNode(this.email)} placement="left">
+                                        <Popover id="emailPopover" style={{width: 250}}>{this.state.email.message}</Popover>
                                     </Overlay>
 
                                     <FormControl ref={email => {
@@ -358,7 +350,6 @@ class Registration extends React.Component {
                     <Modal.Title>{this.state.modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
                     <div className="text-center">Регистрация прошла успешно!</div>
                     <div className="text-center">Для завершения необходимо подтвердить электронную почту.</div>
                     <br/>
