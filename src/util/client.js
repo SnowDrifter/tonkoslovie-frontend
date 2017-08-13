@@ -1,17 +1,33 @@
 import axios from 'axios';
 const apiEndpoint = process.env.API_ENDPOINT || '';
+import {browserHistory} from 'react-router'
 
-function headersConfig() {
-    if(localStorage.getItem('token')) {
-        return {
-            'Authorization': localStorage.getItem('token')
+let client;
+
+(function () {
+    client = axios.create({
+        baseURL: apiEndpoint
+    });
+
+    client.interceptors.request.use(function (config) {
+        if (localStorage.getItem('token')) {
+            config.headers.Authorization = localStorage.getItem('token')
         }
-    } else {
-        return null;
-    }
-}
 
-export default axios.create({
-    baseURL: apiEndpoint,
-    headers: headersConfig()
-});
+        return config;
+    });
+
+    client.interceptors.response.use(null, function (error) {
+        let response = error.response;
+
+        if (response.status === 403) {
+            localStorage.removeItem('token');
+            window.location.reload();
+            browserHistory.push("/");
+        }
+
+        return Promise.reject(error);
+    });
+})();
+
+export default client;

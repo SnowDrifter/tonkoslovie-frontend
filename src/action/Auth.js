@@ -1,6 +1,4 @@
 import client from "../util/client";
-import {browserHistory} from 'react-router'
-import axios from 'axios';
 
 import {
     SHOW_LOGIN,
@@ -49,7 +47,6 @@ export function login(payload) {
         })
             .then(function (response) {
                 localStorage.setItem('token', response.data.token);
-                axios.defaults.headers.common['Authorization'] = response.data.token;
 
                 dispatch({
                     type: LOGIN_SUCCESS,
@@ -87,10 +84,16 @@ export function logout() {
             }
         });
 
-        client.get('/api/user/logout');
+        // client.get('/api/user/logout', {
+        //     headers: {
+        //         Authorization: localStorage.getItem("token")
+        //     }}
+        // )
 
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        client.get('/api/user/logout').then(function () {
+            localStorage.removeItem('token');
+        });
+
 
         dispatch({
             type: ROUTING,

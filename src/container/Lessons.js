@@ -32,7 +32,7 @@ class Lessons extends React.Component {
     render() {
         let texts = [];
 
-        const lessons = this.state.lessons.sort(function(a, b) {
+        const lessons = this.state.lessons.sort(function (a, b) {
             return a.title.localeCompare(b.title);
         });
 
