@@ -12,7 +12,9 @@ import {
     Modal,
     Form,
     Jumbotron,
-    Glyphicon
+    Glyphicon,
+    ToggleButtonGroup,
+    ToggleButton
 } from "react-bootstrap";
 import * as  partTypes from '../TextPartTypes'
 
@@ -27,15 +29,21 @@ class CreatePartModal extends React.Component {
 
     saveTextPart() {
         let textPart = {};
-        textPart.type = ReactDOM.findDOMNode(this.type).value;
+        let type = this.state.type;
+
+        textPart.type = type;
         textPart.data = ReactDOM.findDOMNode(this.data).value;
-        textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+
+        if(type == partTypes.QUESTION) {
+            textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+        }
+
         this.props.saveTextPart(null, textPart);
         this.setState({type: partTypes.TEXT})
     }
 
-    changeType() {
-        this.setState({type: ReactDOM.findDOMNode(this.type).value})
+    changeType(type) {
+        this.setState({type: type})
     }
 
     render() {
@@ -83,14 +91,12 @@ class CreatePartModal extends React.Component {
                     <FormGroup>
                         <Row>
                             <Col md={12}>
-                                <FormGroup>
-                                    <FormControl componentClass="select" placeholder="select" inputRef={type => {
-                                        this.type = type
-                                    }} onChange={this.changeType.bind(this)}>
-                                        <option value={partTypes.TEXT}>Текст</option>
-                                        <option value={partTypes.QUESTION}>Вопрос</option>
-                                    </FormControl>
-                                </FormGroup>
+                                <ButtonToolbar>
+                                    <ToggleButtonGroup type="radio" name="options" onChange={this.changeType.bind(this)} defaultValue={partTypes.TEXT}>
+                                        <ToggleButton value={partTypes.TEXT}>Текст</ToggleButton>
+                                        <ToggleButton value={partTypes.QUESTION}>Вопрос</ToggleButton>
+                                    </ToggleButtonGroup>
+                                </ButtonToolbar>
 
                                 {body}
                             </Col>

@@ -12,7 +12,9 @@ import {
     Modal,
     Form,
     Jumbotron,
-    Glyphicon
+    Glyphicon,
+    ToggleButtonGroup,
+    ToggleButton
 } from "react-bootstrap";
 import * as  partTypes from '../TextPartTypes'
 
@@ -20,17 +22,39 @@ class EditPartModal extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            type: undefined
+        }
     }
 
     saveTextPart() {
         let textPart = this.props.currentPart;
+        let type = this.state.type || this.props.currentPart.type;
+
+        textPart.type = type;
         textPart.data = ReactDOM.findDOMNode(this.data).value;
-        textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+
+        if (type == partTypes.QUESTION) {
+            textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+        }
+
         this.props.saveTextPart(this.props.currentPartIndex, textPart)
     }
 
+    changeType(type) {
+        this.setState({type: type});
+    }
+
     render() {
-        let type = this.props.currentPart ? this.props.currentPart.type : undefined;
+        let type;
+        const currentPart = this.props.currentPart;
+
+        if (this.state.type) {
+            type = this.state.type
+        } else {
+            type = this.props.currentPart ? this.props.currentPart.type : undefined;
+        }
+
         let body;
 
         if (type == partTypes.TEXT) {
@@ -41,7 +65,7 @@ class EditPartModal extends React.Component {
                         this.data = data
                     }}
                     componentClass="textarea"
-                    defaultValue={this.props.currentPart ? this.props.currentPart.data : ""}
+                    defaultValue={currentPart ? currentPart.data : ""}
                 />
             </FormGroup>
         } else if (type == partTypes.QUESTION) {
@@ -53,7 +77,7 @@ class EditPartModal extends React.Component {
                             this.data = data
                         }}
                         componentClass="textarea"
-                        defaultValue={this.props.currentPart ? this.props.currentPart.data : ""}
+                        defaultValue={currentPart ? currentPart.data : ""}
                     />
                 </FormGroup>
                 <FormGroup>
@@ -62,7 +86,7 @@ class EditPartModal extends React.Component {
                         inputRef={placeholder => {
                             this.placeholder = placeholder
                         }}
-                        defaultValue={this.props.currentPart ? this.props.currentPart.placeholder : ""}
+                        defaultValue={currentPart ? currentPart.placeholder : ""}
                     />
                 </FormGroup>
             </div>
@@ -77,14 +101,21 @@ class EditPartModal extends React.Component {
                     <FormGroup>
                         <Row>
                             <Col md={12}>
+                                <ButtonToolbar>
+                                    <ToggleButtonGroup type="radio" name="options" onChange={this.changeType.bind(this)}
+                                                       defaultValue={type}>
+                                        <ToggleButton value={partTypes.TEXT}>Текст</ToggleButton>
+                                        <ToggleButton value={partTypes.QUESTION}>Вопрос</ToggleButton>
+                                    </ToggleButtonGroup>
+                                </ButtonToolbar>
+
                                 {body}
                             </Col>
                         </Row>
                     </FormGroup>
 
-                    <Button
-                        onClick={this.saveTextPart.bind(this)}
-                        className="pull-right" bsStyle="success">Сохранить</Button>
+                    <Button onClick={this.saveTextPart.bind(this)} className="pull-right"
+                            bsStyle="success">Сохранить</Button>
                 </Form>
             </Modal.Body>
         </Modal>
