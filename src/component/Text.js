@@ -71,7 +71,9 @@ class LessonText extends React.Component {
         textParts.map((part, index) => {
             if (part.type == partTypes.QUESTION) {
                 let answer = ReactDOM.findDOMNode(this['form-' + index]).value;
-                if (answer.toLowerCase() == part.data.toLowerCase()) {
+                answer = answer.trim().toLowerCase();
+
+                if (answer == part.data.toLowerCase()) {
                     part.ok = true;
                 } else {
                     part.error = true;
@@ -87,9 +89,13 @@ class LessonText extends React.Component {
         let title = this.state.title + " | Тонкословие";
 
         this.state.textParts.map((part, index) => {
-            switch(part.type) {
-                case partTypes.TEXT:  components.push(<dev className="text-part" key={index}>{part.data}</dev>); break;
-                case partTypes.LINE_BREAK: components.push(<div className="clearfix" key={index}/>); break;
+            switch (part.type) {
+                case partTypes.TEXT:
+                    components.push(<dev className="text-part" key={index}>{part.data}</dev>);
+                    break;
+                case partTypes.LINE_BREAK:
+                    components.push(<div className="clearfix" key={index}/>);
+                    break;
                 case partTypes.QUESTION: {
                     let validateState;
                     let disabled = false;
@@ -118,13 +124,13 @@ class LessonText extends React.Component {
         });
 
         let soundComponent;
-        if(this.state.soundFileName) {
-            soundComponent =  <div className="center-block">
+        if (this.state.soundFileName) {
+            soundComponent = <div className="center-block">
                 <h4>Прослушать текст</h4>
                 <ReactPlayer
-                height={25}
-                controls={true}
-                url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    height={40}
+                    controls={true}
+                    url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
             </div>
         }
 
