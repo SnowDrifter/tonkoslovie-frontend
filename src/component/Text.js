@@ -111,6 +111,7 @@ class LessonText extends React.Component {
                             ref={part => {
                                 this['form-' + index] = part
                             }}
+                            style={{width: part.data.length * 15}}
                             type="text"
                             bsSize="small"
                             disabled={disabled}
