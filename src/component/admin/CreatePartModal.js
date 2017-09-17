@@ -16,14 +16,15 @@ import {
     ToggleButtonGroup,
     ToggleButton
 } from "react-bootstrap";
-import * as  partTypes from '../TextPartTypes'
+import * as  partTypes from "../TextPartTypes";
 
 class CreatePartModal extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            type: partTypes.TEXT
+            type: partTypes.TEXT,
+            selectValues: [""]
         }
     }
 
@@ -32,10 +33,18 @@ class CreatePartModal extends React.Component {
         let type = this.state.type;
 
         textPart.type = type;
-        textPart.data = ReactDOM.findDOMNode(this.data).value;
 
-        if(type == partTypes.QUESTION) {
+        if (type == partTypes.TEXT) {
+            textPart.data = ReactDOM.findDOMNode(this.data).value;
+        }
+
+        if (type == partTypes.QUESTION) {
+            textPart.data = ReactDOM.findDOMNode(this.data).value;
             textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+        }
+
+        if (type == partTypes.SELECT) {
+            textPart.data = this.state.selectValues;
         }
 
         this.props.saveTextPart(null, textPart);
@@ -44,6 +53,12 @@ class CreatePartModal extends React.Component {
 
     changeType(type) {
         this.setState({type: type})
+    }
+
+    addSelectValue() {
+        const selectValues = this.state.selectValues;
+        selectValues.push("");
+        this.setState({selectValues: selectValues})
     }
 
     render() {
@@ -80,6 +95,30 @@ class CreatePartModal extends React.Component {
                     />
                 </FormGroup>
             </div>
+        } else if (type == partTypes.SELECT) {
+            const selectForms = [];
+
+            this.state.selectValues.map((value, index) => {
+                selectForms.push(<FormControl
+                        key={index}
+                        ref={part => {
+                            this['form-' + index] = part
+                        }}
+                        defaultValue={value}
+                    />
+                );
+            });
+
+            body = <div>
+                <FormGroup>
+                    <ControlLabel>Варианты</ControlLabel>
+                    {selectForms}
+                </FormGroup>
+
+                <Button
+                    onClick={this.addSelectValue.bind(this)}
+                    className="pull-right" bsStyle="success">Добавить вариант</Button>
+            </div>
         }
 
         return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} bsSize="large">
@@ -92,9 +131,11 @@ class CreatePartModal extends React.Component {
                         <Row>
                             <Col md={12}>
                                 <ButtonToolbar>
-                                    <ToggleButtonGroup type="radio" name="options" onChange={this.changeType.bind(this)} defaultValue={partTypes.TEXT}>
+                                    <ToggleButtonGroup type="radio" name="options" onChange={this.changeType.bind(this)}
+                                                       defaultValue={partTypes.TEXT}>
                                         <ToggleButton value={partTypes.TEXT}>Текст</ToggleButton>
                                         <ToggleButton value={partTypes.QUESTION}>Вопрос</ToggleButton>
+                                        <ToggleButton value={partTypes.SELECT}>Выбор</ToggleButton>
                                     </ToggleButtonGroup>
                                 </ButtonToolbar>
 
