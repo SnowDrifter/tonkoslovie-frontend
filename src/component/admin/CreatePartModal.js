@@ -24,8 +24,10 @@ class CreatePartModal extends React.Component {
 
         this.state = {
             type: partTypes.TEXT,
-            selectValues: [""]
-        }
+            choiceValues: [""]
+        };
+
+        this.changeChoiceValue = this.changeChoiceValue.bind(this);
     }
 
     saveTextPart() {
@@ -43,8 +45,8 @@ class CreatePartModal extends React.Component {
             textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
         }
 
-        if (type == partTypes.SELECT) {
-            textPart.data = this.state.selectValues;
+        if (type == partTypes.CHOICE) {
+            textPart.data = this.state.choiceValues;
         }
 
         this.props.saveTextPart(null, textPart);
@@ -55,10 +57,18 @@ class CreatePartModal extends React.Component {
         this.setState({type: type})
     }
 
-    addSelectValue() {
-        const selectValues = this.state.selectValues;
-        selectValues.push("");
-        this.setState({selectValues: selectValues})
+    addChoiceValue() {
+        const choiceValues = this.state.choiceValues;
+        choiceValues.push("");
+        this.setState({choiceValues: choiceValues})
+    }
+
+    changeChoiceValue(index) {
+        let choiceValue = ReactDOM.findDOMNode(this['form-' + index]).value;
+
+        const choiceValues = this.state.choiceValues;
+        choiceValues[index] = choiceValue;
+        this.setState({choiceValues: choiceValues});
     }
 
     render() {
@@ -95,15 +105,16 @@ class CreatePartModal extends React.Component {
                     />
                 </FormGroup>
             </div>
-        } else if (type == partTypes.SELECT) {
-            const selectForms = [];
+        } else if (type == partTypes.CHOICE) {
+            const choiceForms = [];
 
-            this.state.selectValues.map((value, index) => {
-                selectForms.push(<FormControl
+            this.state.choiceValues.map((value, index) => {
+                choiceForms.push(<FormControl
                         key={index}
                         ref={part => {
                             this['form-' + index] = part
                         }}
+                        onChange={() => this.changeChoiceValue(index)}
                         defaultValue={value}
                     />
                 );
@@ -112,12 +123,10 @@ class CreatePartModal extends React.Component {
             body = <div>
                 <FormGroup>
                     <ControlLabel>Варианты</ControlLabel>
-                    {selectForms}
+                    {choiceForms}
                 </FormGroup>
 
-                <Button
-                    onClick={this.addSelectValue.bind(this)}
-                    className="pull-right" bsStyle="success">Добавить вариант</Button>
+                <Button onClick={this.addChoiceValue.bind(this)}>Добавить вариант</Button>
             </div>
         }
 
@@ -135,7 +144,7 @@ class CreatePartModal extends React.Component {
                                                        defaultValue={partTypes.TEXT}>
                                         <ToggleButton value={partTypes.TEXT}>Текст</ToggleButton>
                                         <ToggleButton value={partTypes.QUESTION}>Вопрос</ToggleButton>
-                                        <ToggleButton value={partTypes.SELECT}>Выбор</ToggleButton>
+                                        <ToggleButton value={partTypes.CHOICE}>Выбор</ToggleButton>
                                     </ToggleButtonGroup>
                                 </ButtonToolbar>
 
