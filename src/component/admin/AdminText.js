@@ -183,6 +183,9 @@ class Text extends React.Component {
             } else if (part.type == partTypes.QUESTION) {
                 elements.push(<QuestionPart key={index} index={index} data={part.data}
                                             removePart={this.removeTextPart} editPart={this.editTextPart}/>);
+            } else if (part.type == partTypes.CHOICE) {
+                elements.push(<ChoicePart choiceVariants={part.choiceVariants} key={index} index={index}
+                                          removePart={this.removeTextPart} editPart={this.editTextPart}/>);
             } else if (part.type == partTypes.LINE_BREAK) {
                 elements.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
             }
@@ -276,6 +279,21 @@ class QuestionPart extends React.Component {
     render() {
         return <div className="admin-question-part">
             {this.props.data}
+
+            <ButtonGroup className="button-block">
+                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
+                    glyph="pencil"/></Button>
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
+                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+            </ButtonGroup>
+        </div>
+    }
+}
+
+class ChoicePart extends React.Component {
+    render() {
+        return <div className="admin-choice-part">
+            {this.props.choiceVariants}
 
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon

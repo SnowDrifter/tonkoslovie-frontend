@@ -46,7 +46,7 @@ class CreatePartModal extends React.Component {
         }
 
         if (type == partTypes.CHOICE) {
-            textPart.data = this.state.choiceValues;
+            textPart.choiceVariants = this.state.choiceValues;
         }
 
         this.props.saveTextPart(null, textPart);
