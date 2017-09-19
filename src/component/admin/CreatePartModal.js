@@ -19,15 +19,14 @@ import {
 import * as  partTypes from "../TextPartTypes";
 
 class CreatePartModal extends React.Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
             type: partTypes.TEXT,
-            choiceValues: [""]
+            choicesCount: 1
         };
-
-        this.changeChoiceValue = this.changeChoiceValue.bind(this);
     }
 
     saveTextPart() {
@@ -46,7 +45,14 @@ class CreatePartModal extends React.Component {
         }
 
         if (type == partTypes.CHOICE) {
-            textPart.choiceVariants = this.state.choiceValues;
+            const choiceVariants = [];
+            const choiceCount = this.state.choicesCount;
+
+            for (let i = 0; i < choiceCount; i++) {
+                choiceVariants.push(ReactDOM.findDOMNode(this['form-' + i]).value);
+            }
+
+            textPart.choiceVariants = choiceVariants;
         }
 
         this.props.saveTextPart(null, textPart);
@@ -57,18 +63,18 @@ class CreatePartModal extends React.Component {
         this.setState({type: type})
     }
 
-    addChoiceValue() {
-        const choiceValues = this.state.choiceValues;
-        choiceValues.push("");
-        this.setState({choiceValues: choiceValues})
+    increaseChoicesCount() {
+        let choicesCount = this.state.choicesCount;
+        choicesCount++;
+        this.setState({choicesCount: choicesCount})
     }
 
-    changeChoiceValue(index) {
-        let choiceValue = ReactDOM.findDOMNode(this['form-' + index]).value;
-
-        const choiceValues = this.state.choiceValues;
-        choiceValues[index] = choiceValue;
-        this.setState({choiceValues: choiceValues});
+    decreaseChoicesCount() {
+        if (this.state.choicesCount > 1) {
+            let choicesCount = this.state.choicesCount;
+            choicesCount--;
+            this.setState({choicesCount: choicesCount});
+        }
     }
 
     render() {
@@ -107,18 +113,15 @@ class CreatePartModal extends React.Component {
             </div>
         } else if (type == partTypes.CHOICE) {
             const choiceForms = [];
+            const choiceCount = this.state.choicesCount;
 
-            this.state.choiceValues.map((value, index) => {
-                choiceForms.push(<FormControl
-                        key={index}
+            for (let i = 0; i < choiceCount; i++) {
+                choiceForms.push(<FormControl key={i}
                         ref={part => {
-                            this['form-' + index] = part
-                        }}
-                        onChange={() => this.changeChoiceValue(index)}
-                        defaultValue={value}
-                    />
+                            this['form-' + i] = part
+                        }}/>
                 );
-            });
+            }
 
             body = <div>
                 <FormGroup>
@@ -126,7 +129,8 @@ class CreatePartModal extends React.Component {
                     {choiceForms}
                 </FormGroup>
 
-                <Button onClick={this.addChoiceValue.bind(this)}>Добавить вариант</Button>
+                <Button onClick={this.increaseChoicesCount.bind(this)}>Добавить вариант</Button>
+                <Button onClick={this.decreaseChoicesCount.bind(this)}>Удалить вариант</Button>
             </div>
         }
 
