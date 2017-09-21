@@ -11,6 +11,7 @@ import {
     ButtonGroup,
     Modal,
     Form,
+    InputGroup,
     Jumbotron,
     Glyphicon,
     ToggleButtonGroup,
@@ -49,7 +50,10 @@ class CreatePartModal extends React.Component {
             const choiceCount = this.state.choicesCount;
 
             for (let i = 0; i < choiceCount; i++) {
-                choiceVariants.push(ReactDOM.findDOMNode(this['form-' + i]).value);
+                let choiceVariant = {};
+                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
+                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                choiceVariants.push(choiceVariant);
             }
 
             textPart.choiceVariants = choiceVariants;
@@ -116,10 +120,16 @@ class CreatePartModal extends React.Component {
             const choiceCount = this.state.choicesCount;
 
             for (let i = 0; i < choiceCount; i++) {
-                choiceForms.push(<FormControl key={i}
-                        ref={part => {
+                choiceForms.push(<InputGroup  key={i}>
+                        <InputGroup.Addon>
+                            <input type="radio" name="rightGroup" ref={part => {
+                                this['right-' + i] = part
+                            }}/>
+                        </InputGroup.Addon>
+                        <FormControl ref={part => {
                             this['form-' + i] = part
                         }}/>
+                    </InputGroup>
                 );
             }
 

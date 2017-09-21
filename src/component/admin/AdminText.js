@@ -292,8 +292,14 @@ class QuestionPart extends React.Component {
 
 class ChoicePart extends React.Component {
     render() {
+        const words = [];
+
+        this.props.choiceVariants.map(variant => {
+            words.push(variant.title);
+        });
+
         return <div className="admin-choice-part">
-            {this.props.choiceVariants}
+            {words.join(', ')}
 
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon

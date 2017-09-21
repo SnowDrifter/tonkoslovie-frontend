@@ -11,6 +11,7 @@ import {
     ButtonGroup,
     Modal,
     Form,
+    InputGroup,
     Jumbotron,
     Glyphicon,
     ToggleButtonGroup,
@@ -78,7 +79,10 @@ class EditPartModal extends React.Component {
             const choiceCount = this.state.choiceVariants.length;
 
             for (let i = 0; i < choiceCount; i++) {
-                choiceVariants.push(ReactDOM.findDOMNode(this['form-' + i]).value);
+                let choiceVariant = {};
+                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
+                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                choiceVariants.push(choiceVariant);
             }
 
             textPart.choiceVariants = choiceVariants;
@@ -134,13 +138,16 @@ class EditPartModal extends React.Component {
             const choiceForms = [];
 
             this.state.choiceVariants.map((value, index) => {
-                choiceForms.push(<FormControl
-                        key={index}
-                        ref={part => {
+                choiceForms.push(<InputGroup  key={index}>
+                        <InputGroup.Addon>
+                            <input type="radio" name="rightGroup" ref={part => {
+                                this['right-' + index] = part
+                            }} defaultChecked={value.right}/>
+                        </InputGroup.Addon>
+                        <FormControl ref={part => {
                             this['form-' + index] = part
-                        }}
-                        defaultValue={value}
-                    />
+                        }}  defaultValue={value.title}/>
+                    </InputGroup>
                 );
             });
 
