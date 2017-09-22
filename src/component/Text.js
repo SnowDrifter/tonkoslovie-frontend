@@ -74,7 +74,15 @@ class LessonText extends React.Component {
                 answer = answer.trim().toLowerCase();
 
                 if (answer == part.data.toLowerCase()) {
-                    part.ok = true;
+                    part.success = true;
+                } else {
+                    part.error = true;
+                }
+            } if (part.type == partTypes.CHOICE) {
+                let answer = ReactDOM.findDOMNode(this['form-' + index]).value;
+
+                if(this.checkChoiceVariant(answer, part.choiceVariants)) {
+                    part.success = true;
                 } else {
                     part.error = true;
                 }
@@ -82,6 +90,14 @@ class LessonText extends React.Component {
         });
 
         this.setState({textParts: textParts});
+    }
+
+    checkChoiceVariant(currentVariant, variants) {
+       return variants.some(value => {
+            if(value.title == currentVariant) {
+                return !!value.right;
+            }
+        });
     }
 
     render() {
@@ -99,11 +115,11 @@ class LessonText extends React.Component {
                 case partTypes.QUESTION: {
                     let validateState;
                     let disabled = false;
-                    if (part.ok) {
+                    if (part.success) {
                         validateState = "success";
                         disabled = true;
                     } else if (part.error) {
-                        validateState = "error"
+                        validateState = "error";
                     }
 
                     components.push(<FormGroup key={index} validationState={validateState} className="text-part">
@@ -111,13 +127,44 @@ class LessonText extends React.Component {
                             ref={part => {
                                 this['form-' + index] = part
                             }}
-                            style={{width: part.data.length * 15}}
+                            style={{width: part.data.length * 15 + 15}}
                             type="text"
                             bsSize="small"
                             disabled={disabled}
                             placeholder={part.placeholder}
+                            maxLength={part.data.length}
                         />
                         <FormControl.Feedback />
+                    </FormGroup>);
+                    break;
+                }
+                case partTypes.CHOICE: {
+                    const variants = [];
+                    variants.push(<option key={-1} value="-1">Выберите правильный вариант</option>);
+
+                    part.choiceVariants.map((value, index) => {
+                        variants.push(<option key={index} value={value.title}>{value.title}</option>);
+                    });
+
+                    let validateState;
+                    let disabled = false;
+                    if (part.success) {
+                        validateState = "success";
+                        disabled = true;
+                    } else if (part.error) {
+                        validateState = "error"
+                    }
+
+                    components.push( <FormGroup  validationState={validateState} key={index}>
+                        <FormControl componentClass="select"
+                                     placeholder="select"
+                                     bsSize="small"
+                                     disabled={disabled}
+                                     ref={part => {
+                                         this['form-' + index] = part
+                                     }}>
+                            {variants}
+                        </FormControl>
                     </FormGroup>);
                     break;
                 }
