@@ -39,7 +39,7 @@ class EditPartModal extends React.Component {
     }
 
     decreaseChoicesCount() {
-        if (this.state.choicesCount > 1) {
+        if (this.state.choiceVariants.length > 1) {
             let choiceVariants = this.state.choiceVariants;
             choiceVariants.pop();
             this.setState({choiceVariants: choiceVariants})
@@ -60,9 +60,9 @@ class EditPartModal extends React.Component {
     }
 
     saveTextPart() {
-        let textPart = this.props.currentPart;
         let type = this.state.type || this.props.currentPart.type;
 
+        let textPart = this.props.currentPart;
         textPart.type = type;
 
         if (type == partTypes.TEXT) {
@@ -138,7 +138,7 @@ class EditPartModal extends React.Component {
             const choiceForms = [];
 
             this.state.choiceVariants.map((value, index) => {
-                choiceForms.push(<InputGroup  key={index}>
+                choiceForms.push(<InputGroup key={index} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
                                 this['right-' + index] = part

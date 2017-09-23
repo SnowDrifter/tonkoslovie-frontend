@@ -31,9 +31,9 @@ class CreatePartModal extends React.Component {
     }
 
     saveTextPart() {
-        let textPart = {};
         let type = this.state.type;
 
+        let textPart = {};
         textPart.type = type;
 
         if (type == partTypes.TEXT) {
@@ -46,17 +46,22 @@ class CreatePartModal extends React.Component {
         }
 
         if (type == partTypes.CHOICE) {
-            const choiceVariants = [];
-            const choiceCount = this.state.choicesCount;
+            if (this.checkRightAnswer()) {
+                const choiceVariants = [];
+                const choiceCount = this.state.choicesCount;
 
-            for (let i = 0; i < choiceCount; i++) {
-                let choiceVariant = {};
-                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
-                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
-                choiceVariants.push(choiceVariant);
+                for (let i = 0; i < choiceCount; i++) {
+                    let choiceVariant = {};
+                    choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
+                    choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                    choiceVariants.push(choiceVariant);
+                }
+
+                textPart.choiceVariants = choiceVariants;
+            } else {
+                alert("Необходим хотя бы один правильный ответ");
+                return;
             }
-
-            textPart.choiceVariants = choiceVariants;
         }
 
         this.props.saveTextPart(null, textPart);
@@ -79,6 +84,18 @@ class CreatePartModal extends React.Component {
             choicesCount--;
             this.setState({choicesCount: choicesCount});
         }
+    }
+
+    checkRightAnswer() {
+        const choiceCount = this.state.choicesCount;
+
+        for (let i = 0; i < choiceCount; i++) {
+            if (ReactDOM.findDOMNode(this['right-' + i]).checked) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     render() {
@@ -120,7 +137,7 @@ class CreatePartModal extends React.Component {
             const choiceCount = this.state.choicesCount;
 
             for (let i = 0; i < choiceCount; i++) {
-                choiceForms.push(<InputGroup  key={i}>
+                choiceForms.push(<InputGroup key={i} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
                                 this['right-' + i] = part
