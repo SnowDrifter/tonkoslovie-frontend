@@ -1,5 +1,6 @@
 import App from './container/App.js';
 import Registration from "./component/Registration.js";
+import Err500 from "./component/Err500.js";
 import Err404 from "./component/Err404.js";
 import Err403 from "./component/Err403.js";
 import Lessons from "./container/Lessons.js";
@@ -45,6 +46,7 @@ render((
                     <Route path="/contacts" component={Contacts}/>
                     <Route path="/about" component={About}/>
                     <Route path="/accessDenied" component={Err403}/>
+                    <Route path="/500" component={Err500}/>
                     <Route path="*" component={Err404} status={404}/>
                 </Route>
             </Router>

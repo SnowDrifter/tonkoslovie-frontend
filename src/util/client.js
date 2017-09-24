@@ -20,10 +20,14 @@ let client;
     client.interceptors.response.use(null, function (error) {
         let response = error.response;
 
-        if (response.status === 403) {
+        if(error.message == "Network Error") {
+            browserHistory.push("/500");
+        } else if (response.status === 403) {
             localStorage.removeItem('token');
             window.location.reload();
             browserHistory.push("/");
+        } else if (response.status >= 500) {
+            browserHistory.push("/500");
         }
 
         return Promise.reject(error);

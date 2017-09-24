@@ -8,7 +8,7 @@ class Home extends React.Component {
             <Helmet title="Главная  | Тонкословие"/>
 
             <Jumbotron>
-                <h1 style={{textAlign: "center"}}>ÞΣԿb †﻿Ø|-|ҠØᛈ/\ØβUମ ∏Ø/\bᛈҠØՐØ</h1>
+                <h1 style={{textAlign: "center"}}>ÞΣԿb †﻿ØĤҠØϾ/\ØβUମ ∏Ø/\bϾҠØՐØ</h1>
             </Jumbotron>
         </div>
     }
