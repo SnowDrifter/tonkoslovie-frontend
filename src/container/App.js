@@ -10,10 +10,18 @@ import {Link} from 'react-router'
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            expandNavbar: false
+        };
     };
 
     logout() {
         this.props.actions.logout();
+    }
+
+    toggleExpandNavbar(){
+        this.setState({expandNavbar: !this.state.expandNavbar});
     }
 
     render() {
@@ -21,34 +29,39 @@ class App extends React.Component {
 
         return (
             <div>
-                <Navbar>
+                <Navbar inverse
+                        onToggle={this.toggleExpandNavbar.bind(this)}
+                        expanded={this.state.expandNavbar}>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <Link to="/"> Главная</Link>
                         </Navbar.Brand>
+                        <Navbar.Toggle />
                     </Navbar.Header>
 
-                    <Nav>
-                        <LinkContainer to="/lessons">
-                            <NavItem>Уроки</NavItem>
-                        </LinkContainer>
-                        <LinkContainer to="/about">
-                            <NavItem>О проекте</NavItem>
-                        </LinkContainer>
-                        <LinkContainer to="/contacts">
-                            <NavItem>Контакты</NavItem>
-                        </LinkContainer>
-                    </Nav>
-                    <Nav pullRight>
-                        <LinkContainer to="/registration">
-                            <NavItem className={isAuthenticated ? 'hidden' : ''}>Регистрация</NavItem>
-                        </LinkContainer>
-                        <NavItem onClick={this.props.actions.showLogin}
-                                 className={isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
+                    <Navbar.Collapse>
+                        <Nav>
+                            <LinkContainer to="/lessons">
+                                <NavItem>Уроки</NavItem>
+                            </LinkContainer>
+                            <LinkContainer to="/about">
+                                <NavItem>О проекте</NavItem>
+                            </LinkContainer>
+                            <LinkContainer to="/contacts">
+                                <NavItem>Контакты</NavItem>
+                            </LinkContainer>
+                        </Nav>
+                        <Nav pullRight>
+                            <LinkContainer to="/registration">
+                                <NavItem className={isAuthenticated ? 'hidden' : ''}>Регистрация</NavItem>
+                            </LinkContainer>
+                            <NavItem onClick={this.props.actions.showLogin}
+                                     className={isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
 
-                            <NavItem onClick={this.logout.bind(this)}
-                                     className={isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
-                    </Nav>
+                                <NavItem onClick={this.logout.bind(this)}
+                                         className={isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
+                        </Nav>
+                    </Navbar.Collapse>
                 </Navbar>
 
                 <Login/>
