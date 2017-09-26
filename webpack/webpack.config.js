@@ -65,7 +65,7 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 'API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
-                'NGINX_ENDPOINT': JSON.stringify(process.env.NGINX_ENDPOINT),
+                "MEDIA_ENDPOINT": JSON.stringify(process.env.MEDIA_ENDPOINT),
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         })

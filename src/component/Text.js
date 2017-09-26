@@ -111,9 +111,10 @@ class LessonText extends React.Component {
             soundComponent = <div className="center-block">
                 <h4>Прослушать текст</h4>
                 <ReactPlayer
+                    width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    url={process.env.MEDIA_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
             </div>
         }
 
@@ -121,10 +122,10 @@ class LessonText extends React.Component {
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-            <Jumbotron style={{textAlign: "justify"}}>
+            <Jumbotron className="text-body" style={{textAlign: "justify"}}>
                 <form className="form-inline">
                     {components}
-                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
+                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="text-check-button pull-right"
                             bsStyle="success">Проверить</Button>
                 </form>
             </Jumbotron>

@@ -1,6 +1,6 @@
 import React from "react";
 import client from "../util/client";
-import {ListGroupItem, ListGroup, Panel} from "react-bootstrap";
+import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
 import style from './Lessons.less'
@@ -30,23 +30,25 @@ class Lessons extends React.Component {
     }
 
     render() {
-        let texts = [];
+        let lessonPreviews = [];
 
         const lessons = this.state.lessons.sort(function (a, b) {
             return a.title.localeCompare(b.title);
         });
 
         lessons.map((lesson, index) => {
-            const preview = lesson.previewImage ?
-                <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage}/> : null;
+            const preview = lesson.previewImage ? <Image className="lesson-preview" src={process.env.MEDIA_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage} thumbnail/> : null;
 
-            texts.push(
-                <Link key={index} to={"/lesson/" + lesson.id}>
+            lessonPreviews.push(
+                <Link className="lesson" key={index} to={"/lesson/" + lesson.id}>
                     <li>
+                        <div className="lesson-image-wrapper">
                         {preview}
-                        <h3>{lesson.title}</h3>
-                        <p>{lesson.annotation}</p>
+                        </div>
+                        <h3 className="lesson-title">{lesson.title}</h3>
+                        <p className="lesson-annotation">{lesson.annotation}</p>
                     </li>
+                    <hr/>
                 </Link>)
         });
 
@@ -55,7 +57,7 @@ class Lessons extends React.Component {
 
             <Panel header="Уроки">
                 <ul className="lessons-list">
-                    {texts}
+                    {lessonPreviews}
                 </ul>
             </Panel>
         </div>

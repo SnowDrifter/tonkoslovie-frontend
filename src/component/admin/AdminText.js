@@ -197,9 +197,10 @@ class Text extends React.Component {
             soundComponent = <div>
                 <h4>Звуковая дорожка</h4>
                 <ReactPlayer
+                    width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    url={process.env.MEDIA_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
                 <Button onClick={this.deleteSoundFile.bind(this)}>Удалить дорожку</Button>
             </div>
         } else {

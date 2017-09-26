@@ -220,7 +220,7 @@ class Lesson extends React.Component {
         if (this.state.previewFileName) {
             previewComponent = <div>
                 <h4>Превью</h4>
-                <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + this.state.previewFileName}/>
+                <img src={process.env.MEDIA_ENDPOINT + '/tonkoslovie/images/200_200-' + this.state.previewFileName}/>
                 <br/>
                 <Button onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>
