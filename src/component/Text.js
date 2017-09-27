@@ -125,7 +125,8 @@ class LessonText extends React.Component {
             <Jumbotron className="text-body" style={{textAlign: "justify"}}>
                 <form className="form-inline">
                     {components}
-                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="text-check-button pull-right"
+                    <br/>
+                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
                             bsStyle="success">Проверить</Button>
                 </form>
             </Jumbotron>
@@ -157,6 +158,22 @@ class QuestionPart extends React.Component {
         }
     }
 
+    calculateInputLength(part) {
+        if(part.data.length > part.placeholder.length) {
+            if(part.data.length <= 3) {
+                return 70;
+            } else {
+                return (part.data.length  + 1) * 8 + 10;
+            }
+        } else {
+            if(part.placeholder.length <= 3) {
+                return 70;
+            } else {
+                return (part.placeholder.length  + 1) * 8 + 10;
+            }
+        }
+    }
+
     render() {
         const part = this.props.part;
         let validateState;
@@ -169,18 +186,19 @@ class QuestionPart extends React.Component {
             validateState = "error";
         }
 
-        return <FormGroup validationState={validateState} className="text-part">
+        return <FormGroup className="text-part" validationState={validateState}>
             <FormControl
                 ref={part => {
                     this['form-' + this.props.index] = part
                 }}
-                style={{width: part.data.length * 15 + 15}}
+                style={{width: this.calculateInputLength(part)}}
                 type="text"
                 bsSize="small"
                 disabled={disabled}
                 placeholder={part.placeholder}
                 maxLength={part.data.length}
             />
+            <FormControl.Feedback />
         </FormGroup>;
     }
 }
@@ -226,7 +244,7 @@ class ChoicePart extends React.Component {
             validateState = "error"
         }
 
-        return <FormGroup validationState={validateState}>
+        return <FormGroup className="text-part" validationState={validateState}>
             <FormControl componentClass="select"
                          bsSize="small"
                          disabled={disabled}
