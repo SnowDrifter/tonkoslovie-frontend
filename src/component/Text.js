@@ -181,7 +181,6 @@ class QuestionPart extends React.Component {
                 placeholder={part.placeholder}
                 maxLength={part.data.length}
             />
-            <FormControl.Feedback />
         </FormGroup>;
     }
 }

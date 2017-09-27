@@ -3,11 +3,28 @@
   margin: 2px 5px;
 }
 
+.text-body {
+  padding-bottom: 60px;
+}
+
 // Fix default bootstrap padding
 .has-feedback .form-control {
   padding-right: 5px !important;
 }
 
-.text-body {
-  padding-bottom: 60px;
+// Force form-inline for mobile
+@media (max-width: 767px) {
+  .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
 }
