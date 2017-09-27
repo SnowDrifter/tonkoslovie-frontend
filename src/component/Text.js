@@ -126,7 +126,7 @@ class LessonText extends React.Component {
                 <form className="form-inline">
                     {components}
                     <br/>
-                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
+                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="text-check-button pull-right"
                             bsStyle="success">Проверить</Button>
                 </form>
             </Jumbotron>
