@@ -125,8 +125,8 @@ class LessonText extends React.Component {
             <Jumbotron className="text-body" style={{textAlign: "justify"}}>
                 <form className="form-inline">
                     {components}
-                    <br/>
-                    <Button type="submit" onClick={this.checkAnswers.bind(this)} className="text-check-button pull-right"
+                    <br style={{lineHeight: "40px"}}/>
+                    <Button bsSize="large" type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
                             bsStyle="success">Проверить</Button>
                 </form>
             </Jumbotron>
@@ -198,7 +198,6 @@ class QuestionPart extends React.Component {
                 placeholder={part.placeholder}
                 maxLength={part.data.length}
             />
-            <FormControl.Feedback />
         </FormGroup>;
     }
 }
