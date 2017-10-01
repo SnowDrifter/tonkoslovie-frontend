@@ -4,15 +4,7 @@ import {browserHistory} from 'react-router'
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
     Button,
-    Modal,
-    Form,
     Glyphicon,
     ButtonGroup,
     ButtonToolbar

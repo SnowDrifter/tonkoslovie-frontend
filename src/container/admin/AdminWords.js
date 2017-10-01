@@ -3,15 +3,7 @@ import client from "../../util/client";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
     Button,
-    Modal,
-    Form,
     Glyphicon,
     ButtonGroup,
     ButtonToolbar
@@ -138,7 +130,7 @@ class Words extends React.Component {
                 </Table>
 
                 <br/>
-                <Button onClick={this.showAddWord.bind(this)} bsStyle="success">Добавить слово</Button>
+                <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
 
                 <Word showModal={this.state.showModal}
                       modalTitle={this.state.modalTitle}

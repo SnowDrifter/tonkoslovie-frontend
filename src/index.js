@@ -15,6 +15,8 @@ import AdminTexts from "./container/admin/AdminTexts.js";
 import AdminText from "./component/admin/AdminText.js";
 import AdminLessons from "./container/admin/AdminLessons.js";
 import AdminLesson from "./component/admin/AdminLesson.js";
+import AdminExercise from "./component/admin/AdminExercise.js";
+import AdminExercises from "./container/admin/AdminExercises.js";
 import React from 'react'
 import {render} from 'react-dom'
 import {Router, IndexRoute, Route, Link, browserHistory} from 'react-router'
@@ -39,6 +41,8 @@ render((
                         <Route path="/admin/texts" component={AdminTexts}/>
                         <Route path="/admin/lessons" component={AdminLessons}/>
                         <Route path="/admin/lesson(/:lessonId)" component={AdminLesson}/>
+                        <Route path="/admin/exercises" component={AdminExercises}/>
+                        <Route path="/admin/exercise(/:exerciseId)" component={AdminExercise}/>
                     </Route>
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson(/:lessonId)" component={Lesson}/>

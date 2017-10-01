@@ -2,71 +2,68 @@ import React from "react";
 import client from "../../util/client";
 import {browserHistory} from 'react-router'
 import {Table, Column, Cell} from "fixed-data-table-2";
-import "fixed-data-table-2/dist/fixed-data-table.css";
 import {
     Button,
     Glyphicon,
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
 
 
-class Texts extends React.Component {
+class AdminExercises extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            texts: []
+            exercises: []
         };
 
-        this.deleteText = this.deleteText.bind(this);
-        this.editText = this.editText.bind(this);
-        this.updateTexts = this.updateTexts.bind(this);
+        this.deleteLExercise = this.deleteLExercise.bind(this);
+        this.editExercise = this.editExercise.bind(this);
+        this.updateExercises = this.updateExercises.bind(this);
     }
 
-    componentDidMount(){
-        this.updateTexts();
+    componentDidMount() {
+        this.updateExercises();
     }
 
-    updateTexts() {
-        client.get('/api/content/texts')
+    updateExercises() {
+        client.get('/api/content/exercises')
             .then(response => {
-                const texts = response.data;
-                this.setState({texts: texts})
+                const exercises = response.data;
+                this.setState({exercises: exercises})
             });
     }
 
-    deleteText(textId) {
-        if(confirm("Удалить текст №" + textId + "?")) {
-            client.delete('/api/content/text', {
+    deleteLExercise(exerciseId) {
+        if (confirm("Удалить упражнение №" + exerciseId + "?")) {
+            client.delete('/api/content/exercise', {
                 params: {
-                    id: textId
+                    id: exerciseId
                 }
             }).then(() => {
-                this.updateTexts();
+                this.updateExercises();
             });
         }
     }
 
-    addNewText() {
-         browserHistory.push("/admin/text")
+    addNewExercise() {
+        browserHistory.push("/admin/exercise")
     }
 
-    editText(text) {
-        browserHistory.push("/admin/text/" + text.id);
+    editExercise(exercise) {
+        browserHistory.push("/admin/exercise/" + exercise.id);
     }
 
     render() {
-        let texts = this.state.texts;
+        let exercises = this.state.exercises;
 
-        return (
-            <div>
+
+        return (<div>
                 <Table
                     rowHeight={50}
-                    rowsCount={texts.length}
+                    rowsCount={exercises.length}
                     width={1140}
                     height={600}
                     headerHeight={30}>
@@ -74,7 +71,7 @@ class Texts extends React.Component {
                     <Column
                         header={<Cell>№</Cell>}
                         cell={({rowIndex}) => (
-                            <Cell>{texts[rowIndex].id}</Cell>
+                            <Cell>{exercises[rowIndex].id}</Cell>
                         )}
                         fixed={true}
                         width={80}
@@ -84,7 +81,7 @@ class Texts extends React.Component {
                         header={<Cell>Название</Cell>}
                         cell={({rowIndex}) => (
                             <Cell>
-                                {texts[rowIndex].title}
+                                {exercises[rowIndex].title}
                             </Cell>
                         )}
                         flexGrow={1}
@@ -96,11 +93,8 @@ class Texts extends React.Component {
                             <Cell>
                                 <ButtonToolbar>
                                     <ButtonGroup>
-                                        <Button onClick={() => this.editText(texts[rowIndex])} bsSize="small"><Glyphicon
-                                            glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
-                                                className="pull-right" bsStyle="danger"> <Glyphicon
-                                            glyph="remove"/></Button>
+                                        <Button onClick={() => this.editExercise(exercises[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
+                                        <Button bsSize="small" onClick={() => this.deleteLExercise(exercises[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
                                     </ButtonGroup>
                                 </ButtonToolbar>
                             </Cell>
@@ -109,11 +103,11 @@ class Texts extends React.Component {
                     />
                 </Table>
                 <br/>
-                <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
+                <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
 
             </div>
         );
     }
 }
 
-export default Texts
+export default AdminExercises;
