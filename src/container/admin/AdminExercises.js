@@ -78,10 +78,10 @@ class AdminExercises extends React.Component {
                     />
 
                     <Column
-                        header={<Cell>Название</Cell>}
+                        header={<Cell>Оригинал</Cell>}
                         cell={({rowIndex}) => (
                             <Cell>
-                                {exercises[rowIndex].title}
+                                {exercises[rowIndex].original}
                             </Cell>
                         )}
                         flexGrow={1}
