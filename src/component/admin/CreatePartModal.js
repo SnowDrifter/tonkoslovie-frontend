@@ -134,9 +134,8 @@ class CreatePartModal extends React.Component {
             </div>
         } else if (type == partTypes.CHOICE) {
             const choiceForms = [];
-            const choiceCount = this.state.choicesCount;
 
-            for (let i = 0; i < choiceCount; i++) {
+            for (let i = 0; i < this.state.choicesCount; i++) {
                 choiceForms.push(<InputGroup key={i} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {

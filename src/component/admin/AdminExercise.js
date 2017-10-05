@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import style from './AdminExercise.less'
 import client from "../../util/client";
+import * as  exerciseTypes from "../ExerciseTypes";
 
 
 class AdminExercise extends React.Component {
@@ -25,12 +26,15 @@ class AdminExercise extends React.Component {
             id: null,
             type: null,
             original: null,
-            answersCount: 1,
+            answersCount: 0,
             answers: []
         };
 
         if (this.props.params.exerciseId) {
             this.loadExercise(this.props.params.exerciseId)
+        } else {
+            // Fix empty default value in first answer input
+            this.setState({answersCount: 1});
         }
     }
 
@@ -51,6 +55,7 @@ class AdminExercise extends React.Component {
             });
 
             ReactDOM.findDOMNode(this.original).value = exercise.original;
+            ReactDOM.findDOMNode(this.type).value = exercise.type;
         })
     }
 
@@ -64,8 +69,9 @@ class AdminExercise extends React.Component {
         client.post('/api/content/exercise', {
             id: this.state.id,
             original: ReactDOM.findDOMNode(this.original).value,
-            answers: answers
-        }).then((response) => {
+            answers: answers,
+            type: ReactDOM.findDOMNode(this.type).value
+        }).then(response => {
             this.setState({
                 id: response.data.id,
             });
@@ -101,13 +107,21 @@ class AdminExercise extends React.Component {
 
         return (<Panel>
                 <Jumbotron>
-                    <h3>Оригинал</h3>
+                    <h4>Оригинал</h4>
                     <FormGroup>
                         <FormControl
                             inputRef={original => {
                                 this.original = original
                             }}
                         />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
+                        <FormControl componentClass="select" ref={part => {this['type'] = part}}>
+                            <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
+                            <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
+                        </FormControl>
                     </FormGroup>
 
                     <div className="admin-exercise-answer-panel">
