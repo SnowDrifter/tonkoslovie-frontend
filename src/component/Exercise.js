@@ -10,8 +10,10 @@ import {
     Button
 } from "react-bootstrap";
 import DOMPurify from 'dompurify'
+import style from './Exercise.less'
 import Helmet from "react-helmet";
 import {Link} from 'react-router'
+
 import * as  exerciseTypes from "./ExerciseTypes";
 
 class Exercise extends React.Component {
@@ -23,10 +25,14 @@ class Exercise extends React.Component {
             id: null,
             type: null,
             original: null,
+            hint: null,
             answersCount: 0,
             answers: [],
             loaded: false,
-            failed: false
+            failed: false,
+            showAnswer: false,
+            validationState: null,
+            suggestShowAnswer: false
         };
 
         this.loadExercise(this.props.params.exerciseId)
@@ -46,6 +52,7 @@ class Exercise extends React.Component {
                 id: exercise.id,
                 type: exercise.type,
                 original: exercise.original,
+                hint: exercise.hint,
                 answersCount: answersCount,
                 answers:  exercise.answers || [],
                 loaded: true
@@ -59,7 +66,18 @@ class Exercise extends React.Component {
     }
 
     checkAnswer() {
-        alert(ReactDOM.findDOMNode(this.answer).value);
+        const currentAnswer = ReactDOM.findDOMNode(this.answer).value.trim().toLowerCase();
+        let answerIsCorrect = false;
+        this.state.answers.map((answer) => {
+            if(answer.toLowerCase() == currentAnswer) {
+                this.setState({validationState: "success", suggestShowAnswer: true});
+                answerIsCorrect = true;
+            }
+        });
+
+        if(!answerIsCorrect) {
+            this.setState({validationState: "error", suggestShowAnswer: true});
+        }
     }
 
     render() {
@@ -80,13 +98,22 @@ class Exercise extends React.Component {
             }
         }
 
+        let showAnswerComponent;
+        if(this.state.suggestShowAnswer) {
+            showAnswerComponent = <div>
+                <Button onClick={()=> this.setState({showAnswer: !this.state.showAnswer})}>Посмотреть возможный вариант ответа</Button>
+                <Panel className="exercise-answer-panel" collapsible expanded={this.state.showAnswer}>{this.state.answers[0]}</Panel>
+            </div>
+        }
+
         const content = <Panel>
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{pageHeader}</PageHeader>
             <h3>{taskText}</h3>
-            <h4>{this.state.original}</h4>
+            <h4><div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}></div></h4>
 
-            <FormGroup>
+            <FormGroup
+                validationState={this.state.validationState}>
                 <FormControl
                     componentClass="textarea"
                     inputRef={answer => {
@@ -96,8 +123,12 @@ class Exercise extends React.Component {
                 />
             </FormGroup>
 
+            <p>Подсказка: {this.state.hint}</p>
+
             <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} className="pull-right"
                     bsStyle="success">Проверить</Button>
+
+            {showAnswerComponent}
         </Panel>;
 
         if (this.state.loaded) {

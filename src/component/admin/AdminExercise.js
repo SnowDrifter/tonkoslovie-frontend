@@ -16,6 +16,11 @@ import style from './AdminExercise.less'
 import client from "../../util/client";
 import * as  exerciseTypes from "../ExerciseTypes";
 
+import {Editor} from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import {convertToRaw, ContentState, convertFromHTML, EditorState} from 'draft-js';
+
 
 class AdminExercise extends React.Component {
 
@@ -25,7 +30,8 @@ class AdminExercise extends React.Component {
         this.state = {
             id: null,
             type: null,
-            original: null,
+            original: EditorState.createEmpty(),
+            hint: null,
             answersCount: 0,
             answers: []
         };
@@ -36,6 +42,8 @@ class AdminExercise extends React.Component {
             // Fix empty default value in first answer input
             this.setState({answersCount: 1});
         }
+
+        this.handleOriginalChange = this.handleOriginalChange.bind(this);
     }
 
     loadExercise(exerciseId) {
@@ -48,14 +56,22 @@ class AdminExercise extends React.Component {
 
             const answersCount = exercise.answers ? exercise.answers.length : 1;
 
+            const blocksFromHTML = convertFromHTML(exercise.original);
+            const contentState = ContentState.createFromBlockArray(
+                blocksFromHTML.contentBlocks,
+                blocksFromHTML.entityMap
+            );
+
             this.setState({
                 id: exercise.id,
                 answersCount: answersCount,
-                answers:  exercise.answers || []
+                original: EditorState.createWithContent(contentState),
+                answers: exercise.answers || []
             });
 
-            ReactDOM.findDOMNode(this.original).value = exercise.original;
+            // ReactDOM.findDOMNode(this.original).value = exercise.original;
             ReactDOM.findDOMNode(this.type).value = exercise.type;
+            ReactDOM.findDOMNode(this.hint).value = exercise.hint;
         })
     }
 
@@ -68,7 +84,8 @@ class AdminExercise extends React.Component {
 
         client.post('/api/content/exercise', {
             id: this.state.id,
-            original: ReactDOM.findDOMNode(this.original).value,
+            original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
+            hint: ReactDOM.findDOMNode(this.hint).value,
             answers: answers,
             type: ReactDOM.findDOMNode(this.type).value
         }).then(response => {
@@ -78,6 +95,12 @@ class AdminExercise extends React.Component {
 
             alert("Сохранено");
         })
+    }
+
+    handleOriginalChange(original) {
+        this.setState({
+            original: original
+        });
     }
 
     increaseAnswersCount() {
@@ -107,11 +130,23 @@ class AdminExercise extends React.Component {
 
         return (<Panel>
                 <Jumbotron>
+
                     <h4>Оригинал</h4>
+                    <Panel>
+                        <Editor
+                            editorState={this.state.original}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onEditorStateChange={this.handleOriginalChange}
+                        />
+                    </Panel>
+
                     <FormGroup>
+                        <ControlLabel><h4>Подсказка</h4></ControlLabel>
                         <FormControl
-                            inputRef={original => {
-                                this.original = original
+                            inputRef={hint => {
+                                this.hint = hint
                             }}
                         />
                     </FormGroup>
