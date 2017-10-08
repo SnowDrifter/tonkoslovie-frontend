@@ -81,7 +81,7 @@ class AdminExercises extends React.Component {
                         header={<Cell>Оригинал</Cell>}
                         cell={({rowIndex}) => (
                             <Cell>
-                                {exercises[rowIndex].original}
+                                {exercises[rowIndex].original.replace(/<\/?[^>]+(>|$)/g, "").replace("&nbsp;", " ")}
                             </Cell>
                         )}
                         flexGrow={1}

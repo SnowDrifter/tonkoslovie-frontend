@@ -1,19 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import client from "../util/client";
-import {
-    Panel,
-    PageHeader,
-    Jumbotron,
-    FormGroup,
-    FormControl,
-    Button
-} from "react-bootstrap";
-import DOMPurify from 'dompurify'
-import style from './Exercise.less'
+import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
+import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import {Link} from 'react-router'
-
+import {Link, browserHistory} from "react-router";
+import style from './Exercise.less'
 import * as  exerciseTypes from "./ExerciseTypes";
 
 class Exercise extends React.Component {
@@ -35,7 +27,9 @@ class Exercise extends React.Component {
             suggestShowAnswer: false
         };
 
-        this.loadExercise(this.props.params.exerciseId)
+        this.loadExercise(this.props.params.exerciseId);
+
+        this.loadNextExercise = this.loadNextExercise.bind(this);
     }
 
     loadExercise(exerciseId) {
@@ -80,8 +74,41 @@ class Exercise extends React.Component {
         }
     }
 
+    loadNextExercise(newCycle) {
+        let excludeExercises = [];
+
+        if(!newCycle) {
+            excludeExercises = [this.props.params.exerciseId];
+            if(window.sessionStorage.getItem("loadedExercises")) {
+                let oldExercises = JSON.parse(window.sessionStorage.getItem("loadedExercises"));
+                excludeExercises = excludeExercises.concat(oldExercises);
+            }
+            window.sessionStorage.setItem("loadedExercises", JSON.stringify(excludeExercises));
+        } else {
+            window.sessionStorage.removeItem("loadedExercises");
+        }
+
+        client.get('/api/content/exercise/randomId', {
+            params: {
+                excludeIds: excludeExercises.join(',')
+            }
+        }).then(response => {
+            const nextExerciseId = response.data.id;
+
+            if(nextExerciseId) {
+                browserHistory.push("/exercise/" + nextExerciseId);
+                window.location.reload();
+            } else{
+                // TODO: add pretty modal
+                if (confirm("Новые упражнения закончились, начать заново?")) {
+                    this.loadNextExercise(true);
+                }
+            }
+        })
+    }
+
     render() {
-        let title = "Тонкословие"; // TODO: create custom style
+        let title = "Упражнение | Тонкословие"; // TODO: create custom title
 
         let pageHeader;
         let taskText;
@@ -100,9 +127,9 @@ class Exercise extends React.Component {
 
         let showAnswerComponent;
         if(this.state.suggestShowAnswer) {
-            showAnswerComponent = <div>
+            showAnswerComponent = <div className="exercise-showAnswer-component">
                 <Button onClick={()=> this.setState({showAnswer: !this.state.showAnswer})}>Посмотреть возможный вариант ответа</Button>
-                <Panel className="exercise-answer-panel" collapsible expanded={this.state.showAnswer}>{this.state.answers[0]}</Panel>
+                <Panel className="exercise-showAnswer-panel" collapsible expanded={this.state.showAnswer}>{this.state.answers[0]}</Panel>
             </div>
         }
 
@@ -115,18 +142,23 @@ class Exercise extends React.Component {
             <FormGroup
                 validationState={this.state.validationState}>
                 <FormControl
+                    className="exercise-answer-form"
                     componentClass="textarea"
                     inputRef={answer => {
                         this.answer = answer
                     }}
                     placeholder="Введите ответ"
+                    rows={4}
                 />
             </FormGroup>
 
-            <p>Подсказка: {this.state.hint}</p>
+            {/*TODO: temp hide*/}
+            {/*<p>Подсказка: {this.state.hint}</p>*/}
 
             <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} className="pull-right"
                     bsStyle="success">Проверить</Button>
+
+            <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)}>Загрузить следующее упражнение</Button>
 
             {showAnswerComponent}
         </Panel>;
