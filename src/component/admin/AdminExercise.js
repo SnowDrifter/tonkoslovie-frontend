@@ -15,11 +15,10 @@ import {
 import style from './AdminExercise.less'
 import client from "../../util/client";
 import * as  exerciseTypes from "../ExerciseTypes";
-
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import draftToHtml from 'draftjs-to-html';
-import {convertToRaw, ContentState, convertFromHTML, EditorState} from 'draft-js';
+import {Editor} from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
+import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
 
 
 class AdminExercise extends React.Component {
@@ -31,7 +30,7 @@ class AdminExercise extends React.Component {
             id: null,
             type: null,
             original: EditorState.createEmpty(),
-            hint: null,
+            dictionary: EditorState.createEmpty(),
             answersCount: 0,
             answers: []
         };
@@ -44,6 +43,7 @@ class AdminExercise extends React.Component {
         }
 
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
+        this.handleDictionaryChange = this.handleDictionaryChange.bind(this);
     }
 
     loadExercise(exerciseId) {
@@ -56,22 +56,28 @@ class AdminExercise extends React.Component {
 
             const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-            const blocksFromHTML = convertFromHTML(exercise.original);
-            const contentState = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap
+            const originalBlocksFromHTML = convertFromHTML(exercise.original);
+            const originalState = ContentState.createFromBlockArray(
+                originalBlocksFromHTML.contentBlocks,
+                originalBlocksFromHTML.entityMap
+            );
+
+            const dictionaryBlocksFromHTML = convertFromHTML(exercise.dictionary);
+            const dictionaryState = ContentState.createFromBlockArray(
+                dictionaryBlocksFromHTML.contentBlocks,
+                dictionaryBlocksFromHTML.entityMap
             );
 
             this.setState({
                 id: exercise.id,
                 answersCount: answersCount,
-                original: EditorState.createWithContent(contentState),
+                original: EditorState.createWithContent(originalState),
+                dictionary: EditorState.createWithContent(dictionaryState),
                 answers: exercise.answers || []
             });
 
             // ReactDOM.findDOMNode(this.original).value = exercise.original;
             ReactDOM.findDOMNode(this.type).value = exercise.type;
-            ReactDOM.findDOMNode(this.hint).value = exercise.hint;
         })
     }
 
@@ -85,7 +91,7 @@ class AdminExercise extends React.Component {
         client.post('/api/content/exercise', {
             id: this.state.id,
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
-            hint: ReactDOM.findDOMNode(this.hint).value,
+            dictionary: draftToHtml(convertToRaw(this.state.dictionary.getCurrentContent())),
             answers: answers,
             type: ReactDOM.findDOMNode(this.type).value
         }).then(response => {
@@ -100,6 +106,13 @@ class AdminExercise extends React.Component {
     handleOriginalChange(original) {
         this.setState({
             original: original
+        });
+    }
+
+    handleDictionaryChange(dictionary) {
+        console.log(dictionary);
+        this.setState({
+            dictionary: dictionary
         });
     }
 
@@ -130,26 +143,21 @@ class AdminExercise extends React.Component {
 
         return (<Panel>
                 <Jumbotron>
-
                     <h4>Оригинал</h4>
                     <Panel>
                         <Editor
                             editorState={this.state.original}
-                            toolbarClassName="toolbarClassName"
-                            wrapperClassName="wrapperClassName"
-                            editorClassName="editorClassName"
                             onEditorStateChange={this.handleOriginalChange}
                         />
                     </Panel>
 
-                    <FormGroup>
-                        <ControlLabel><h4>Подсказка</h4></ControlLabel>
-                        <FormControl
-                            inputRef={hint => {
-                                this.hint = hint
-                            }}
+                    <h4>Словарь</h4>
+                    <Panel>
+                        <Editor
+                            editorState={this.state.dictionary}
+                            onEditorStateChange={this.handleDictionaryChange}
                         />
-                    </FormGroup>
+                    </Panel>
 
                     <FormGroup>
                         <ControlLabel><h4>Вариант перевода</h4></ControlLabel>

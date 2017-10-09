@@ -7,6 +7,8 @@ import Helmet from "react-helmet";
 import {Link, browserHistory} from "react-router";
 import style from './Exercise.less'
 import * as  exerciseTypes from "./ExerciseTypes";
+import SimpleConfirmModal from "./SimpleConfirmModal";
+import SimpleTextModal from "./SimpleTextModal";
 
 class Exercise extends React.Component {
 
@@ -17,19 +19,22 @@ class Exercise extends React.Component {
             id: null,
             type: null,
             original: null,
-            hint: null,
+            dictionary: null,
             answersCount: 0,
             answers: [],
             loaded: false,
             failed: false,
             showAnswer: false,
             validationState: null,
-            suggestShowAnswer: false
+            suggestShowAnswer: false,
+            showConfirmModal: false,
+            showDictionaryModal: false
         };
 
         this.loadExercise(this.props.params.exerciseId);
 
         this.loadNextExercise = this.loadNextExercise.bind(this);
+        this.hideModals = this.hideModals.bind(this);
     }
 
     loadExercise(exerciseId) {
@@ -46,7 +51,7 @@ class Exercise extends React.Component {
                 id: exercise.id,
                 type: exercise.type,
                 original: exercise.original,
-                hint: exercise.hint,
+                dictionary: exercise.dictionary,
                 answersCount: answersCount,
                 answers:  exercise.answers || [],
                 loaded: true
@@ -99,16 +104,21 @@ class Exercise extends React.Component {
                 browserHistory.push("/exercise/" + nextExerciseId);
                 window.location.reload();
             } else{
-                // TODO: add pretty modal
-                if (confirm("Новые упражнения закончились, начать заново?")) {
-                    this.loadNextExercise(true);
-                }
+                this.setState({showConfirmModal: true});
             }
         })
     }
 
+    hideModals() {
+        this.setState({showConfirmModal: false, showDictionaryModal: false});
+    }
+
+    showDictionaryModal() {
+        this.setState({showDictionaryModal: true});
+    }
+
     render() {
-        let title = "Упражнение | Тонкословие"; // TODO: create custom title
+        let title = "Упражнение | Тонкословие";
 
         let pageHeader;
         let taskText;
@@ -152,15 +162,22 @@ class Exercise extends React.Component {
                 />
             </FormGroup>
 
-            {/*TODO: temp hide*/}
-            {/*<p>Подсказка: {this.state.hint}</p>*/}
-
-            <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} className="pull-right"
-                    bsStyle="success">Проверить</Button>
-
-            <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)}>Загрузить следующее упражнение</Button>
+            <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} bsStyle="success">Проверить</Button>
+            {' '}
+            <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>
+            <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)} className="pull-right">Следующее упражнение</Button>
 
             {showAnswerComponent}
+
+            <SimpleConfirmModal showModal={this.state.showConfirmModal}
+                                hideModal={this.hideModals}
+                                confirmFunction={this.loadNextExercise}
+                                modalTitle="Новые упражнения закончились, начать заново?"/>
+
+            <SimpleTextModal showModal={this.state.showDictionaryModal}
+                             hideModal={this.hideModals}
+                             title="Словарь"
+                             text={this.state.dictionary}/>
         </Panel>;
 
         if (this.state.loaded) {
