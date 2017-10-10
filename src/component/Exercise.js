@@ -164,8 +164,9 @@ class Exercise extends React.Component {
 
             <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} bsStyle="success">Проверить</Button>
             {' '}
-            <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>
             <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)} className="pull-right">Следующее упражнение</Button>
+            <br className="exercise-button-separator"/>
+            <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>
 
             {showAnswerComponent}
 
