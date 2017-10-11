@@ -9,6 +9,7 @@ import style from './Exercise.less'
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleConfirmModal from "./SimpleConfirmModal";
 import SimpleTextModal from "./SimpleTextModal";
+import Loader from '../util/Loader';
 
 class Exercise extends React.Component {
 
@@ -186,7 +187,7 @@ class Exercise extends React.Component {
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Упражнение не найдено</h2></Jumbotron>;
         } else {
-            return null;
+            return <Loader/>;
         }
     }
 }
