@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../util/client";
+import client from "../../util/client";
 import {
     Panel,
     PageHeader,
@@ -10,6 +10,7 @@ import {
 import DOMPurify from 'dompurify'
 import Helmet from "react-helmet";
 import {Link} from 'react-router'
+import Loader from '../Loader';
 
 class Lesson extends React.Component {
 
@@ -78,7 +79,7 @@ class Lesson extends React.Component {
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Урок не найден</h2></Jumbotron>;
         } else {
-            return null;
+            return <Loader/>;
         }
     }
 }

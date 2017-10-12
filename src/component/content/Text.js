@@ -17,11 +17,12 @@ import {
     Row,
     Col
 } from "react-bootstrap";
-import client from "../util/client";
+import client from "../../util/client";
 import style from './Text.less'
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
+import Loader from '../Loader';
 
 class LessonText extends React.Component {
 
@@ -139,7 +140,7 @@ class LessonText extends React.Component {
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Текст не найден</h2></Jumbotron>;
         } else {
-            return null;
+            return <Loader/>;
         }
     }
 }

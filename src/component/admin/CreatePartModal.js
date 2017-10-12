@@ -17,7 +17,7 @@ import {
     ToggleButtonGroup,
     ToggleButton
 } from "react-bootstrap";
-import * as  partTypes from "../TextPartTypes";
+import * as  partTypes from "../content/TextPartTypes";
 
 class CreatePartModal extends React.Component {
 

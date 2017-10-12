@@ -21,7 +21,7 @@ import client from "../../util/client";
 import style from './AdminText.less'
 import EditPartModal from './EditPartModal'
 import CreatePartModal from './CreatePartModal'
-import * as partTypes from  '../TextPartTypes'
+import * as partTypes from  '../content/TextPartTypes'
 import ReactPlayer from 'react-player'
 
 class Text extends React.Component {

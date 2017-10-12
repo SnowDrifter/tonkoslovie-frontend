@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../util/client";
+import client from "../../util/client";
 import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import {Link, browserHistory} from "react-router";
 import style from './Exercise.less'
 import * as  exerciseTypes from "./ExerciseTypes";
-import SimpleConfirmModal from "./SimpleConfirmModal";
-import SimpleTextModal from "./SimpleTextModal";
-import Loader from '../util/Loader';
+import SimpleConfirmModal from "../SimpleConfirmModal";
+import SimpleTextModal from "../SimpleTextModal";
+import Loader from '../Loader';
 
 class Exercise extends React.Component {
 

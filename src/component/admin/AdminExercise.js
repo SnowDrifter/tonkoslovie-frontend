@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import style from './AdminExercise.less'
 import client from "../../util/client";
-import * as  exerciseTypes from "../ExerciseTypes";
+import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
