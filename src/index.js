@@ -6,6 +6,7 @@ import Err403 from "./component/Err403.js";
 import Lessons from "./container/content/Lessons.js";
 import Lesson from "./component/content/Lesson.js";
 import Text from "./component/content/Text.js";
+import ExerciseThemes from "./container/content/ExerciseThemes.js";
 import Exercise from "./component/content/Exercise.js";
 import Home from "./container/Home.js";
 import Contacts from "./container/Contacts.js";
@@ -16,8 +17,10 @@ import AdminTexts from "./container/admin/AdminTexts.js";
 import AdminText from "./component/admin/AdminText.js";
 import AdminLessons from "./container/admin/AdminLessons.js";
 import AdminLesson from "./component/admin/AdminLesson.js";
-import AdminExercise from "./component/admin/AdminExercise.js";
 import AdminExercises from "./container/admin/AdminExercises.js";
+import AdminExercise from "./component/admin/AdminExercise.js";
+import AdminThemes from "./container/admin/AdminThemes.js";
+import AdminTheme from "./component/admin/AdminTheme.js";
 import React from 'react'
 import {render} from 'react-dom'
 import {Router, IndexRoute, Route, Link, browserHistory} from 'react-router'
@@ -44,10 +47,13 @@ render((
                         <Route path="/admin/lesson(/:lessonId)" component={AdminLesson}/>
                         <Route path="/admin/exercises" component={AdminExercises}/>
                         <Route path="/admin/exercise(/:exerciseId)" component={AdminExercise}/>
+                        <Route path="/admin/themes" component={AdminThemes}/>
+                        <Route path="/admin/theme(/:themeId)" component={AdminTheme}/>
                     </Route>
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson(/:lessonId)" component={Lesson}/>
                     <Route path="/text(/:textId)" component={Text}/>
+                    <Route path="/exercises" component={ExerciseThemes}/>
                     <Route path="/exercise(/:exerciseId)" component={Exercise}/>
                     <Route path="/contacts" component={Contacts}/>
                     <Route path="/about" component={About}/>

@@ -44,6 +44,9 @@ class App extends React.Component {
                             <LinkContainer to="/lessons">
                                 <NavItem>Уроки</NavItem>
                             </LinkContainer>
+                            <LinkContainer to="/exercises">
+                                <NavItem>Упражнения</NavItem>
+                            </LinkContainer>
                             <LinkContainer to="/about">
                                 <NavItem>О проекте</NavItem>
                             </LinkContainer>

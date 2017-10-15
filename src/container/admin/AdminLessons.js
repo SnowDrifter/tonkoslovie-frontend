@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 
 
-class Lessons extends React.Component {
+class AdminLessons extends React.Component {
 
     constructor(props) {
         super(props);
@@ -121,4 +121,4 @@ class Lessons extends React.Component {
     }
 }
 
-export default Lessons
+export default AdminLessons;

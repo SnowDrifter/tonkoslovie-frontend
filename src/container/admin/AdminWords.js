@@ -12,7 +12,7 @@ import {Link} from 'react-router'
 import Word from '../../component/admin/AdminWord'
 
 
-class Words extends React.Component {
+class AdminWords extends React.Component {
 
     constructor(props) {
         super(props);
@@ -141,4 +141,4 @@ class Words extends React.Component {
     }
 }
 
-export default Words;
+export default AdminWords;

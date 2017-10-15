@@ -9,64 +9,62 @@ import {
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
 
 
-class AdminTexts extends React.Component {
+class AdminThemes extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            texts: []
+            themes: []
         };
 
-        this.deleteText = this.deleteText.bind(this);
-        this.editText = this.editText.bind(this);
-        this.updateTexts = this.updateTexts.bind(this);
+        this.deleteTheme = this.deleteTheme.bind(this);
+        this.editTheme = this.editTheme.bind(this);
+        this.updateThemes = this.updateThemes.bind(this);
     }
 
-    componentDidMount(){
-        this.updateTexts();
+    componentDidMount() {
+        this.updateThemes();
     }
 
-    updateTexts() {
-        client.get('/api/content/texts')
+    updateThemes() {
+        client.get('/api/content/themes')
             .then(response => {
-                const texts = response.data;
-                this.setState({texts: texts})
+                const themes = response.data;
+                this.setState({themes: themes})
             });
     }
 
-    deleteText(textId) {
-        if(confirm("Удалить текст №" + textId + "?")) {
-            client.delete('/api/content/text', {
+    deleteTheme(themeId) {
+        if (confirm("Удалить тему №" + themeId + "?")) {
+            client.delete('/api/content/theme', {
                 params: {
-                    id: textId
+                    id: themeId
                 }
             }).then(() => {
-                this.updateTexts();
+                this.updateThemes();
             });
         }
     }
 
-    addNewText() {
-         browserHistory.push("/admin/text")
+    addNewTheme() {
+        browserHistory.push("/admin/theme")
     }
 
-    editText(text) {
-        browserHistory.push("/admin/text/" + text.id);
+    editTheme(theme) {
+        browserHistory.push("/admin/theme/" + theme.id);
     }
 
     render() {
-        let texts = this.state.texts;
+        let themes = this.state.themes;
 
         return (
             <div>
                 <Table
                     rowHeight={50}
-                    rowsCount={texts.length}
+                    rowsCount={themes.length}
                     width={1140}
                     height={600}
                     headerHeight={30}>
@@ -74,7 +72,7 @@ class AdminTexts extends React.Component {
                     <Column
                         header={<Cell>№</Cell>}
                         cell={({rowIndex}) => (
-                            <Cell>{texts[rowIndex].id}</Cell>
+                            <Cell>{themes[rowIndex].id}</Cell>
                         )}
                         fixed={true}
                         width={80}
@@ -84,7 +82,7 @@ class AdminTexts extends React.Component {
                         header={<Cell>Название</Cell>}
                         cell={({rowIndex}) => (
                             <Cell>
-                                {texts[rowIndex].title}
+                                {themes[rowIndex].title}
                             </Cell>
                         )}
                         flexGrow={1}
@@ -96,11 +94,8 @@ class AdminTexts extends React.Component {
                             <Cell>
                                 <ButtonToolbar>
                                     <ButtonGroup>
-                                        <Button onClick={() => this.editText(texts[rowIndex])} bsSize="small"><Glyphicon
-                                            glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
-                                                className="pull-right" bsStyle="danger"> <Glyphicon
-                                            glyph="remove"/></Button>
+                                        <Button onClick={() => this.editTheme(themes[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
+                                        <Button bsSize="small" onClick={() => this.deleteTheme(themes[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
                                     </ButtonGroup>
                                 </ButtonToolbar>
                             </Cell>
@@ -109,11 +104,10 @@ class AdminTexts extends React.Component {
                     />
                 </Table>
                 <br/>
-                <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
-
+                <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
             </div>
         );
     }
 }
 
-export default AdminTexts;
+export default AdminThemes;
