@@ -24,12 +24,13 @@ import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
 import Loader from '../Loader';
 
-class LessonText extends React.Component {
+class Text extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            id: null,
             title: null,
             textParts: [],
             soundFileName: null,
@@ -257,4 +258,4 @@ class ChoicePart extends React.Component {
     }
 }
 
-export default LessonText;
+export default Text;

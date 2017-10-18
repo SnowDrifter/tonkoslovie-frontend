@@ -3,7 +3,7 @@ import client from "../../util/client";
 import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
-import style from './ExerciseThemes.less'
+import style from './Themes.less'
 import Loader from '../../component/Loader';
 
 class ExercisesThemes extends React.Component {

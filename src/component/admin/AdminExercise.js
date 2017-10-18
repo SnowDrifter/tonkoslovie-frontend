@@ -110,7 +110,6 @@ class AdminExercise extends React.Component {
     }
 
     handleDictionaryChange(dictionary) {
-        console.log(dictionary);
         this.setState({
             dictionary: dictionary
         });

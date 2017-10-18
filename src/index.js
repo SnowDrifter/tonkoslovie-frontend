@@ -6,7 +6,8 @@ import Err403 from "./component/Err403.js";
 import Lessons from "./container/content/Lessons.js";
 import Lesson from "./component/content/Lesson.js";
 import Text from "./component/content/Text.js";
-import ExerciseThemes from "./container/content/ExerciseThemes.js";
+import Themes from "./container/content/Themes.js";
+import Theme from "./component/content/Theme.js";
 import Exercise from "./component/content/Exercise.js";
 import Home from "./container/Home.js";
 import Contacts from "./container/Contacts.js";
@@ -53,7 +54,8 @@ render((
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson(/:lessonId)" component={Lesson}/>
                     <Route path="/text(/:textId)" component={Text}/>
-                    <Route path="/exercises" component={ExerciseThemes}/>
+                    <Route path="/themes" component={Themes}/>
+                    <Route path="/theme(/:themeId)" component={Theme}/>
                     <Route path="/exercise(/:exerciseId)" component={Exercise}/>
                     <Route path="/contacts" component={Contacts}/>
                     <Route path="/about" component={About}/>
