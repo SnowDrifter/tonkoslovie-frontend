@@ -13,7 +13,7 @@ import {
     ROUTING
 } from '../constant/Routing'
 
-export function showLogin(payload) {
+export function showLogin() {
     return (dispatch) => {
         dispatch({
             type: SHOW_LOGIN,
@@ -24,7 +24,7 @@ export function showLogin(payload) {
     }
 }
 
-export function hideLogin(payload) {
+export function hideLogin() {
     return (dispatch) => {
         dispatch({
             type: HIDE_LOGIN,
@@ -64,7 +64,7 @@ export function login(payload) {
                     }
                 });
             })
-            .catch(function (error) {
+            .catch(function () {
                 dispatch({
                     type: LOGIN_FAILURE,
                     payload: {
@@ -84,16 +84,9 @@ export function logout() {
             }
         });
 
-        // client.get('/api/user/logout', {
-        //     headers: {
-        //         Authorization: localStorage.getItem("token")
-        //     }}
-        // )
-
         client.get('/api/user/logout').then(function () {
             localStorage.removeItem('token');
         });
-
 
         dispatch({
             type: ROUTING,

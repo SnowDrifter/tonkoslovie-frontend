@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react";
 import Login from "../component/Login.js";
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Button} from "react-bootstrap";
 import {connect} from 'react-redux'
@@ -76,10 +76,6 @@ class App extends React.Component {
         )
     }
 }
-
-App.contextTypes = {
-    router: PropTypes.object.isRequired
-};
 
 function mapStateToProps(state) {
     return {
