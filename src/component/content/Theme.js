@@ -19,8 +19,8 @@ import {
 import client from "../../util/client";
 import style from './Text.less'
 import Helmet from "react-helmet";
-import Loader from '../Loader';
-import ExerciseComponent from './ExerciseComponent';
+import Loader from "../Loader";
+import ExerciseComponent from "./ExerciseComponent";
 
 class Theme extends React.Component {
 
@@ -33,6 +33,7 @@ class Theme extends React.Component {
             exercises: [],
             currentExercise: {},
             currentExerciseNumber: 0,
+            solvedExerciseCount: 0,
             soundFileName: null,
             loaded: false,
             failed: false
@@ -43,12 +44,14 @@ class Theme extends React.Component {
         }
 
         this.nextExercise = this.nextExercise.bind(this);
+        this.addSolvedExercise = this.addSolvedExercise.bind(this);
     }
 
     loadTheme(themeId) {
         client.get('/api/content/theme', {
             params: {
-                id: themeId
+                id: themeId,
+                randomExercises: true
             }
         }).then(response => {
             const theme = response.data;
@@ -67,12 +70,50 @@ class Theme extends React.Component {
         })
     }
 
-    nextExercise() {
-        let newExerciseNumber = this.state.currentExerciseNumber;
-        newExerciseNumber++;
+    addSolvedExercise(correctUserAnswer) {
+        let exercises = this.state.exercises;
+        const solvedExercise = exercises[this.state.currentExerciseNumber];
 
-        if(newExerciseNumber < this.state.exercises.length) {
-            const newExercise = this.state.exercises[newExerciseNumber];
+        if (!solvedExercise.solved) {
+            solvedExercise.solved = true;
+            solvedExercise.correctUserAnswer = correctUserAnswer;
+
+            exercises[this.state.currentExerciseNumber] = solvedExercise;
+
+            this.setState({
+                exercises: exercises,
+                solvedExerciseCount: ++this.state.solvedExerciseCount
+            })
+        }
+    }
+
+    nextExercise() {
+        if (this.state.solvedExerciseCount < this.state.exercises.length) {
+            let newExercise;
+            let newExerciseNumber;
+
+            for (let i = ++this.state.currentExerciseNumber; i < this.state.exercises.length; i++) {
+                let nextExercise = this.state.exercises[i];
+
+                if (!nextExercise.solved) {
+                    newExercise = nextExercise;
+                    newExerciseNumber = i;
+                    break;
+                }
+            }
+
+            // Start new cycle
+            if (!newExercise) {
+                this.state.exercises.every((exercise, index) => {
+                    if (!exercise.solved) {
+                        newExercise = exercise;
+                        newExerciseNumber = index;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                })
+            }
 
             this.setState({
                 currentExercise: newExercise,
@@ -82,24 +123,20 @@ class Theme extends React.Component {
             // TODO: add custom modal
             alert("Упражнения закончились")
         }
-
     }
 
     render() {
         let title = this.state.title + " | Тонкословие";
 
-        let currentExerciseNumber = this.state.currentExerciseNumber;
-        currentExerciseNumber++;
-
         let content = <Panel>
-            {currentExerciseNumber + "/" + this.state.exercises.length}
+            {this.state.solvedExerciseCount + "/" + this.state.exercises.length}
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
             <ExerciseComponent nextExercise={this.nextExercise}
                                exercise={this.state.currentExercise}
+                               addSolvedExercise={this.addSolvedExercise}
             />
         </Panel>;
-
 
         if (this.state.loaded) {
             return content;

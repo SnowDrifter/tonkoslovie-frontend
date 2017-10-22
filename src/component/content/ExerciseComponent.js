@@ -18,6 +18,7 @@ class ExerciseComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.updateExercise(nextProps.exercise);
+        ReactDOM.findDOMNode(this.answer).value = nextProps.exercise.correctUserAnswer || "";
     }
 
     updateExercise(exercise) {
@@ -44,6 +45,7 @@ class ExerciseComponent extends React.Component {
             if (answer.toLowerCase() == currentAnswer) {
                 this.setState({validationState: "success", suggestShowAnswer: true});
                 answerIsCorrect = true;
+                this.props.addSolvedExercise(answer);
             }
         });
 
@@ -86,16 +88,14 @@ class ExerciseComponent extends React.Component {
             </div>
         }
 
-        return <Panel>
-            <PageHeader style={{textAlign: "center"}}>{pageHeader}</PageHeader>
+        return <div>
             <h3>{taskText}</h3>
             <h4>
                 <div className="content"
                      dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}></div>
             </h4>
 
-            <FormGroup
-                validationState={this.state.validationState}>
+            <FormGroup validationState={this.state.validationState}>
                 <FormControl
                     className="exercise-answer-form"
                     componentClass="textarea"
@@ -121,7 +121,7 @@ class ExerciseComponent extends React.Component {
                              hideModal={this.hideModals}
                              title="Словарь"
                              text={this.state.dictionary}/>
-        </Panel>;
+        </div>;
     }
 }
 
