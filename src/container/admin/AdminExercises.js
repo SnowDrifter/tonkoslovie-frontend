@@ -78,10 +78,10 @@ class AdminExercises extends React.Component {
                     />
 
                     <Column
-                        header={<Cell>Оригинал</Cell>}
+                        header={<Cell>Заголовок</Cell>}
                         cell={({rowIndex}) => (
                             <Cell>
-                                {exercises[rowIndex].original.replace(/<\/?[^>]+(>|$)/g, "").replace("&nbsp;", " ")}
+                                {exercises[rowIndex].title}
                             </Cell>
                         )}
                         flexGrow={1}

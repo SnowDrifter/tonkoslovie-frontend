@@ -21,6 +21,7 @@ import style from './Text.less'
 import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";
+import SimpleConfirmModal from "../SimpleConfirmModal";
 
 class Theme extends React.Component {
 
@@ -35,6 +36,7 @@ class Theme extends React.Component {
             currentExerciseNumber: 0,
             solvedExerciseCount: 0,
             soundFileName: null,
+            showSuccessModal: false,
             loaded: false,
             failed: false
         };
@@ -45,6 +47,8 @@ class Theme extends React.Component {
 
         this.nextExercise = this.nextExercise.bind(this);
         this.addSolvedExercise = this.addSolvedExercise.bind(this);
+        this.hideSuccessModal = this.hideSuccessModal.bind(this);
+        this.removeProgress = this.removeProgress.bind(this);
     }
 
     loadTheme(themeId) {
@@ -70,6 +74,22 @@ class Theme extends React.Component {
         })
     }
 
+    removeProgress() {
+        const exercises = this.state.exercises;
+        exercises.forEach(exercise => {
+            exercise.solved = null;
+            exercise.correctUserAnswer = null;
+        });
+
+        this.setState({
+            exercises: exercises,
+            currentExercise: this.state.exercises[0],
+            currentExerciseNumber: 0,
+            solvedExerciseCount: 0,
+            showSuccessModal: false
+        })
+    }
+
     addSolvedExercise(correctUserAnswer) {
         let exercises = this.state.exercises;
         const solvedExercise = exercises[this.state.currentExerciseNumber];
@@ -85,6 +105,10 @@ class Theme extends React.Component {
                 solvedExerciseCount: ++this.state.solvedExerciseCount
             })
         }
+    }
+
+    hideSuccessModal() {
+        this.setState({showSuccessModal: false});
     }
 
     nextExercise() {
@@ -120,8 +144,7 @@ class Theme extends React.Component {
                 currentExerciseNumber: newExerciseNumber
             })
         } else {
-            // TODO: add custom modal
-            alert("Упражнения закончились")
+            this.setState({showSuccessModal: true})
         }
     }
 
@@ -129,13 +152,17 @@ class Theme extends React.Component {
         let title = this.state.title + " | Тонкословие";
 
         let content = <Panel>
-            {this.state.solvedExerciseCount + "/" + this.state.exercises.length}
+            <span className="pull-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
             <ExerciseComponent nextExercise={this.nextExercise}
                                exercise={this.state.currentExercise}
-                               addSolvedExercise={this.addSolvedExercise}
-            />
+                               addSolvedExercise={this.addSolvedExercise}/>
+
+            <SimpleConfirmModal showModal={this.state.showSuccessModal}
+                                hideModal={this.hideSuccessModal}
+                                confirmFunction={this.removeProgress}
+                                modalTitle="Новые упражнения закончились, начать заново?"/>
         </Panel>;
 
         if (this.state.loaded) {

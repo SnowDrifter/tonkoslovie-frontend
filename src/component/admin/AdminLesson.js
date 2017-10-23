@@ -31,7 +31,7 @@ class Lesson extends React.Component {
 
         this.state = {
             id: null,
-            relatedTexts: [],
+            texts: [],
             foundTexts: [],
             text: EditorState.createEmpty(),
             published: false,
@@ -63,7 +63,7 @@ class Lesson extends React.Component {
 
             this.setState({
                 id: lesson.id,
-                relatedTexts: lesson.relatedTexts,
+                texts: lesson.texts,
                 text: EditorState.createWithContent(contentState),
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
@@ -82,7 +82,7 @@ class Lesson extends React.Component {
             annotation: ReactDOM.findDOMNode(this.annotation).value,
             text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
             published: this.state.published,
-            relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
+            texts: this.state.texts || [],
             previewImage: this.state.previewFileName
         }).then((response) => {
             this.setState({
@@ -110,7 +110,7 @@ class Lesson extends React.Component {
 
     checkTextAlreadyAdded(text) {
         let alreadyAdded = false;
-        this.state.relatedTexts.forEach(function (oldText, index, array) {
+        this.state.texts.forEach(function (oldText, index, array) {
             if (oldText.id == text.id) {
                 alreadyAdded = true;
             }
@@ -126,13 +126,13 @@ class Lesson extends React.Component {
         foundTexts.splice(index, 1);
         this.setState({foundTexts: foundTexts});
 
-        this.setState({relatedTexts: this.state.relatedTexts.concat(text)});
+        this.setState({texts: this.state.texts.concat(text)});
     }
 
     removeText(textId) {
-        let relatedTexts = this.state.relatedTexts;
-        relatedTexts.splice(textId, 1);
-        this.setState({relatedTexts: relatedTexts});
+        let texts = this.state.texts;
+        texts.splice(textId, 1);
+        this.setState({texts: texts});
     }
 
     handTextChange(text) {
@@ -193,7 +193,7 @@ class Lesson extends React.Component {
     render() {
         let texts = [];
 
-        this.state.relatedTexts.map((text, index) => {
+        this.state.texts.map((text, index) => {
             texts.push(<ListGroupItem bsStyle="info" key={index}>
                 {text.title}
                 <Button className="pull-right" onClick={() => this.removeText(index)} bsSize="xsmall"

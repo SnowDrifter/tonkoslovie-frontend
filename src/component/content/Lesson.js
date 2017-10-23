@@ -21,7 +21,7 @@ class Lesson extends React.Component {
             id: undefined,
             title: undefined,
             text: undefined,
-            relatedTexts: [],
+            texts: [],
             loaded: false,
             failed: false
         };
@@ -40,7 +40,7 @@ class Lesson extends React.Component {
                 id: lesson.id,
                 title: lesson.title,
                 text: lesson.text,
-                relatedTexts: lesson.relatedTexts,
+                texts: lesson.texts,
                 loaded: true
             });
         }).catch(() => {
@@ -54,7 +54,7 @@ class Lesson extends React.Component {
         let texts = [];
         let title = this.state.title + " | Тонкословие";
 
-        const sortedTexts = this.state.relatedTexts.sort(function(a, b) {
+        const sortedTexts = this.state.texts.sort(function(a, b) {
             return a.title.localeCompare(b.title);
         });
 

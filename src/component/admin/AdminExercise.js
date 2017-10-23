@@ -76,8 +76,8 @@ class AdminExercise extends React.Component {
                 answers: exercise.answers || []
             });
 
-            // ReactDOM.findDOMNode(this.original).value = exercise.original;
             ReactDOM.findDOMNode(this.type).value = exercise.type;
+            ReactDOM.findDOMNode(this.title).value = exercise.title;
         })
     }
 
@@ -90,6 +90,7 @@ class AdminExercise extends React.Component {
 
         client.post('/api/content/exercise', {
             id: this.state.id,
+            title: ReactDOM.findDOMNode(this.title).value,
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
             dictionary: draftToHtml(convertToRaw(this.state.dictionary.getCurrentContent())),
             answers: answers,
@@ -142,6 +143,15 @@ class AdminExercise extends React.Component {
 
         return (<Panel>
                 <Jumbotron>
+                    <FormGroup>
+                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                        <FormControl
+                            inputRef={title => {
+                                this.title = title
+                            }}
+                        />
+                    </FormGroup>
+
                     <h4>Оригинал</h4>
                     <Panel>
                         <Editor
