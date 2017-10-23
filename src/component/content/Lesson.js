@@ -20,7 +20,7 @@ class Lesson extends React.Component {
         this.state = {
             id: undefined,
             title: undefined,
-            text: undefined,
+            content: undefined,
             texts: [],
             loaded: false,
             failed: false
@@ -39,7 +39,7 @@ class Lesson extends React.Component {
             this.setState({
                 id: lesson.id,
                 title: lesson.title,
-                text: lesson.text,
+                content: lesson.content,
                 texts: lesson.texts,
                 loaded: true
             });
@@ -62,11 +62,11 @@ class Lesson extends React.Component {
             texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
         });
 
-        let content = <Panel>
+        let body = <Panel>
             <Helmet title={title}/>
                 <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.text)}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
 
                 <h3>Тексты</h3>
                 <ListGroup>
@@ -75,7 +75,7 @@ class Lesson extends React.Component {
         </Panel>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Урок не найден</h2></Jumbotron>;
         } else {

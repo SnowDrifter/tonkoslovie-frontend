@@ -49,7 +49,7 @@ class ExercisesThemes extends React.Component {
                 </Link>)
         });
 
-        const content = <div>
+        const body = <div>
             <Helmet title="Темы упражнений | Тонкословие"/>
 
             <Panel header="Темы упражнений">
@@ -60,7 +60,7 @@ class ExercisesThemes extends React.Component {
         </div>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else {
             return <Loader/>;
         }

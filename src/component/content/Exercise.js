@@ -144,7 +144,7 @@ class Exercise extends React.Component {
             </div>
         }
 
-        const content = <Panel>
+        const body = <Panel>
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{pageHeader}</PageHeader>
             <h3>{taskText}</h3>
@@ -183,7 +183,7 @@ class Exercise extends React.Component {
         </Panel>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Упражнение не найдено</h2></Jumbotron>;
         } else {

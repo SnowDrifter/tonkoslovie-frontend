@@ -33,7 +33,7 @@ class Lesson extends React.Component {
             id: null,
             texts: [],
             foundTexts: [],
-            text: EditorState.createEmpty(),
+            content: EditorState.createEmpty(),
             published: false,
             previewFileName: null,
             progressUploadFile: null
@@ -55,7 +55,7 @@ class Lesson extends React.Component {
         }).then(response => {
             const lesson = response.data;
 
-            const blocksFromHTML = convertFromHTML(lesson.text);
+            const blocksFromHTML = convertFromHTML(lesson.content);
             const contentState = ContentState.createFromBlockArray(
                 blocksFromHTML.contentBlocks,
                 blocksFromHTML.entityMap
@@ -64,7 +64,7 @@ class Lesson extends React.Component {
             this.setState({
                 id: lesson.id,
                 texts: lesson.texts,
-                text: EditorState.createWithContent(contentState),
+                content: EditorState.createWithContent(contentState),
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
                 progressUploadFile: null
@@ -80,7 +80,7 @@ class Lesson extends React.Component {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             annotation: ReactDOM.findDOMNode(this.annotation).value,
-            text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
+            content: draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
             published: this.state.published,
             texts: this.state.texts || [],
             previewImage: this.state.previewFileName
@@ -135,9 +135,9 @@ class Lesson extends React.Component {
         this.setState({texts: texts});
     }
 
-    handTextChange(text) {
+    handTextChange(content) {
         this.setState({
-            text: text
+            content: content
         });
     }
 
@@ -272,7 +272,7 @@ class Lesson extends React.Component {
                 <h3>Текст урока</h3>
                 <Panel>
                     <Editor
-                        editorState={this.state.text}
+                        editorState={this.state.content}
                         toolbarClassName="toolbarClassName"
                         wrapperClassName="wrapperClassName"
                         editorClassName="editorClassName"
@@ -307,7 +307,6 @@ class Lesson extends React.Component {
                 <Checkbox checked={this.state.published} onClick={this.togglePublished.bind(this)}>
                     Опубликовать урок
                 </Checkbox>
-
             </Jumbotron>
             <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
         </Panel>

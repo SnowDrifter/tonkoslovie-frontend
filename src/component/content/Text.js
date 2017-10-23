@@ -120,7 +120,7 @@ class Text extends React.Component {
             </div>
         }
 
-        let content = <Panel>
+        let body = <Panel>
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
@@ -137,7 +137,7 @@ class Text extends React.Component {
         </Panel>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Текст не найден</h2></Jumbotron>;
         } else {

@@ -54,7 +54,7 @@ class Lessons extends React.Component {
                 </Link>)
         });
 
-        const content = <div>
+        const body = <div>
             <Helmet title="Уроки | Тонкословие"/>
 
             <Panel header="Уроки">
@@ -65,7 +65,7 @@ class Lessons extends React.Component {
         </div>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else {
             return <Loader/>;
         }

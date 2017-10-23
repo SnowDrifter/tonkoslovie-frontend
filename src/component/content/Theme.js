@@ -151,7 +151,7 @@ class Theme extends React.Component {
     render() {
         let title = this.state.title + " | Тонкословие";
 
-        let content = <Panel>
+        let body = <Panel>
             <span className="pull-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
             <Helmet title={title}/>
             <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
@@ -166,7 +166,7 @@ class Theme extends React.Component {
         </Panel>;
 
         if (this.state.loaded) {
-            return content;
+            return body;
         } else if (this.state.failed) {
             return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Тема не найдена</h2></Jumbotron>;
         } else {
