@@ -103,7 +103,12 @@ class Theme extends React.Component {
             this.setState({
                 exercises: exercises,
                 solvedExerciseCount: ++this.state.solvedExerciseCount
-            })
+            });
+
+            // All exercises is over
+            if (this.state.solvedExerciseCount >= this.state.exercises.length) {
+                this.setState({showSuccessModal: true});
+            }
         }
     }
 

@@ -10,10 +10,23 @@ class ExerciseComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.updateExercise(this.props.exercise);
+        const exercise = this.props.exercise;
+        const answersCount = exercise.answers ? exercise.answers.length : 1;
+
+        this.state = {
+            id: exercise.id,
+            type: exercise.type,
+            original: exercise.original,
+            dictionary: exercise.dictionary,
+            answersCount: answersCount,
+            answers: exercise.answers,
+            showAnswerPanel: false,
+            validationState: null,
+            suggestShowAnswer: false,
+            showDictionaryModal: false
+        };
 
         this.hideModals = this.hideModals.bind(this);
-        this.updateExercise = this.updateExercise.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -24,18 +37,29 @@ class ExerciseComponent extends React.Component {
     updateExercise(exercise) {
         const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-        this.state = {
+        let validationState;
+
+        if(exercise.solved != undefined) {
+            if(exercise.solved == true) {
+                validationState = "success";
+            } else {
+                validationState = "error";
+            }
+        }
+
+        // TODO: check showAnswer, open only after two clicks
+        this.setState({
             id: exercise.id,
             type: exercise.type,
             original: exercise.original,
             dictionary: exercise.dictionary,
             answersCount: answersCount,
             answers: exercise.answers,
-            showAnswer: false,
-            validationState: null,
-            suggestShowAnswer: false,
+            showAnswerPanel: false,
+            validationState: validationState,
+            suggestShowAnswer: exercise.solved,
             showDictionaryModal: false
-        };
+        });
     }
 
     checkAnswer() {
@@ -65,26 +89,28 @@ class ExerciseComponent extends React.Component {
     render() {
         let pageHeader;
         let taskText;
-        switch (this.state.type) {
-            case exerciseTypes.RUSSIAN_TO_POLISH: {
-                pageHeader = "Перевод с русского на польский";
-                taskText = "Переведите на польский фразу: ";
-                break;
-            }
-            case exerciseTypes.POLISH_TO_RUSSIAN: {
-                pageHeader = "Перевод с польского на русский";
-                taskText = "Переведите на русский фразу: ";
-                break;
+        if (this.state.type) {
+            switch (this.state.type) {
+                case exerciseTypes.RUSSIAN_TO_POLISH: {
+                    pageHeader = "Перевод с русского на польский";
+                    taskText = "Переведите на польский фразу: ";
+                    break;
+                }
+                case exerciseTypes.POLISH_TO_RUSSIAN: {
+                    pageHeader = "Перевод с польского на русский";
+                    taskText = "Переведите на русский фразу: ";
+                    break;
+                }
             }
         }
 
         let showAnswerComponent;
         if (this.state.suggestShowAnswer) {
             showAnswerComponent = <div className="exercise-showAnswer-component">
-                <Button onClick={() => this.setState({showAnswer: !this.state.showAnswer})}>Посмотреть возможный вариант
+                <Button onClick={() => this.setState({showAnswer: !this.state.showAnswerPanel})}>Посмотреть возможный вариант
                     ответа</Button>
                 <Panel className="exercise-showAnswer-panel" collapsible
-                       expanded={this.state.showAnswer}>{this.state.answers[0]}</Panel>
+                       expanded={this.state.showAnswerPanel}>{this.state.answers[0]}</Panel>
             </div>
         }
 
