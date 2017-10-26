@@ -47,7 +47,12 @@ class ExerciseComponent extends React.Component {
             }
         }
 
-        // TODO: check showAnswer, open only after two clicks
+
+        let answerVariant;
+        if(this.state.answers) {
+            answerVariant = this.state.answers[Math.floor(Math.random() * this.state.answers.length)];
+        }
+
         this.setState({
             id: exercise.id,
             type: exercise.type,
@@ -56,6 +61,7 @@ class ExerciseComponent extends React.Component {
             answersCount: answersCount,
             answers: exercise.answers,
             showAnswerPanel: false,
+            answerVariant: answerVariant,
             validationState: validationState,
             suggestShowAnswer: exercise.solved,
             showDictionaryModal: false
@@ -107,10 +113,10 @@ class ExerciseComponent extends React.Component {
         let showAnswerComponent;
         if (this.state.suggestShowAnswer) {
             showAnswerComponent = <div className="exercise-showAnswer-component">
-                <Button onClick={() => this.setState({showAnswer: !this.state.showAnswerPanel})}>Посмотреть возможный вариант
+                <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>Посмотреть возможный вариант
                     ответа</Button>
                 <Panel className="exercise-showAnswer-panel" collapsible
-                       expanded={this.state.showAnswerPanel}>{this.state.answers[0]}</Panel>
+                       expanded={this.state.showAnswerPanel}>{this.state.answerVariant}</Panel>
             </div>
         }
 
