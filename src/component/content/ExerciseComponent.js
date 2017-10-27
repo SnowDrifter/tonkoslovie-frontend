@@ -47,7 +47,6 @@ class ExerciseComponent extends React.Component {
             }
         }
 
-
         let answerVariant;
         if(this.state.answers) {
             answerVariant = this.state.answers[Math.floor(Math.random() * this.state.answers.length)];
@@ -69,13 +68,26 @@ class ExerciseComponent extends React.Component {
     }
 
     checkAnswer() {
-        const currentAnswer = ReactDOM.findDOMNode(this.answer).value.trim().toLowerCase();
+        const rawAnswer = ReactDOM.findDOMNode(this.answer).value;
+        const currentAnswer = rawAnswer.trim().toLowerCase();
+
         let answerIsCorrect = false;
+
+        // Try check regexp
+        if(this.props.exercise.answerRegex) {
+            if(currentAnswer.match(new RegExp( this.props.exercise.answerRegex , 'gi'))) {
+                this.setState({validationState: "success", suggestShowAnswer: true});
+                answerIsCorrect = true;
+                this.props.addSolvedExercise(rawAnswer);
+            }
+        }
+
+        // Try check all answers
         this.state.answers.map((answer) => {
             if (answer.toLowerCase() == currentAnswer) {
                 this.setState({validationState: "success", suggestShowAnswer: true});
                 answerIsCorrect = true;
-                this.props.addSolvedExercise(answer);
+                this.props.addSolvedExercise(rawAnswer);
             }
         });
 

@@ -78,6 +78,7 @@ class AdminExercise extends React.Component {
 
             ReactDOM.findDOMNode(this.type).value = exercise.type;
             ReactDOM.findDOMNode(this.title).value = exercise.title;
+            ReactDOM.findDOMNode(this.answerRegex).value = exercise.answerRegex;
         })
     }
 
@@ -94,7 +95,8 @@ class AdminExercise extends React.Component {
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
             dictionary: draftToHtml(convertToRaw(this.state.dictionary.getCurrentContent())),
             answers: answers,
-            type: ReactDOM.findDOMNode(this.type).value
+            type: ReactDOM.findDOMNode(this.type).value,
+            answerRegex: ReactDOM.findDOMNode(this.answerRegex).value
         }).then(response => {
             this.setState({
                 id: response.data.id,
@@ -176,6 +178,16 @@ class AdminExercise extends React.Component {
                         </FormControl>
                     </FormGroup>
 
+                    <FormGroup>
+                        <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
+                        <FormControl
+                            componentClass="textarea"
+                            inputRef={answerRegex => {
+                                this.answerRegex = answerRegex
+                            }}
+                        />
+                    </FormGroup>
+
                     <div className="admin-exercise-answer-panel">
                         <FormGroup>
                             <ControlLabel><h4>Ответы</h4></ControlLabel>
@@ -185,8 +197,8 @@ class AdminExercise extends React.Component {
                         <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
                     </div>
                 </Jumbotron>
-                <Button onClick={this.saveExercise.bind(this)} className="pull-right"
-                        bsStyle="success">Сохранить</Button>
+
+                <Button onClick={this.saveExercise.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
             </Panel>
         );
     }
