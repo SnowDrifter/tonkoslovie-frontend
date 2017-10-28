@@ -30,7 +30,7 @@ class AdminThemes extends React.Component {
     }
 
     updateThemes() {
-        client.get('/api/content/themes')
+        client.get('/api/content/themes?onlyPublished=false')
             .then(response => {
                 const themes = response.data;
                 this.setState({themes: themes})
