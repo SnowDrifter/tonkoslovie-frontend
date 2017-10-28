@@ -79,6 +79,7 @@ if (IS_PRODUCTION) {
             debug: false
         }),
         new webpack.optimize.UglifyJsPlugin({
+            parallel: true,
             beautify: false,
             sourceMap: false,
             mangle: true,
@@ -89,7 +90,6 @@ if (IS_PRODUCTION) {
                 unused: true,
                 warnings: false,
                 drop_console: true,
-                unsafe: true,
                 screw_ie8: true
             },
             comments: false
