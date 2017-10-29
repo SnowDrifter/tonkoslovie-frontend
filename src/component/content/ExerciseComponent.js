@@ -62,7 +62,7 @@ class ExerciseComponent extends React.Component {
             showAnswerPanel: false,
             answerVariant: answerVariant,
             validationState: validationState,
-            suggestShowAnswer: exercise.solved,
+            suggestShowAnswer: false,
             showDictionaryModal: false
         });
     }
@@ -75,17 +75,17 @@ class ExerciseComponent extends React.Component {
 
         // Try check regexp
         if(this.props.exercise.answerRegex) {
-            if(currentAnswer.match(new RegExp( this.props.exercise.answerRegex , 'gi'))) {
-                this.setState({validationState: "success", suggestShowAnswer: true});
+            if(new RegExp(this.props.exercise.answerRegex , 'gi').test(currentAnswer)) {
+                this.setState({validationState: "success"});
                 answerIsCorrect = true;
                 this.props.addSolvedExercise(rawAnswer);
             }
         }
 
-        // Try check all answers
+        // Try check all hardcode answers
         this.state.answers.map((answer) => {
             if (answer.toLowerCase() == currentAnswer) {
-                this.setState({validationState: "success", suggestShowAnswer: true});
+                this.setState({validationState: "success"});
                 answerIsCorrect = true;
                 this.props.addSolvedExercise(rawAnswer);
             }
