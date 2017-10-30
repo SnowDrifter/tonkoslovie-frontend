@@ -13,6 +13,11 @@ class ExerciseComponent extends React.Component {
         const exercise = this.props.exercise;
         const answersCount = exercise.answers ? exercise.answers.length : 1;
 
+        let answerVariant;
+        if(exercise.answers) {
+            answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
+        }
+
         this.state = {
             id: exercise.id,
             type: exercise.type,
@@ -21,6 +26,7 @@ class ExerciseComponent extends React.Component {
             answersCount: answersCount,
             answers: exercise.answers,
             showAnswerPanel: false,
+            answerVariant: answerVariant,
             validationState: null,
             suggestShowAnswer: false,
             showDictionaryModal: false
@@ -48,8 +54,8 @@ class ExerciseComponent extends React.Component {
         }
 
         let answerVariant;
-        if(this.state.answers) {
-            answerVariant = this.state.answers[Math.floor(Math.random() * this.state.answers.length)];
+        if(exercise.answers) {
+            answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
         }
 
         this.setState({
@@ -125,10 +131,12 @@ class ExerciseComponent extends React.Component {
         let showAnswerComponent;
         if (this.state.suggestShowAnswer) {
             showAnswerComponent = <div className="exercise-showAnswer-component">
-                <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>Посмотреть возможный вариант
-                    ответа</Button>
-                <Panel className="exercise-showAnswer-panel" collapsible
-                       expanded={this.state.showAnswerPanel}>{this.state.answerVariant}</Panel>
+                <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>
+                    Посмотреть возможный вариант ответа
+                </Button>
+                <Panel className="exercise-showAnswer-panel" collapsible expanded={this.state.showAnswerPanel}>
+                    {this.state.answerVariant}
+                </Panel>
             </div>
         }
 
