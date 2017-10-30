@@ -31,15 +31,12 @@ class AdminExercise extends React.Component {
             type: null,
             original: EditorState.createEmpty(),
             dictionary: EditorState.createEmpty(),
-            answersCount: 0,
+            answersCount: 1,
             answers: []
         };
 
         if (this.props.params.exerciseId) {
             this.loadExercise(this.props.params.exerciseId)
-        } else {
-            // Fix empty default value in first answer input
-            this.setState({answersCount: 1});
         }
 
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
