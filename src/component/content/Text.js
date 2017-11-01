@@ -230,7 +230,7 @@ class ChoicePart extends React.Component {
     render() {
         const part = this.props.part;
         const variants = [];
-        variants.push(<option key={-1} value="-1">Выберите правильный вариант</option>);
+        variants.push(<option key={-1} value="-1" hidden>Выберите правильный вариант</option>);
 
         part.choiceVariants.map((value, index) => {
             variants.push(<option key={index} value={value.title}>{value.title}</option>);

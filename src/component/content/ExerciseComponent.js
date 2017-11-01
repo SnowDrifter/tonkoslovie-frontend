@@ -4,6 +4,7 @@ import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "reac
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleTextModal from "../SimpleTextModal";
+import style from './Exercise.less'
 
 class ExerciseComponent extends React.Component {
 
