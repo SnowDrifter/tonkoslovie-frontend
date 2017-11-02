@@ -1,14 +1,10 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from 'react-router'
+import {browserHistory} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import {
-    Button,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
+import Loader from "../../component/Loader";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar} from "react-bootstrap";
 
 
 class AdminThemes extends React.Component {
@@ -17,7 +13,8 @@ class AdminThemes extends React.Component {
         super(props);
 
         this.state = {
-            themes: []
+            themes: [],
+            loaded: false
         };
 
         this.deleteTheme = this.deleteTheme.bind(this);
@@ -33,7 +30,10 @@ class AdminThemes extends React.Component {
         client.get('/api/content/themes?onlyPublished=false')
             .then(response => {
                 const themes = response.data;
-                this.setState({themes: themes})
+                this.setState({
+                    themes: themes,
+                    loaded: true
+                })
             });
     }
 
@@ -60,53 +60,60 @@ class AdminThemes extends React.Component {
     render() {
         let themes = this.state.themes;
 
-        return (
-            <div>
-                <Table
-                    rowHeight={50}
-                    rowsCount={themes.length}
-                    width={1140}
-                    height={600}
-                    headerHeight={30}>
+        const body = <div>
+            <Table
+                rowHeight={50}
+                rowsCount={themes.length}
+                width={1140}
+                height={600}
+                headerHeight={30}>
 
-                    <Column
-                        header={<Cell>№</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>{themes[rowIndex].id}</Cell>
-                        )}
-                        fixed={true}
-                        width={80}
-                    />
+                <Column
+                    header={<Cell>№</Cell>}
+                    cell={({rowIndex}) => (
+                        <Cell>{themes[rowIndex].id}</Cell>
+                    )}
+                    fixed={true}
+                    width={80}
+                />
 
-                    <Column
-                        header={<Cell>Название</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {themes[rowIndex].title}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                <Column
+                    header={<Cell>Название</Cell>}
+                    cell={({rowIndex}) => (
+                        <Cell>
+                            {themes[rowIndex].title}
+                        </Cell>
+                    )}
+                    flexGrow={1}
+                    width={100}
+                />
 
-                    <Column
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                <ButtonToolbar>
-                                    <ButtonGroup>
-                                        <Button onClick={() => this.editTheme(themes[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteTheme(themes[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            </Cell>
-                        )}
-                        width={100}
-                    />
-                </Table>
-                <br/>
-                <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
-            </div>
-        );
+                <Column
+                    cell={({rowIndex}) => (
+                        <Cell>
+                            <ButtonToolbar>
+                                <ButtonGroup>
+                                    <Button onClick={() => this.editTheme(themes[rowIndex])} bsSize="small"><Glyphicon
+                                        glyph="pencil"/></Button>
+                                    <Button bsSize="small" onClick={() => this.deleteTheme(themes[rowIndex].id)}
+                                            className="pull-right" bsStyle="danger"> <Glyphicon
+                                        glyph="remove"/></Button>
+                                </ButtonGroup>
+                            </ButtonToolbar>
+                        </Cell>
+                    )}
+                    width={100}
+                />
+            </Table>
+            <br/>
+            <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
+        </div>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 

@@ -3,6 +3,7 @@ import client from "../../util/client";
 import {browserHistory} from 'react-router'
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
+import Loader from '../../component/Loader';
 import {
     Button,
     Glyphicon,
@@ -19,7 +20,8 @@ class AdminTexts extends React.Component {
         super(props);
 
         this.state = {
-            texts: []
+            texts: [],
+            loaded: false
         };
 
         this.deleteText = this.deleteText.bind(this);
@@ -35,7 +37,10 @@ class AdminTexts extends React.Component {
         client.get('/api/content/texts')
             .then(response => {
                 const texts = response.data;
-                this.setState({texts: texts})
+                this.setState({
+                    texts: texts,
+                    loaded: true
+                })
             });
     }
 
@@ -62,57 +67,61 @@ class AdminTexts extends React.Component {
     render() {
         let texts = this.state.texts;
 
-        return (
-            <div>
-                <Table
-                    rowHeight={50}
-                    rowsCount={texts.length}
-                    width={1140}
-                    height={600}
-                    headerHeight={30}>
+        const body = <div>
+            <Table
+                rowHeight={50}
+                rowsCount={texts.length}
+                width={1140}
+                height={600}
+                headerHeight={30}>
 
-                    <Column
-                        header={<Cell>№</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>{texts[rowIndex].id}</Cell>
-                        )}
-                        fixed={true}
-                        width={80}
-                    />
+                <Column
+                    header={<Cell>№</Cell>}
+                    cell={({rowIndex}) => (
+                        <Cell>{texts[rowIndex].id}</Cell>
+                    )}
+                    fixed={true}
+                    width={80}
+                />
 
-                    <Column
-                        header={<Cell>Название</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {texts[rowIndex].title}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                <Column
+                    header={<Cell>Название</Cell>}
+                    cell={({rowIndex}) => (
+                        <Cell>
+                            {texts[rowIndex].title}
+                        </Cell>
+                    )}
+                    flexGrow={1}
+                    width={100}
+                />
 
-                    <Column
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                <ButtonToolbar>
-                                    <ButtonGroup>
-                                        <Button onClick={() => this.editText(texts[rowIndex])} bsSize="small"><Glyphicon
-                                            glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
-                                                className="pull-right" bsStyle="danger"> <Glyphicon
-                                            glyph="remove"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            </Cell>
-                        )}
-                        width={100}
-                    />
-                </Table>
-                <br/>
-                <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
+                <Column
+                    cell={({rowIndex}) => (
+                        <Cell>
+                            <ButtonToolbar>
+                                <ButtonGroup>
+                                    <Button onClick={() => this.editText(texts[rowIndex])} bsSize="small"><Glyphicon
+                                        glyph="pencil"/></Button>
+                                    <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
+                                            className="pull-right" bsStyle="danger"> <Glyphicon
+                                        glyph="remove"/></Button>
+                                </ButtonGroup>
+                            </ButtonToolbar>
+                        </Cell>
+                    )}
+                    width={100}
+                />
+            </Table>
+            <br/>
+            <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
 
-            </div>
-        );
+        </div>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
