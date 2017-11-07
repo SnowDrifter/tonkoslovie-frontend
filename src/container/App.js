@@ -29,8 +29,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <Navbar inverse
-                        onToggle={this.toggleExpandNavbar.bind(this)}
+                <Navbar onToggle={this.toggleExpandNavbar.bind(this)}
                         expanded={this.state.expandNavbar}>
                     <Navbar.Header>
                         <Navbar.Brand>
