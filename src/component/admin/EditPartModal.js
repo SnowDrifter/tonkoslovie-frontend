@@ -80,8 +80,8 @@ class EditPartModal extends React.Component {
 
             for (let i = 0; i < choiceCount; i++) {
                 let choiceVariant = {};
-                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
-                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                choiceVariant.title = ReactDOM.findDOMNode(this["form-" + i]).value;
+                choiceVariant.right = ReactDOM.findDOMNode(this["right-" + i]).checked;
                 choiceVariants.push(choiceVariant);
             }
 
@@ -141,11 +141,11 @@ class EditPartModal extends React.Component {
                 choiceForms.push(<InputGroup key={index} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
-                                this['right-' + index] = part
+                                this["right-" + index] = part
                             }} defaultChecked={value.right}/>
                         </InputGroup.Addon>
                         <FormControl ref={part => {
-                            this['form-' + index] = part
+                            this["form-" + index] = part
                         }}  defaultValue={value.title}/>
                     </InputGroup>
                 );

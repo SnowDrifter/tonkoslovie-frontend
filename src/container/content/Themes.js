@@ -3,8 +3,8 @@ import client from "../../util/client";
 import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
-import style from './Themes.less'
-import Loader from '../../component/Loader';
+import style from "./Themes.less"
+import Loader from "../../component/Loader";
 
 class ExercisesThemes extends React.Component {
 
@@ -24,7 +24,7 @@ class ExercisesThemes extends React.Component {
     }
 
     updateThemes() {
-        client.get('/api/content/themes')
+        client.get("/api/content/themes")
             .then(response => {
                 const themes = response.data;
                 this.setState({themes: themes, loaded: true})

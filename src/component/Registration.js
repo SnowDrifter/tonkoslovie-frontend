@@ -1,7 +1,7 @@
 import React from "react";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 import client from "../util/client";
-import {browserHistory} from 'react-router'
+import {browserHistory} from "react-router"
 import {
     Panel,
     FormGroup,
@@ -15,7 +15,7 @@ import {
     Overlay,
     Popover
 } from "react-bootstrap";
-import style from './Registration.less'
+import style from "./Registration.less"
 
 class Registration extends React.Component {
     constructor(props) {
@@ -58,7 +58,7 @@ class Registration extends React.Component {
 
         const username = ReactDOM.findDOMNode(this.username).value;
 
-        if (username == '') {
+        if (username == "") {
             this.setState({
                 username: {
                     validationState: "error",
@@ -80,7 +80,7 @@ class Registration extends React.Component {
 
         const confirmPassword = ReactDOM.findDOMNode(this.confirmPassword).value;
 
-        if (password == '') {
+        if (password == "") {
             this.setState({
                 password: {
                     validationState: "error",
@@ -89,7 +89,7 @@ class Registration extends React.Component {
                 }
             });
             success = false;
-        } else if (confirmPassword != '' && password !== confirmPassword) {
+        } else if (confirmPassword != "" && password !== confirmPassword) {
             this.setState({
                 password: {
                     validationState: "error",
@@ -107,7 +107,7 @@ class Registration extends React.Component {
             });
         }
 
-        if (confirmPassword == '') {
+        if (confirmPassword == "") {
             this.setState({
                 confirmPassword: {
                     validationState: "error",
@@ -116,7 +116,7 @@ class Registration extends React.Component {
                 }
             });
             success = false;
-        } else if (password != '' && password !== confirmPassword) {
+        } else if (password != "" && password !== confirmPassword) {
             this.setState({
                 confirmPassword: {
                     validationState: "error",
@@ -137,7 +137,7 @@ class Registration extends React.Component {
         const email = ReactDOM.findDOMNode(this.email).value;
         const emailPattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-        if (email == '') {
+        if (email == "") {
             this.setState({
                 email: {
                     validationState: "error",
@@ -179,7 +179,7 @@ class Registration extends React.Component {
             const firstName = ReactDOM.findDOMNode(this.firstName).value;
             const lastName = ReactDOM.findDOMNode(this.lastName).value;
 
-            client.post('/api/user/registration', {
+            client.post("/api/user/registration", {
                 username: username,
                 password: password,
                 email: email,
@@ -191,7 +191,7 @@ class Registration extends React.Component {
                 const response = error.response.data;
                 if (response.validationErrors) {
                     response.validationErrors.forEach(error => {
-                        if (error.field == 'email') {
+                        if (error.field == "email") {
                             this.setState({
                                 email: {
                                     validationState: "error",
@@ -201,7 +201,7 @@ class Registration extends React.Component {
                             });
                         }
 
-                        if (error.field == 'username') {
+                        if (error.field == "username") {
                             this.setState({
                                 username: {
                                     validationState: "error",

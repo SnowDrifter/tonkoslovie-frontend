@@ -52,8 +52,8 @@ class CreatePartModal extends React.Component {
 
                 for (let i = 0; i < choiceCount; i++) {
                     let choiceVariant = {};
-                    choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
-                    choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                    choiceVariant.title = ReactDOM.findDOMNode(this["form-" + i]).value;
+                    choiceVariant.right = ReactDOM.findDOMNode(this["right-" + i]).checked;
                     choiceVariants.push(choiceVariant);
                 }
 
@@ -90,7 +90,7 @@ class CreatePartModal extends React.Component {
         const choiceCount = this.state.choicesCount;
 
         for (let i = 0; i < choiceCount; i++) {
-            if (ReactDOM.findDOMNode(this['right-' + i]).checked) {
+            if (ReactDOM.findDOMNode(this["right-" + i]).checked) {
                 return true;
             }
         }
@@ -139,11 +139,11 @@ class CreatePartModal extends React.Component {
                 choiceForms.push(<InputGroup key={i} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
-                                this['right-' + i] = part
+                                this["right-" + i] = part
                             }}/>
                         </InputGroup.Addon>
                         <FormControl ref={part => {
-                            this['form-' + i] = part
+                            this["form-" + i] = part
                         }}/>
                     </InputGroup>
                 );

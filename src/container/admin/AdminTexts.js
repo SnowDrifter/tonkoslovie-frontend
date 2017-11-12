@@ -1,17 +1,17 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from 'react-router'
+import {browserHistory} from "react-router"
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import Loader from '../../component/Loader';
+import Loader from "../../component/Loader";
 import {
     Button,
     Glyphicon,
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
 
 
 class AdminTexts extends React.Component {
@@ -34,7 +34,7 @@ class AdminTexts extends React.Component {
     }
 
     updateTexts() {
-        client.get('/api/content/texts')
+        client.get("/api/content/texts")
             .then(response => {
                 const texts = response.data;
                 this.setState({
@@ -46,7 +46,7 @@ class AdminTexts extends React.Component {
 
     deleteText(textId) {
         if(confirm("Удалить текст №" + textId + "?")) {
-            client.delete('/api/content/text', {
+            client.delete("/api/content/text", {
                 params: {
                     id: textId
                 }

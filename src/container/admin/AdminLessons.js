@@ -1,9 +1,9 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from 'react-router'
+import {browserHistory} from "react-router"
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import Loader from '../../component/Loader';
+import Loader from "../../component/Loader";
 import {
     Button,
     Glyphicon,
@@ -32,7 +32,7 @@ class AdminLessons extends React.Component {
     }
 
     updateLessons() {
-        client.get('/api/content/lessons?onlyPublished=false')
+        client.get("/api/content/lessons?onlyPublished=false")
             .then(response => {
                 const lessons = response.data;
                 this.setState({
@@ -44,7 +44,7 @@ class AdminLessons extends React.Component {
 
     deleteLesson(lessonId) {
         if (confirm("Удалить урок №" + lessonId + "?")) {
-            client.delete('/api/content/lesson', {
+            client.delete("/api/content/lesson", {
                 params: {
                     id: lessonId
                 }

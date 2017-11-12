@@ -1,11 +1,11 @@
 import React from "react";
 import Login from "../component/Login.js";
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Button} from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import * as UserActions from '../action/Auth'
-import {LinkContainer} from 'react-router-bootstrap';
-import {Link} from 'react-router'
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
+import * as UserActions from "../action/Auth"
+import {LinkContainer} from "react-router-bootstrap";
+import {Link} from "react-router"
 
 class App extends React.Component {
     constructor(props) {
@@ -55,13 +55,13 @@ class App extends React.Component {
                         </Nav>
                         <Nav pullRight>
                             <LinkContainer to="/registration">
-                                <NavItem className={isAuthenticated ? 'hidden' : ''}>Регистрация</NavItem>
+                                <NavItem className={isAuthenticated ? "hidden" : ""}>Регистрация</NavItem>
                             </LinkContainer>
                             <NavItem onClick={this.props.actions.showLogin}
-                                     className={isAuthenticated ? 'hidden' : ''}>Вход</NavItem>
+                                     className={isAuthenticated ? "hidden" : ""}>Вход</NavItem>
 
                                 <NavItem onClick={this.logout.bind(this)}
-                                         className={isAuthenticated ? '' : 'hidden'}>Выход</NavItem>
+                                         className={isAuthenticated ? "" : "hidden"}>Выход</NavItem>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

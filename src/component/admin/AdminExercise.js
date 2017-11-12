@@ -12,7 +12,7 @@ import {
     Form,
     Glyphicon
 } from "react-bootstrap";
-import style from './AdminExercise.less'
+import style from "./AdminExercise.less"
 import client from "../../util/client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
@@ -47,7 +47,7 @@ class AdminExercise extends React.Component {
     }
 
     loadExercise(exerciseId) {
-        client.get('/api/content/exercise', {
+        client.get("/api/content/exercise", {
             params: {
                 id: exerciseId
             }
@@ -86,10 +86,10 @@ class AdminExercise extends React.Component {
         const answers = [];
 
         for (let i = 0; i < this.state.answersCount; i++) {
-            answers.push(ReactDOM.findDOMNode(this['answer-' + i]).value);
+            answers.push(ReactDOM.findDOMNode(this["answer-" + i]).value);
         }
 
-        client.post('/api/content/exercise', {
+        client.post("/api/content/exercise", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
@@ -138,7 +138,7 @@ class AdminExercise extends React.Component {
 
         for (let i = 0; i < answersCount; i++) {
                 answerForms.push(<FormControl className="admin-exercise-answer-form" key={i} ref={part => {
-                        this['answer-' + i] = part
+                        this["answer-" + i] = part
                     }}  defaultValue={this.state.answers[i] || ""}/>
                 );
         }
@@ -172,7 +172,7 @@ class AdminExercise extends React.Component {
 
                     <FormGroup>
                         <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
-                        <FormControl componentClass="select" ref={part => {this['type'] = part}}>
+                        <FormControl componentClass="select" ref={part => {this["type"] = part}}>
                             <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
                             <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
                         </FormControl>

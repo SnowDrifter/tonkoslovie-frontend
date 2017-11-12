@@ -3,8 +3,8 @@ import client from "../../util/client";
 import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
-import style from './Lessons.less'
-import Loader from '../../component/Loader';
+import style from "./Lessons.less"
+import Loader from "../../component/Loader";
 
 class Lessons extends React.Component {
 
@@ -24,7 +24,7 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        client.get('/api/content/lessons')
+        client.get("/api/content/lessons")
             .then(response => {
                 const lessons = response.data;
                 this.setState({lessons: lessons, loaded: true})
@@ -39,7 +39,7 @@ class Lessons extends React.Component {
         });
 
         lessons.map((lesson, index) => {
-            const preview = lesson.previewImage ? <Image className="lesson-preview" src={process.env.MEDIA_ENDPOINT + '/tonkoslovie/images/200_200-' + lesson.previewImage} thumbnail/> : null;
+            const preview = lesson.previewImage ? <Image className="lesson-preview" src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + lesson.previewImage} thumbnail/> : null;
 
             lessonPreviews.push(
                 <Link className="lesson" key={index} to={"/lesson/" + lesson.id}>

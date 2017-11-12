@@ -5,12 +5,12 @@ import {
     LOGIN_FAILURE,
     LOGIN_SUCCESS,
     LOGOUT
-} from '../constant/User'
-import decode from 'jwt-decode';
+} from "../constant/User"
+import decode from "jwt-decode";
 
 const initialState = ({
-    user: localStorage.getItem('token') != undefined ? decode(localStorage.getItem('token')) : {},
-    isAuthenticated: localStorage.getItem('token') != undefined,
+    user: localStorage.getItem("token") != undefined ? decode(localStorage.getItem("token")) : {},
+    isAuthenticated: localStorage.getItem("token") != undefined,
     showLogin: false,
     errorMessage: null
 });

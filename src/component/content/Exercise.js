@@ -5,11 +5,11 @@ import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "reac
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import {Link, browserHistory} from "react-router";
-import style from './Exercise.less'
+import style from "./Exercise.less"
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleConfirmModal from "../SimpleConfirmModal";
 import SimpleTextModal from "../SimpleTextModal";
-import Loader from '../Loader';
+import Loader from "../Loader";
 
 class Exercise extends React.Component {
 
@@ -39,7 +39,7 @@ class Exercise extends React.Component {
     }
 
     loadExercise(exerciseId) {
-        client.get('/api/content/exercise', {
+        client.get("/api/content/exercise", {
             params: {
                 id: exerciseId
             }
@@ -94,9 +94,9 @@ class Exercise extends React.Component {
             window.sessionStorage.removeItem("loadedExercises");
         }
 
-        client.get('/api/content/exercise/randomId', {
+        client.get("/api/content/exercise/randomId", {
             params: {
-                excludeIds: excludeExercises.join(',')
+                excludeIds: excludeExercises.join(",")
             }
         }).then(response => {
             const nextExerciseId = response.data.id;
@@ -164,7 +164,7 @@ class Exercise extends React.Component {
             </FormGroup>
 
             <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} bsStyle="success">Проверить</Button>
-            {' '}
+            {" "}
             <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)} className="pull-right">Следующее упражнение</Button>
             <br className="exercise-button-separator"/>
             <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>

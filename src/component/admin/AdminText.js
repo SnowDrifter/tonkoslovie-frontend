@@ -18,11 +18,11 @@ import {
     Glyphicon
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from './AdminText.less'
-import EditPartModal from './EditPartModal'
-import CreatePartModal from './CreatePartModal'
-import * as partTypes from  '../content/TextPartTypes'
-import ReactPlayer from 'react-player'
+import style from "./AdminText.less"
+import EditPartModal from "./EditPartModal"
+import CreatePartModal from "./CreatePartModal"
+import * as partTypes from  "../content/TextPartTypes"
+import ReactPlayer from "react-player"
 
 class Text extends React.Component {
 
@@ -52,7 +52,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        client.get('/api/content/text', {
+        client.get("/api/content/text", {
             params: {
                 id: textId
             }
@@ -69,7 +69,7 @@ class Text extends React.Component {
     }
 
     saveText() {
-        client.post('/api/content/text', {
+        client.post("/api/content/text", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             parts: this.state.textParts ? this.state.textParts : [],
@@ -133,7 +133,7 @@ class Text extends React.Component {
 
     deleteSoundFile() {
         if (confirm("Удалить звуковую дорожку?")) {
-            client.delete('/api/media/sound', {
+            client.delete("/api/media/sound", {
                 params: {
                     fileName: this.state.soundFileName
                 }
@@ -153,8 +153,8 @@ class Text extends React.Component {
         }
 
         const data = new FormData();
-        data.append('file', sound);
-        data.append('textId', this.state.id);
+        data.append("file", sound);
+        data.append("textId", this.state.id);
 
         let config = {
             onUploadProgress: (progressEvent) => {
@@ -162,7 +162,7 @@ class Text extends React.Component {
             }
         };
 
-        client.post('/api/media/sound', data, config)
+        client.post("/api/media/sound", data, config)
             .then((response) => {
                 this.setState({soundFileName: response.data.fileName, progressUploadFile: null});
                 this.saveText();
@@ -200,7 +200,7 @@ class Text extends React.Component {
                     width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.MEDIA_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    url={process.env.MEDIA_ENDPOINT + "/tonkoslovie/sounds/" + this.state.soundFileName}/>
                 <Button onClick={this.deleteSoundFile.bind(this)}>Удалить дорожку</Button>
             </div>
         } else {
@@ -218,7 +218,7 @@ class Text extends React.Component {
                 <ProgressBar striped
                              className="admin-text-progressbar"
                              active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
-                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              bsStyle="success"
                              now={this.state.progressUploadFile}
                              label={(this.state.progressUploadFile) + "%"}/>
@@ -300,7 +300,7 @@ class ChoicePart extends React.Component {
         });
 
         return <div className="admin-choice-part">
-            {words.join(', ')}
+            {words.join(", ")}
 
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon

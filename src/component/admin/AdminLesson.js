@@ -18,10 +18,10 @@ import {
     Checkbox
 } from "react-bootstrap";
 
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import draftToHtml from 'draftjs-to-html';
-import {convertToRaw, ContentState, convertFromHTML, EditorState} from 'draft-js';
+import {Editor} from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
+import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
 
 
 class Lesson extends React.Component {
@@ -48,7 +48,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        client.get('/api/content/lesson', {
+        client.get("/api/content/lesson", {
             params: {
                 id: lessonId
             }
@@ -76,7 +76,7 @@ class Lesson extends React.Component {
     }
 
     saveLesson() {
-        client.post('/api/content/lesson', {
+        client.post("/api/content/lesson", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             annotation: ReactDOM.findDOMNode(this.annotation).value,
@@ -96,7 +96,7 @@ class Lesson extends React.Component {
     searchText() {
         let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
 
-        client.get('/api/content/texts/findByTitle', {
+        client.get("/api/content/texts/findByTitle", {
             params: {
                 title: searchTitle
             }
@@ -149,8 +149,8 @@ class Lesson extends React.Component {
         }
 
         const data = new FormData();
-        data.append('file', preview);
-        data.append('lessonId', this.state.id);
+        data.append("file", preview);
+        data.append("lessonId", this.state.id);
 
         let config = {
             onUploadProgress: (progressEvent) => {
@@ -158,7 +158,7 @@ class Lesson extends React.Component {
             }
         };
 
-        client.post('/api/media/image', data, config)
+        client.post("/api/media/image", data, config)
             .then((response) => {
                 this.setState({previewFileName: response.data.fileName, progressUploadFile: null});
                 this.saveLesson();
@@ -171,7 +171,7 @@ class Lesson extends React.Component {
 
     deletePreview() {
         if (confirm("Удалить превью?")) {
-            client.delete('/api/media/image', {
+            client.delete("/api/media/image", {
                 params: {
                     fileName: this.state.previewFileName
                 }
@@ -220,7 +220,7 @@ class Lesson extends React.Component {
         if (this.state.previewFileName) {
             previewComponent = <div>
                 <h4>Превью</h4>
-                <img src={process.env.MEDIA_ENDPOINT + '/tonkoslovie/images/200_200-' + this.state.previewFileName}/>
+                <img src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + this.state.previewFileName}/>
                 <br/>
                 <Button onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>
@@ -239,7 +239,7 @@ class Lesson extends React.Component {
                 <ProgressBar striped
                              className="admin-text-progressbar"
                              active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
-                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              bsStyle="success"
                              now={this.state.progressUploadFile}
                              label={(this.state.progressUploadFile) + "%"}/>

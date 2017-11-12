@@ -1,6 +1,6 @@
-import axios from 'axios';
-const apiEndpoint = process.env.API_ENDPOINT || '';
-import {browserHistory} from 'react-router'
+import axios from "axios";
+const apiEndpoint = process.env.API_ENDPOINT || "";
+import {browserHistory} from "react-router"
 
 let client;
 
@@ -10,8 +10,8 @@ let client;
     });
 
     client.interceptors.request.use(function (config) {
-        if (localStorage.getItem('token')) {
-            config.headers.Authorization = localStorage.getItem('token')
+        if (localStorage.getItem("token")) {
+            config.headers.Authorization = localStorage.getItem("token")
         }
 
         return config;
@@ -23,7 +23,7 @@ let client;
         if(error.message == "Network Error") {
             browserHistory.push("/500");
         } else if (response.status === 403) {
-            localStorage.removeItem('token');
+            localStorage.removeItem("token");
             window.location.reload();
             browserHistory.push("/");
         } else if (response.status >= 500) {

@@ -4,7 +4,7 @@ import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "reac
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleTextModal from "../SimpleTextModal";
-import style from './Exercise.less'
+import style from "./Exercise.less"
 
 class ExerciseComponent extends React.Component {
 
@@ -82,7 +82,7 @@ class ExerciseComponent extends React.Component {
 
         // Try check regexp
         if(this.props.exercise.answerRegex) {
-            if(new RegExp(this.props.exercise.answerRegex , 'gi').test(currentAnswer)) {
+            if(new RegExp(this.props.exercise.answerRegex , "gi").test(currentAnswer)) {
                 this.setState({validationState: "success"});
                 answerIsCorrect = true;
                 this.props.addSolvedExercise(rawAnswer);
@@ -162,7 +162,7 @@ class ExerciseComponent extends React.Component {
 
             <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)}
                     bsStyle="success">Проверить</Button>
-            {' '}
+            {" "}
             <Button bsSize="large" type="submit" onClick={this.props.nextExercise.bind(this)} className="pull-right">Следующее
                 упражнение</Button>
             <br className="exercise-button-separator"/>

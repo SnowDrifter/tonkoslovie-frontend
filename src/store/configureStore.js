@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunkMiddleware from 'redux-thunk'
-import { logger } from 'redux-logger'
-import { rootReducer } from '../reducer/Index.js'
-import { redirect } from '../middleware/redirect'
+import { createStore, applyMiddleware, compose } from "redux"
+import thunkMiddleware from "redux-thunk"
+import { logger } from "redux-logger"
+import { rootReducer } from "../reducer/Index.js"
+import { redirect } from "../middleware/redirect"
 
 export default function configureStore() {
     return compose(

@@ -1,8 +1,8 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from 'react-router'
+import {browserHistory} from "react-router"
 import {Table, Column, Cell} from "fixed-data-table-2";
-import Loader from '../../component/Loader';
+import Loader from "../../component/Loader";
 import {
     Button,
     Glyphicon,
@@ -31,7 +31,7 @@ class AdminExercises extends React.Component {
     }
 
     updateExercises() {
-        client.get('/api/content/exercises')
+        client.get("/api/content/exercises")
             .then(response => {
                 const exercises = response.data;
                 this.setState({
@@ -43,7 +43,7 @@ class AdminExercises extends React.Component {
 
     deleteLExercise(exerciseId) {
         if (confirm("Удалить упражнение №" + exerciseId + "?")) {
-            client.delete('/api/content/exercise', {
+            client.delete("/api/content/exercise", {
                 params: {
                     id: exerciseId
                 }

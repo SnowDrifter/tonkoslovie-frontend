@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
+import {bindActionCreators} from "redux"
+import {connect} from "react-redux"
 import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
-import * as UserActions from '../action/Auth'
-import style from './Login.less'
+import * as UserActions from "../action/Auth"
+import style from "./Login.less"
 
 class Login extends React.Component {
 
@@ -62,7 +62,7 @@ class Login extends React.Component {
                             </Row>
                         </FormGroup>
 
-                        <span style={{color: 'red'}}>{this.props.user.user.errorMessage}</span>
+                        <span style={{color: "red"}}>{this.props.user.user.errorMessage}</span>
 
                         <Button type="submit" className="pull-right" bsStyle="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>

@@ -27,7 +27,7 @@ class AdminThemes extends React.Component {
     }
 
     updateThemes() {
-        client.get('/api/content/themes?onlyPublished=false')
+        client.get("/api/content/themes?onlyPublished=false")
             .then(response => {
                 const themes = response.data;
                 this.setState({
@@ -39,7 +39,7 @@ class AdminThemes extends React.Component {
 
     deleteTheme(themeId) {
         if (confirm("Удалить тему №" + themeId + "?")) {
-            client.delete('/api/content/theme', {
+            client.delete("/api/content/theme", {
                 params: {
                     id: themeId
                 }

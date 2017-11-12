@@ -7,10 +7,10 @@ import {
     ListGroup,
     ListGroupItem
 } from "react-bootstrap";
-import DOMPurify from 'dompurify'
+import DOMPurify from "dompurify"
 import Helmet from "react-helmet";
-import {Link} from 'react-router'
-import Loader from '../Loader';
+import {Link} from "react-router"
+import Loader from "../Loader";
 
 class Lesson extends React.Component {
 
@@ -30,7 +30,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        client.get('/api/content/lesson', {
+        client.get("/api/content/lesson", {
             params: {
                 id: lessonId
             }

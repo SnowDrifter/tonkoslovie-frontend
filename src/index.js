@@ -1,4 +1,4 @@
-import App from './container/App.js';
+import App from "./container/App.js";
 import Registration from "./component/Registration.js";
 import Err500 from "./component/Err500.js";
 import Err404 from "./component/Err404.js";
@@ -22,12 +22,12 @@ import AdminExercises from "./container/admin/AdminExercises.js";
 import AdminExercise from "./component/admin/AdminExercise.js";
 import AdminThemes from "./container/admin/AdminThemes.js";
 import AdminTheme from "./component/admin/AdminTheme.js";
-import React from 'react'
-import {render} from 'react-dom'
-import {Router, IndexRoute, Route, Link, browserHistory} from 'react-router'
-import {Provider} from 'react-redux'
-import configureStore from './store/configureStore'
-import RestrictedContainer from './container/RestrictedContainer'
+import React from "react"
+import {render} from "react-dom"
+import {Router, IndexRoute, Route, Link, browserHistory} from "react-router"
+import {Provider} from "react-redux"
+import configureStore from "./store/configureStore"
+import RestrictedContainer from "./container/RestrictedContainer"
 
 
 const store = configureStore();
@@ -39,7 +39,7 @@ render((
                 <Route path="/" component={App}>
                     <IndexRoute component={Home}/>
                     <Route path="/registration" component={Registration}/>
-                    <Route authorize={['ROLE_ADMIN']} component={RestrictedContainer}>
+                    <Route authorize={["ROLE_ADMIN"]} component={RestrictedContainer}>
                         <Route path="/admin" component={Admin}/>
                         <Route path="/admin/words" component={AdminWords}/>
                         <Route path="/admin/text(/:textId)" component={AdminText}/>
@@ -66,4 +66,4 @@ render((
             </Router>
         </Provider>
     </div>
-), document.getElementById('main'));
+), document.getElementById("main"));

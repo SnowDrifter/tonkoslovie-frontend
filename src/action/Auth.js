@@ -7,11 +7,11 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
     LOGOUT
-} from '../constant/User'
+} from "../constant/User"
 
 import {
     ROUTING
-} from '../constant/Routing'
+} from "../constant/Routing"
 
 export function showLogin() {
     return (dispatch) => {
@@ -41,12 +41,12 @@ export function login(payload) {
             type: LOGIN_REQUEST
         });
 
-        client.post('/api/user/login', {
+        client.post("/api/user/login", {
             username: payload.username,
             password: payload.password
         })
             .then(function (response) {
-                localStorage.setItem('token', response.data.token);
+                localStorage.setItem("token", response.data.token);
 
                 dispatch({
                     type: LOGIN_SUCCESS,
@@ -59,8 +59,8 @@ export function login(payload) {
                 dispatch({
                     type: ROUTING,
                     payload: {
-                        method: 'replace',
-                        nextUrl: '/'
+                        method: "replace",
+                        nextUrl: "/"
                     }
                 });
             })
@@ -84,15 +84,15 @@ export function logout() {
             }
         });
 
-        client.get('/api/user/logout').then(function () {
-            localStorage.removeItem('token');
+        client.get("/api/user/logout").then(function () {
+            localStorage.removeItem("token");
         });
 
         dispatch({
             type: ROUTING,
             payload: {
-                method: 'replace',
-                nextUrl: '/'
+                method: "replace",
+                nextUrl: "/"
             }
         });
     }

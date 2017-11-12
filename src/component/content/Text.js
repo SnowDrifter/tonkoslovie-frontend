@@ -18,11 +18,11 @@ import {
     Col
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from './Text.less'
+import style from "./Text.less"
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
-import Loader from '../Loader';
+import Loader from "../Loader";
 
 class Text extends React.Component {
 
@@ -46,7 +46,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        client.get('/api/content/text', {
+        client.get("/api/content/text", {
             params: {
                 id: textId
             }
@@ -72,7 +72,7 @@ class Text extends React.Component {
 
         textParts.map((part, index) => {
             if (part.type == partTypes.QUESTION || part.type == partTypes.CHOICE) {
-                this['part-' + index].checkAnswer();
+                this["part-" + index].checkAnswer();
             }
         });
 
@@ -95,13 +95,13 @@ class Text extends React.Component {
                 }
                 case partTypes.QUESTION: {
                     components.push(<QuestionPart ref={instance => {
-                        this['part-' + index] = instance;
+                        this["part-" + index] = instance;
                     }} key={index} part={part} index={index}/>);
                     break;
                 }
                 case partTypes.CHOICE: {
                     components.push(<ChoicePart ref={instance => {
-                        this['part-' + index] = instance;
+                        this["part-" + index] = instance;
                     }} part={part} key={index} index={index}/>);
                     break;
                 }
@@ -116,7 +116,7 @@ class Text extends React.Component {
                     width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.MEDIA_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    url={process.env.MEDIA_ENDPOINT + "/tonkoslovie/sounds/" + this.state.soundFileName}/>
             </div>
         }
 
@@ -150,7 +150,7 @@ class QuestionPart extends React.Component {
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = ReactDOM.findDOMNode(this['form-' + this.props.index]).value;
+        let answer = ReactDOM.findDOMNode(this["form-" + this.props.index]).value;
         answer = answer.trim().toLowerCase();
 
         if (answer == part.data.toLowerCase()) {
@@ -191,7 +191,7 @@ class QuestionPart extends React.Component {
         return <FormGroup className="text-part" validationState={validateState}>
             <FormControl
                 ref={part => {
-                    this['form-' + this.props.index] = part
+                    this["form-" + this.props.index] = part
                 }}
                 style={{width: this.calculateInputLength(part)}}
                 type="text"
@@ -208,7 +208,7 @@ class ChoicePart extends React.Component {
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = ReactDOM.findDOMNode(this['form-' + this.props.index]).value;
+        let answer = ReactDOM.findDOMNode(this["form-" + this.props.index]).value;
 
         if (this.checkChoiceVariant(answer, part.choiceVariants)) {
             part.success = true;
@@ -250,7 +250,7 @@ class ChoicePart extends React.Component {
                          bsSize="small"
                          disabled={disabled}
                          ref={part => {
-                             this['form-' + this.props.index] = part
+                             this["form-" + this.props.index] = part
                          }}>
                 {variants}
             </FormControl>

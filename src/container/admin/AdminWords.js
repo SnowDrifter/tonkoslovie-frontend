@@ -9,8 +9,8 @@ import {
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {Link} from 'react-router'
-import Word from '../../component/admin/AdminWord'
+import {Link} from "react-router"
+import Word from "../../component/admin/AdminWord"
 
 
 class AdminWords extends React.Component {
@@ -36,7 +36,7 @@ class AdminWords extends React.Component {
     }
 
     updateWords() {
-        client.get('/api/content/words')
+        client.get("/api/content/words")
             .then(response => {
                 const words = response.data;
                 this.setState({
@@ -57,7 +57,7 @@ class AdminWords extends React.Component {
 
     deleteWord(wordId) {
         if (confirm("Удалить слово №" + wordId + "?")) {
-            client.delete('/api/content/word', {
+            client.delete("/api/content/word", {
                 params: {
                     id: wordId
                 }

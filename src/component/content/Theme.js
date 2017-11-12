@@ -17,7 +17,7 @@ import {
     Col
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from './Text.less'
+import style from "./Text.less"
 import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";
@@ -52,7 +52,7 @@ class Theme extends React.Component {
     }
 
     loadTheme(themeId) {
-        client.get('/api/content/theme', {
+        client.get("/api/content/theme", {
             params: {
                 id: themeId,
                 randomExercises: true

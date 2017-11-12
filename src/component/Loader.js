@@ -1,6 +1,6 @@
-import React from 'react';
-import {ScaleLoader} from 'halogenium';
-import style from './Loader.less'
+import React from "react";
+import {ScaleLoader} from "halogenium";
+import style from "./Loader.less"
 
 class Loader extends React.Component {
 
