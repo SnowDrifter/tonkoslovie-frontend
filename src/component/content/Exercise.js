@@ -4,12 +4,12 @@ import client from "../../util/client";
 import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import {Link, browserHistory} from "react-router";
-import style from "./Exercise.less"
+import {browserHistory} from "react-router";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleConfirmModal from "../SimpleConfirmModal";
 import SimpleTextModal from "../SimpleTextModal";
 import Loader from "../Loader";
+import "./Exercise.less"
 
 class Exercise extends React.Component {
 

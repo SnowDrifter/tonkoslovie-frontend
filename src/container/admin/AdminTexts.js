@@ -10,8 +10,6 @@ import {
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {connect} from "react-redux"
-import {bindActionCreators} from "redux"
 
 
 class AdminTexts extends React.Component {

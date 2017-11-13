@@ -24,7 +24,7 @@ import AdminThemes from "./container/admin/AdminThemes.js";
 import AdminTheme from "./component/admin/AdminTheme.js";
 import React from "react"
 import {render} from "react-dom"
-import {Router, IndexRoute, Route, Link, browserHistory} from "react-router"
+import {Router, IndexRoute, Route, browserHistory} from "react-router"
 import {Provider} from "react-redux"
 import configureStore from "./store/configureStore"
 import RestrictedContainer from "./container/RestrictedContainer"

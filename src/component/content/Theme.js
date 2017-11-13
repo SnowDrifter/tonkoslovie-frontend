@@ -2,22 +2,10 @@ import React from "react";
 import {
     Panel,
     PageHeader,
-    FormGroup,
-    ControlLabel,
-    FormControl,
-    Button,
-    ButtonToolbar,
-    ButtonGroup,
-    Modal,
-    Form,
-    Jumbotron,
-    Glyphicon,
-    Grid,
-    Row,
-    Col
+    Jumbotron
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from "./Text.less"
+import "./Text.less"
 import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";

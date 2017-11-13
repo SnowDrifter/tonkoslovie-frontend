@@ -1,10 +1,10 @@
 import React from "react";
 import client from "../../util/client";
-import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
+import {Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
-import style from "./Themes.less"
 import Loader from "../../component/Loader";
+import "./Themes.less"
 
 class ExercisesThemes extends React.Component {
 

@@ -3,26 +3,20 @@ import ReactDOM from "react-dom";
 import {
     Panel,
     FormGroup,
-    Row,
-    Col,
     ControlLabel,
     FormControl,
     Button,
-    ButtonToolbar,
     ButtonGroup,
-    FieldGroup,
     ProgressBar,
-    Modal,
-    Form,
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from "./AdminText.less"
 import EditPartModal from "./EditPartModal"
 import CreatePartModal from "./CreatePartModal"
 import * as partTypes from  "../content/TextPartTypes"
 import ReactPlayer from "react-player"
+import "./AdminText.less"
 
 class Text extends React.Component {
 

@@ -1,6 +1,6 @@
 import React from "react";
 import Login from "../component/Login.js";
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Button} from "react-bootstrap";
+import {Navbar, Nav, NavItem} from "react-bootstrap";
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import * as UserActions from "../action/Auth"
@@ -14,7 +14,7 @@ class App extends React.Component {
         this.state = {
             expandNavbar: false
         };
-    };
+    }
 
     logout() {
         this.props.actions.logout();

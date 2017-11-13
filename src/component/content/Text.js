@@ -4,25 +4,16 @@ import {
     Panel,
     PageHeader,
     FormGroup,
-    ControlLabel,
     FormControl,
     Button,
-    ButtonToolbar,
-    ButtonGroup,
-    Modal,
-    Form,
-    Jumbotron,
-    Glyphicon,
-    Grid,
-    Row,
-    Col
+    Jumbotron
 } from "react-bootstrap";
 import client from "../../util/client";
-import style from "./Text.less"
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
 import Loader from "../Loader";
+import "./Text.less"
 
 class Text extends React.Component {
 

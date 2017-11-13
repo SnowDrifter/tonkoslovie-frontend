@@ -1,10 +1,10 @@
 import React from "react";
 import client from "../../util/client";
-import {ListGroupItem, ListGroup, Panel, Image} from "react-bootstrap";
+import {Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
-import style from "./Lessons.less"
 import Loader from "../../component/Loader";
+import "./Lessons.less"
 
 class Lessons extends React.Component {
 

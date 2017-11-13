@@ -9,7 +9,6 @@ import {
     ButtonGroup,
     ButtonToolbar
 } from "react-bootstrap";
-import {Link} from "react-router"
 import Word from "../../component/admin/AdminWord"
 
 

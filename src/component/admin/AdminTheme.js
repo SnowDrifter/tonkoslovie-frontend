@@ -3,17 +3,9 @@ import ReactDOM from "react-dom";
 import {
     Panel,
     FormGroup,
-    Row,
-    Col,
     ControlLabel,
     FormControl,
     Button,
-    ButtonToolbar,
-    ButtonGroup,
-    FieldGroup,
-    ProgressBar,
-    Modal,
-    Form,
     Jumbotron,
     Glyphicon,
     ListGroup,
@@ -93,7 +85,7 @@ class AdminTheme extends React.Component {
 
     checkExerciseAlreadyAdded(exercise) {
         let alreadyAdded = false;
-        this.state.exercises.forEach(function (oldExercise, index, array) {
+        this.state.exercises.forEach(function (oldExercise) {
             if (oldExercise.id == exercise.id) {
                 alreadyAdded = true;
             }

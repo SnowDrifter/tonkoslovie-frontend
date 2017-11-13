@@ -5,12 +5,9 @@ import {
     Panel,
     Jumbotron,
     FormGroup,
-    Row,
-    Col,
     ControlLabel,
     FormControl,
     Button,
-    Form,
     Glyphicon,
     ListGroup,
     ListGroupItem,
@@ -110,7 +107,7 @@ class Lesson extends React.Component {
 
     checkTextAlreadyAdded(text) {
         let alreadyAdded = false;
-        this.state.texts.forEach(function (oldText, index, array) {
+        this.state.texts.forEach(function (oldText) {
             if (oldText.id == text.id) {
                 alreadyAdded = true;
             }

@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import client from "../../util/client";
-import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
-import style from "./AdminWord.less"
+import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
+import "./AdminWord.less"
 
 
 class Word extends React.Component {

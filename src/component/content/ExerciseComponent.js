@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
+import {Panel, FormGroup, FormControl, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleTextModal from "../SimpleTextModal";
-import style from "./Exercise.less"
+import "./Exercise.less"
 
 class ExerciseComponent extends React.Component {
 
@@ -112,17 +112,14 @@ class ExerciseComponent extends React.Component {
     }
 
     render() {
-        let pageHeader;
         let taskText;
         if (this.state.type) {
             switch (this.state.type) {
                 case exerciseTypes.RUSSIAN_TO_POLISH: {
-                    pageHeader = "Перевод с русского на польский";
                     taskText = "Переведите на польский фразу: ";
                     break;
                 }
                 case exerciseTypes.POLISH_TO_RUSSIAN: {
-                    pageHeader = "Перевод с польского на русский";
                     taskText = "Переведите на русский фразу: ";
                     break;
                 }

@@ -8,12 +8,9 @@ import {
     FormControl,
     Button,
     ButtonToolbar,
-    ButtonGroup,
     Modal,
     Form,
     InputGroup,
-    Jumbotron,
-    Glyphicon,
     ToggleButtonGroup,
     ToggleButton
 } from "react-bootstrap";

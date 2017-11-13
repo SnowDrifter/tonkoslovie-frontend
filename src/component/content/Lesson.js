@@ -4,8 +4,7 @@ import {
     Panel,
     PageHeader,
     Jumbotron,
-    ListGroup,
-    ListGroupItem
+    ListGroup
 } from "react-bootstrap";
 import DOMPurify from "dompurify"
 import Helmet from "react-helmet";

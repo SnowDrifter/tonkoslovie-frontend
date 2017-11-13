@@ -11,11 +11,10 @@ import {
     FormControl,
     Button,
     Modal,
-    OverlayTrigger,
     Overlay,
     Popover
 } from "react-bootstrap";
-import style from "./Registration.less"
+import "./Registration.less"
 
 class Registration extends React.Component {
     constructor(props) {
@@ -185,7 +184,7 @@ class Registration extends React.Component {
                 email: email,
                 firstName: firstName,
                 lastName: lastName
-            }).then((response) => {
+            }).then(() => {
                 this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
             }).catch((error) => {
                 const response = error.response.data;

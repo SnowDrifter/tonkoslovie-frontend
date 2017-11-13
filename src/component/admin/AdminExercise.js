@@ -4,21 +4,17 @@ import {
     Panel,
     Jumbotron,
     FormGroup,
-    Row,
-    Col,
     ControlLabel,
     FormControl,
-    Button,
-    Form,
-    Glyphicon
+    Button
 } from "react-bootstrap";
-import style from "./AdminExercise.less"
 import client from "../../util/client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
+import "./AdminExercise.less"
 
 
 class AdminExercise extends React.Component {
