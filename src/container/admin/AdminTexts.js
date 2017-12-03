@@ -1,6 +1,6 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from "react-router"
+import {browserHistory, Link} from "react-router"
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
@@ -66,6 +66,7 @@ class AdminTexts extends React.Component {
         let texts = this.state.texts;
 
         const body = <div>
+            <h4><Link to="/admin">Главная</Link> / Тексты</h4>
             <Table
                 rowHeight={50}
                 rowsCount={texts.length}

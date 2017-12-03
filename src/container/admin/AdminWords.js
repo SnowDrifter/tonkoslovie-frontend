@@ -1,5 +1,6 @@
 import React from "react";
 import client from "../../util/client";
+import {Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
@@ -74,6 +75,7 @@ class AdminWords extends React.Component {
         let words = this.state.words;
 
         const body = <div>
+            <h4><Link to="/admin">Главная</Link> / Слова</h4>
             <Table
                 rowHeight={50}
                 rowsCount={words.length}

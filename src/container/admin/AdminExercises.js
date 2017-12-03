@@ -1,13 +1,14 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from "react-router"
+import {browserHistory, Link} from "react-router"
 import {Table, Column, Cell} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
 import {
     Button,
     Glyphicon,
     ButtonGroup,
-    ButtonToolbar
+    ButtonToolbar,
+    Panel
 } from "react-bootstrap";
 
 
@@ -64,11 +65,12 @@ class AdminExercises extends React.Component {
     render() {
         let exercises = this.state.exercises;
 
-        const body = <div>
+        const body = <Panel>
+            <h4><Link to="/admin">Главная</Link> / Упражнения</h4>
             <Table
                 rowHeight={50}
                 rowsCount={exercises.length}
-                width={1140}
+                width={1110}
                 height={600}
                 headerHeight={30}>
 
@@ -108,7 +110,7 @@ class AdminExercises extends React.Component {
             </Table>
             <br/>
             <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;

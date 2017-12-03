@@ -1,6 +1,6 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory} from "react-router";
+import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
@@ -61,6 +61,7 @@ class AdminThemes extends React.Component {
         let themes = this.state.themes;
 
         const body = <div>
+            <h4><Link to="/admin">Главная</Link> / Темы упражнений</h4>
             <Table
                 rowHeight={50}
                 rowsCount={themes.length}
