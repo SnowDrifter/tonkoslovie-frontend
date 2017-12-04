@@ -12,6 +12,7 @@ import {
     ListGroupItem,
     Checkbox
 } from "react-bootstrap";
+import {Link} from "react-router";
 import client from "../../util/client";
 
 class AdminTheme extends React.Component {
@@ -146,6 +147,7 @@ class AdminTheme extends React.Component {
         }
 
         return <Panel>
+            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/themes">Темы упражнений</Link> / {(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</h4>
             <Jumbotron>
                 <FormGroup>
                     <ControlLabel><h4>Заголовок</h4></ControlLabel>

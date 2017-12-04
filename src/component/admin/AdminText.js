@@ -11,6 +11,7 @@ import {
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
+import {Link} from "react-router";
 import client from "../../util/client";
 import EditPartModal from "./EditPartModal"
 import CreatePartModal from "./CreatePartModal"
@@ -220,6 +221,7 @@ class Text extends React.Component {
         }
 
         return <Panel>
+            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/texts">Тексты</Link> / {(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</h4>
             <Jumbotron>
                 <FormGroup>
                     <ControlLabel><h4>Заголовок</h4></ControlLabel>

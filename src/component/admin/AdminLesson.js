@@ -14,7 +14,7 @@ import {
     ProgressBar,
     Checkbox
 } from "react-bootstrap";
-
+import {Link} from "react-router";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
@@ -244,6 +244,7 @@ class Lesson extends React.Component {
         }
 
         return <Panel>
+            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/lessons">Уроки</Link> / {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</h4>
             <Jumbotron>
                 <h3>Заголовок</h3>
                 <FormGroup>

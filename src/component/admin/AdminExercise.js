@@ -13,6 +13,7 @@ import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
+import {Link} from "react-router";
 import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
 import "./AdminExercise.less"
 
@@ -140,6 +141,7 @@ class AdminExercise extends React.Component {
         }
 
         return (<Panel>
+                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/exercises">Упражнения</Link> / {(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</h4>
                 <Jumbotron>
                     <FormGroup>
                         <ControlLabel><h4>Заголовок</h4></ControlLabel>
