@@ -14,6 +14,7 @@ import {
     ProgressBar,
     Checkbox
 } from "react-bootstrap";
+import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -33,7 +34,8 @@ class Lesson extends React.Component {
             content: EditorState.createEmpty(),
             published: false,
             previewFileName: null,
-            progressUploadFile: null
+            progressUploadFile: null,
+            loaded: !this.props.params.lessonId
         };
 
         if (this.props.params.lessonId) {
@@ -64,7 +66,8 @@ class Lesson extends React.Component {
                 content: EditorState.createWithContent(contentState),
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
-                progressUploadFile: null
+                progressUploadFile: null,
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -243,7 +246,7 @@ class Lesson extends React.Component {
             </div>
         }
 
-        return <Panel>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / <Link to="/admin/lessons">Уроки</Link> / {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</h4>
             <Jumbotron>
                 <h3>Заголовок</h3>
@@ -307,7 +310,13 @@ class Lesson extends React.Component {
                 </Checkbox>
             </Jumbotron>
             <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-        </Panel>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 

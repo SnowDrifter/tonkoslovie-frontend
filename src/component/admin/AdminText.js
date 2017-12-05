@@ -11,13 +11,14 @@ import {
     Jumbotron,
     Glyphicon
 } from "react-bootstrap";
+import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
-import EditPartModal from "./EditPartModal"
-import CreatePartModal from "./CreatePartModal"
-import * as partTypes from  "../content/TextPartTypes"
-import ReactPlayer from "react-player"
-import "./AdminText.less"
+import EditPartModal from "./EditPartModal";
+import CreatePartModal from "./CreatePartModal";
+import * as partTypes from "../content/TextPartTypes";
+import ReactPlayer from "react-player";
+import "./AdminText.less";
 
 class Text extends React.Component {
 
@@ -33,7 +34,8 @@ class Text extends React.Component {
             currentPartIndex: null,
             textParts: [],
             progressUploadFile: null,
-            soundFileName: null
+            soundFileName: null,
+            loaded: !this.props.params.textId
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -56,7 +58,8 @@ class Text extends React.Component {
             this.setState({
                 id: text.id,
                 textParts: text.parts,
-                soundFileName: text.soundFileName
+                soundFileName: text.soundFileName,
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.title).value = text.title;
@@ -220,7 +223,7 @@ class Text extends React.Component {
             </div>
         }
 
-        return <Panel>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / <Link to="/admin/texts">Тексты</Link> / {(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</h4>
             <Jumbotron>
                 <FormGroup>
@@ -253,7 +256,13 @@ class Text extends React.Component {
             <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
             <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
             <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-        </Panel>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 

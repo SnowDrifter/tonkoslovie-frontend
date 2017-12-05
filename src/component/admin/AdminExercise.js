@@ -1,13 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-    Panel,
-    Jumbotron,
-    FormGroup,
-    ControlLabel,
-    FormControl,
-    Button
-} from "react-bootstrap";
+import {Panel, Jumbotron, FormGroup, ControlLabel, FormControl, Button} from "react-bootstrap";
 import client from "../../util/client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
@@ -15,7 +8,8 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {Link} from "react-router";
 import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
-import "./AdminExercise.less"
+import Loader from "../../component/Loader";
+import "./AdminExercise.less";
 
 
 class AdminExercise extends React.Component {
@@ -28,15 +22,14 @@ class AdminExercise extends React.Component {
             type: null,
             original: EditorState.createEmpty(),
             dictionary: EditorState.createEmpty(),
-            answersCount: 0,
-            answers: []
+            // Fix empty default value in first answer input
+            answersCount: this.props.params.exerciseId ? 0 : 1,
+            answers: [],
+            loaded: !this.props.params.exerciseId
         };
 
         if (this.props.params.exerciseId) {
             this.loadExercise(this.props.params.exerciseId)
-        } else {
-            // Fix empty default value in first answer input
-            this.setState({answersCount: 1});
         }
 
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
@@ -70,7 +63,8 @@ class AdminExercise extends React.Component {
                 answersCount: answersCount,
                 original: EditorState.createWithContent(originalState),
                 dictionary: EditorState.createWithContent(dictionaryState),
-                answers: exercise.answers || []
+                answers: exercise.answers || [],
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.type).value = exercise.type;
@@ -134,71 +128,78 @@ class AdminExercise extends React.Component {
         const answersCount = this.state.answersCount;
 
         for (let i = 0; i < answersCount; i++) {
-                answerForms.push(<FormControl className="admin-exercise-answer-form" key={i} ref={part => {
-                        this["answer-" + i] = part
-                    }}  defaultValue={this.state.answers[i] || ""}/>
-                );
+            answerForms.push(<FormControl className="admin-exercise-answer-form" key={i} ref={part => {
+                    this["answer-" + i] = part
+                }} defaultValue={this.state.answers[i] || ""}/>
+            );
         }
 
-        return (<Panel>
-                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/exercises">Упражнения</Link> / {(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</h4>
-                <Jumbotron>
+        const body = <Panel>
+            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/exercises">Упражнения</Link> / {(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</h4>
+            <Jumbotron>
+                <FormGroup>
+                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                    <FormControl
+                        inputRef={title => {
+                            this.title = title
+                        }}
+                    />
+                </FormGroup>
+
+                <h4>Оригинал</h4>
+                <Panel>
+                    <Editor
+                        editorState={this.state.original}
+                        onEditorStateChange={this.handleOriginalChange}
+                    />
+                </Panel>
+
+                <h4>Словарь</h4>
+                <Panel>
+                    <Editor
+                        editorState={this.state.dictionary}
+                        onEditorStateChange={this.handleDictionaryChange}
+                    />
+                </Panel>
+
+                <FormGroup>
+                    <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
+                    <FormControl componentClass="select" ref={part => {
+                        this["type"] = part
+                    }}>
+                        <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
+                        <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
+                    </FormControl>
+                </FormGroup>
+
+                <FormGroup>
+                    <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
+                    <FormControl
+                        componentClass="textarea"
+                        inputRef={answerRegex => {
+                            this.answerRegex = answerRegex
+                        }}
+                    />
+                </FormGroup>
+
+                <div className="admin-exercise-answer-panel">
                     <FormGroup>
-                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                        <FormControl
-                            inputRef={title => {
-                                this.title = title
-                            }}
-                        />
+                        <ControlLabel><h4>Ответы</h4></ControlLabel>
+                        {answerForms}
                     </FormGroup>
+                    <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
+                    <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
+                </div>
+            </Jumbotron>
 
-                    <h4>Оригинал</h4>
-                    <Panel>
-                        <Editor
-                            editorState={this.state.original}
-                            onEditorStateChange={this.handleOriginalChange}
-                        />
-                    </Panel>
+            <Button onClick={this.saveExercise.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+        </Panel>;
 
-                    <h4>Словарь</h4>
-                    <Panel>
-                        <Editor
-                            editorState={this.state.dictionary}
-                            onEditorStateChange={this.handleDictionaryChange}
-                        />
-                    </Panel>
-
-                    <FormGroup>
-                        <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
-                        <FormControl componentClass="select" ref={part => {this["type"] = part}}>
-                            <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
-                            <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
-                        </FormControl>
-                    </FormGroup>
-
-                    <FormGroup>
-                        <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
-                        <FormControl
-                            componentClass="textarea"
-                            inputRef={answerRegex => {
-                                this.answerRegex = answerRegex
-                            }}
-                        />
-                    </FormGroup>
-
-                    <div className="admin-exercise-answer-panel">
-                        <FormGroup>
-                            <ControlLabel><h4>Ответы</h4></ControlLabel>
-                            {answerForms}
-                        </FormGroup>
-                        <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
-                        <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
-                    </div>
-                </Jumbotron>
-
-                <Button onClick={this.saveExercise.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-            </Panel>
-        );
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 

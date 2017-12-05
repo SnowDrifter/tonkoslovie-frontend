@@ -12,6 +12,7 @@ import {
     ListGroupItem,
     Checkbox
 } from "react-bootstrap";
+import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
 
@@ -24,7 +25,8 @@ class AdminTheme extends React.Component {
             id: null,
             published: false,
             exercises: [],
-            foundExercises: []
+            foundExercises: [],
+            loaded: !this.props.params.themeId
         };
 
         if (this.props.params.themeId) {
@@ -47,7 +49,8 @@ class AdminTheme extends React.Component {
             this.setState({
                 id: theme.id,
                 exercises: theme.exercises,
-                published: theme.published
+                published: theme.published,
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.title).value = theme.title;
@@ -146,7 +149,7 @@ class AdminTheme extends React.Component {
             foundExercises.push(<span key={0}>Ничего не найдено</span>);
         }
 
-        return <Panel>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / <Link to="/admin/themes">Темы упражнений</Link> / {(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</h4>
             <Jumbotron>
                 <FormGroup>
@@ -188,7 +191,13 @@ class AdminTheme extends React.Component {
             </Jumbotron>
 
             <Button onClick={this.saveTheme.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-        </Panel>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
