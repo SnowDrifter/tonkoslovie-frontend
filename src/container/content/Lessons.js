@@ -4,7 +4,7 @@ import {Panel, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
 import Loader from "../../component/Loader";
-import "./Lessons.less"
+import "./Lessons.less";
 
 class Lessons extends React.Component {
 
@@ -39,14 +39,15 @@ class Lessons extends React.Component {
         });
 
         lessons.map((lesson, index) => {
-            const preview = lesson.previewImage ? <Image className="lesson-preview" src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + lesson.previewImage} thumbnail/> : null;
+            const preview = lesson.previewImage ? <Image className="lesson-preview"
+                                                         src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + lesson.previewImage}
+                                                         thumbnail/> : null;
 
             lessonPreviews.push(
                 <Link className="lesson" key={index} to={"/lesson/" + lesson.id}>
                     <li>
-                        <div className="lesson-image-wrapper">
                         {preview}
-                        </div>
+
                         <h3 className="lesson-title">{lesson.title}</h3>
                         <p className="lesson-annotation">{lesson.annotation}</p>
                     </li>

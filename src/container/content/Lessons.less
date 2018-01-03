@@ -2,11 +2,6 @@
 
   list-style-type: none;
 
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
   div {
     margin: 20px;
   }
@@ -15,20 +10,6 @@
     width: 500px;
   }
 
-  h3 {
-    font: bold 20px Helvetica, Verdana, sans-serif;
-  }
-
-  img {
-    border: 0;
-    float: left;
-    margin: 0 15px 0 0;
-  }
-
-  p {
-    font-size: 15px;
-    color: #333;
-  }
 
   li {
     padding: 10px;
@@ -46,21 +27,39 @@
 
 }
 
+.lesson-preview {
+  border: 0;
+  float: left;
+  margin: 0 15px 0 0;
+}
+
+.lesson-title {
+  font: bold 20px Helvetica, Verdana, sans-serif;
+}
+
+.lesson-annotation {
+  font-size: 15px;
+  color: #333;
+}
+
 .lesson:last-child hr {
   display: none;
 }
 
 @media all and (min-width: 0px) and (max-width: 1024px) {
-  .lesson-title {
-    min-width: 100px;
-    text-align: center;
+  .lessons-list {
+    padding: 0 !important;
+    text-align:center;
   }
 
-  .lesson-annotation {
-    text-align: center;
+  .lesson-title::before {
+    display:block;
+    content: ' ';
+    clear:both;
   }
 
   .lesson-preview  {
     margin-right: 0 !important;
+    float: none;
   }
 }
