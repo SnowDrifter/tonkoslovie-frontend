@@ -77,7 +77,7 @@ class Text extends React.Component {
         this.state.textParts.map((part, index) => {
             switch (part.type) {
                 case partTypes.TEXT: {
-                    components.push(<dev className="text-part" key={index}>{part.data}</dev>);
+                    components.push(<div className="text-part" key={index}>{part.data}</div>);
                     break;
                 }
                 case partTypes.LINE_BREAK: {
