@@ -1,14 +1,9 @@
 import React from "react";
 import client from "../../util/client";
-import {
-    Panel,
-    PageHeader,
-    Jumbotron,
-    ListGroup
-} from "react-bootstrap";
-import DOMPurify from "dompurify"
+import {Panel, PageHeader, Jumbotron, ListGroup} from "react-bootstrap";
+import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import {Link} from "react-router"
+import {Link} from "react-router";
 import Loader from "../Loader";
 
 class Lesson extends React.Component {
@@ -49,28 +44,37 @@ class Lesson extends React.Component {
         })
     }
 
-    render() {
-        let texts = [];
-        let title = this.state.title + " | Тонкословие";
-
-        const sortedTexts = this.state.texts.sort(function(a, b) {
+    createTextList() {
+        const sortedTexts = this.state.texts.sort(function (a, b) {
             return a.title.localeCompare(b.title);
         });
 
+        let texts = [];
         sortedTexts.map((text, index) => {
             texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
         });
 
-        let body = <Panel>
-            <Helmet title={title}/>
-                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
-
-                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
-
+        if (texts.length > 0) {
+            return <div>
                 <h3>Тексты</h3>
                 <ListGroup>
                     {texts}
                 </ListGroup>
+            </div>
+        }
+    }
+
+    render() {
+        const title = this.state.title + " | Тонкословие";
+        const textList = this.createTextList();
+
+        let body = <Panel>
+            <Helmet title={title}/>
+            <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+
+            <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
+
+            {textList}
         </Panel>;
 
         if (this.state.loaded) {
