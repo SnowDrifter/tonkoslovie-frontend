@@ -15,6 +15,7 @@ import {
     ToggleButton
 } from "react-bootstrap";
 import * as  partTypes from "../content/TextPartTypes";
+import { toast } from "react-toastify";
 
 class CreatePartModal extends React.Component {
 
@@ -56,7 +57,7 @@ class CreatePartModal extends React.Component {
 
                 textPart.choiceVariants = choiceVariants;
             } else {
-                alert("Необходим хотя бы один правильный ответ");
+                toast.error("Необходим хотя бы один правильный ответ");
                 return;
             }
         }

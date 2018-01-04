@@ -20,6 +20,7 @@ import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
+import { toast } from "react-toastify";
 
 
 class Lesson extends React.Component {
@@ -89,7 +90,7 @@ class Lesson extends React.Component {
                 id: response.data.id,
             });
 
-            alert("Сохранено");
+            toast.success("Сохранено");
         })
     }
 
@@ -144,7 +145,7 @@ class Lesson extends React.Component {
     uploadPreviewImage() {
         const preview = this.preview.files[0];
         if (preview == undefined) {
-            alert("Выберите файл");
+            toast.error("Выберите файл");
             return;
         }
 
@@ -165,7 +166,7 @@ class Lesson extends React.Component {
             })
             .catch(() => {
                 this.setState({progressUploadFile: null});
-                alert("Произошла ошибка во время загрузки");
+                toast.error("Произошла ошибка во время загрузки");
             });
     }
 
@@ -181,7 +182,7 @@ class Lesson extends React.Component {
                     this.saveLesson();
                 })
                 .catch(() => {
-                    alert("Произошла ошибка во время удаления");
+                    toast.error("Произошла ошибка во время удаления");
                 });
         }
     }

@@ -15,6 +15,7 @@ import {
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
+import { toast } from "react-toastify";
 
 class AdminTheme extends React.Component {
 
@@ -68,7 +69,7 @@ class AdminTheme extends React.Component {
                 id: response.data.id
             });
 
-            alert("Сохранено");
+            toast.success("Сохранено");
         })
     }
 

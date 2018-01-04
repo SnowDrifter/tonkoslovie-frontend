@@ -10,6 +10,7 @@ import {Link} from "react-router";
 import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
 import Loader from "../../component/Loader";
 import "./AdminExercise.less";
+import { toast } from "react-toastify";
 
 
 class AdminExercise extends React.Component {
@@ -93,7 +94,7 @@ class AdminExercise extends React.Component {
                 id: response.data.id,
             });
 
-            alert("Сохранено");
+            toast.success("Сохранено");
         })
     }
 

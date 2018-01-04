@@ -19,6 +19,7 @@ import CreatePartModal from "./CreatePartModal";
 import * as partTypes from "../content/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
+import { toast } from "react-toastify";
 
 class Text extends React.Component {
 
@@ -77,7 +78,7 @@ class Text extends React.Component {
                 id: response.data.id,
             });
 
-            alert("Сохранено");
+            toast.success("Сохранено");
         })
     }
 
@@ -146,7 +147,7 @@ class Text extends React.Component {
     uploadSound() {
         const sound = this.sound.files[0];
         if (sound == undefined) {
-            alert("Выберите файл");
+            toast.error("Выберите файл");
             return;
         }
 
@@ -167,7 +168,7 @@ class Text extends React.Component {
             })
             .catch(() => {
                 this.setState({progressUploadFile: null});
-                alert("Произошла ошибка во время загрузки");
+                toast.error("Произошла ошибка во время загрузки");
             });
     }
 

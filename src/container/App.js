@@ -1,11 +1,12 @@
 import React from "react";
 import Login from "../component/Login.js";
 import {Navbar, Nav, NavItem} from "react-bootstrap";
-import {connect} from "react-redux"
-import {bindActionCreators} from "redux"
-import * as UserActions from "../action/Auth"
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import * as UserActions from "../action/Auth";
 import {LinkContainer} from "react-router-bootstrap";
-import {Link} from "react-router"
+import {Link} from "react-router";
+import {ToastContainer, toast} from "react-toastify";
 
 class App extends React.Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class App extends React.Component {
         this.props.actions.logout();
     }
 
-    toggleExpandNavbar(){
+    toggleExpandNavbar() {
         this.setState({expandNavbar: !this.state.expandNavbar});
     }
 
@@ -60,13 +61,17 @@ class App extends React.Component {
                             <NavItem onClick={this.props.actions.showLogin}
                                      className={isAuthenticated ? "hidden" : ""}>Вход</NavItem>
 
-                                <NavItem onClick={this.logout.bind(this)}
-                                         className={isAuthenticated ? "" : "hidden"}>Выход</NavItem>
+                            <NavItem onClick={this.logout.bind(this)}
+                                     className={isAuthenticated ? "" : "hidden"}>Выход</NavItem>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
 
                 <Login/>
+
+                <ToastContainer autoClose={3000}
+                                position={toast.POSITION.BOTTOM_LEFT}
+                                hideProgressBar={true}/>
 
                 <div className="container">
                     {this.props.children}
