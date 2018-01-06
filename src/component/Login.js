@@ -41,7 +41,7 @@ class Login extends React.Component {
                         <FormGroup>
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="usernameForm">
                                         <ControlLabel>Никнейм</ControlLabel>
                                         <FormControl ref={username => {
                                             this.username = username
@@ -52,7 +52,7 @@ class Login extends React.Component {
 
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="passwordForm">
                                         <ControlLabel>Пароль</ControlLabel>
                                         <FormControl ref={password => {
                                             this.password = password
@@ -62,7 +62,7 @@ class Login extends React.Component {
                             </Row>
                         </FormGroup>
 
-                        <span style={{color: "red"}}>{this.props.user.user.errorMessage}</span>
+                        <span style={{color: "red"}}>{this.props.user.errorMessage}</span>
 
                         <Button type="submit" className="pull-right" bsStyle="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>

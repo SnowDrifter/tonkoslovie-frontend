@@ -65,7 +65,7 @@ class Lesson extends React.Component {
     }
 
     render() {
-        const title = this.state.title + " | Тонкословие";
+        const title = `${this.state.title} | Тонкословие`;
         const textList = this.createTextList();
 
         let body = <Panel>

@@ -43,7 +43,7 @@ class Word extends React.Component {
                         <FormGroup>
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="russianTextForm">
                                         <ControlLabel>Русский текст</ControlLabel>
                                         <FormControl
                                             inputRef={russianText => {
@@ -56,7 +56,7 @@ class Word extends React.Component {
 
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="polishTextForm">
                                         <ControlLabel>Польский текст</ControlLabel>
                                         <FormControl ref={polishText => {
                                             this.polishText = polishText

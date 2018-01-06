@@ -1,17 +1,6 @@
 import client from "../util/client";
-
-import {
-    SHOW_LOGIN,
-    HIDE_LOGIN,
-    LOGIN_REQUEST,
-    LOGIN_SUCCESS,
-    LOGIN_FAILURE,
-    LOGOUT
-} from "../constant/User"
-
-import {
-    ROUTING
-} from "../constant/Routing"
+import {SHOW_LOGIN, HIDE_LOGIN, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT} from "../constant/User";
+import {ROUTING} from "../constant/Routing";
 
 export function showLogin() {
     return (dispatch) => {
@@ -82,10 +71,6 @@ export function logout() {
             payload: {
                 isAuthenticated: false
             }
-        });
-
-        client.get("/api/user/logout").then(function () {
-            localStorage.removeItem("token");
         });
 
         dispatch({

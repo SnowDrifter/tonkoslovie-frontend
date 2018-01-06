@@ -101,7 +101,7 @@ class CreatePartModal extends React.Component {
         let type = this.state.type;
 
         if (type == partTypes.TEXT) {
-            body = <FormGroup controlId="formInlineName">
+            body = <FormGroup controlId="textForm">
                 <ControlLabel>Текст</ControlLabel>
                 <FormControl
                     inputRef={data => {
