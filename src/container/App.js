@@ -15,6 +15,14 @@ class App extends React.Component {
         this.state = {
             expandNavbar: false
         };
+
+        this.checkToken();
+    }
+
+    checkToken() {
+        if (this.props.location.query.token) {
+            this.props.actions.saveToken(this.props.location.query.token);
+        }
     }
 
     logout() {

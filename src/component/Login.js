@@ -67,6 +67,10 @@ class Login extends React.Component {
                         <Button type="submit" className="pull-right" bsStyle="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>
                     </form>
+
+                    <a href="http://localhost:8080/login/google">Google</a>
+                    <br/>
+                    <a href="http://localhost:8080/login/facebook">Facebook</a>
                 </Modal.Body>
             </Modal>
         </div>

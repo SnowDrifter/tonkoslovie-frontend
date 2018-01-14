@@ -64,7 +64,31 @@ export function login(payload) {
     }
 }
 
+export function saveToken(token) {
+    return (dispatch) => {
+        localStorage.setItem("token", token);
+
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: {
+                isAuthenticated: true,
+                showLogin: false
+            }
+        });
+
+        dispatch({
+            type: ROUTING,
+            payload: {
+                method: "replace",
+                nextUrl: "/"
+            }
+        });
+    }
+}
+
 export function logout() {
+    localStorage.removeItem("token");
+
     return (dispatch) => {
         dispatch({
             type: LOGOUT,
