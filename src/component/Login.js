@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {bindActionCreators} from "redux"
-import {connect} from "react-redux"
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
-import * as UserActions from "../action/Auth"
-import "./Login.less"
+import * as UserActions from "../action/Auth";
+import "./Login.less";
+const apiEndpoint = process.env.API_ENDPOINT || "";
 
 class Login extends React.Component {
 
@@ -16,7 +17,7 @@ class Login extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({ showLogin: props.user.showLogin });
+        this.setState({showLogin: props.user.showLogin});
     }
 
     sendLogin(event) {
@@ -37,7 +38,7 @@ class Login extends React.Component {
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="login-modal-body">
-                    <form>
+                    <form className="login-form">
                         <FormGroup>
                             <Row>
                                 <Col md={12}>
@@ -68,9 +69,21 @@ class Login extends React.Component {
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>
                     </form>
 
-                    <a href="http://localhost:8080/login/google">Google</a>
-                    <br/>
-                    <a href="http://localhost:8080/login/facebook">Facebook</a>
+                    <hr/>
+
+                    <div className="login-oauth-panel">
+                        <div className="text-center">Войти с помощью</div>
+                        <div className="login-social-links-wrapper">
+                        <div className="login-social-links">
+                            <a href={apiEndpoint + "/login/google"}>
+                                <img className="login-social-icon-image" src="/assets/social/google.svg"/>
+                            </a>
+                            <a href={apiEndpoint + "/login/facebook"}>
+                                <img className="login-social-icon-image" src="/assets/social/facebook.svg"/>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
                 </Modal.Body>
             </Modal>
         </div>
