@@ -75,10 +75,10 @@ class Login extends React.Component {
                         <div className="text-center">Войти с помощью</div>
                         <div className="login-social-links-wrapper">
                         <div className="login-social-links">
-                            <a href={apiEndpoint + "/login/google"}>
+                            <a href={apiEndpoint + "/api/oauth/login/google"}>
                                 <img className="login-social-icon-image" src="/assets/social/google.svg"/>
                             </a>
-                            <a href={apiEndpoint + "/login/facebook"}>
+                            <a href={apiEndpoint + "/api/oauth/login/facebook"}>
                                 <img className="login-social-icon-image" src="/assets/social/facebook.svg"/>
                             </a>
                         </div>
