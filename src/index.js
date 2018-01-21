@@ -22,6 +22,8 @@ import AdminExercises from "./container/admin/AdminExercises.js";
 import AdminExercise from "./component/admin/AdminExercise.js";
 import AdminThemes from "./container/admin/AdminThemes.js";
 import AdminTheme from "./component/admin/AdminTheme.js";
+import AdminUsers from "./container/admin/AdminUsers.js";
+import AdminUser from "./component/admin/AdminUser.js";
 import React from "react"
 import {render} from "react-dom"
 import {Router, IndexRoute, Route, browserHistory} from "react-router"
@@ -50,6 +52,8 @@ render((
                         <Route path="/admin/exercise(/:exerciseId)" component={AdminExercise}/>
                         <Route path="/admin/themes" component={AdminThemes}/>
                         <Route path="/admin/theme(/:themeId)" component={AdminTheme}/>
+                        <Route path="/admin/users" component={AdminUsers}/>
+                        <Route path="/admin/user/:userId" component={AdminUser}/>
                     </Route>
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson(/:lessonId)" component={Lesson}/>
