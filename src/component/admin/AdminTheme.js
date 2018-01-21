@@ -186,7 +186,7 @@ class AdminTheme extends React.Component {
                     </ListGroup>
                 </Panel>
 
-                <Checkbox checked={this.state.published} onClick={this.togglePublished.bind(this)}>
+                <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
                     Опубликовать тему
                 </Checkbox>
             </Jumbotron>
