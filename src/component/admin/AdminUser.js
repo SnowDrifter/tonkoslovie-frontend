@@ -13,6 +13,7 @@ import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
 import {toast} from "react-toastify";
+import RoleUtil from "../../util/RoleUtil";
 
 class AdminUser extends React.Component {
 
@@ -21,8 +22,8 @@ class AdminUser extends React.Component {
 
         this.state = {
             id: this.props.params.userId,
-            roles: [],
             enabled: false,
+            admin: false,
             loaded: false
         };
 
@@ -38,8 +39,8 @@ class AdminUser extends React.Component {
             const user = response.data;
 
             this.setState({
-                roles: user.roles,
                 enabled: user.enabled,
+                admin: RoleUtil.isAdmin(user.roles),
                 loaded: true
             });
 
@@ -57,11 +58,27 @@ class AdminUser extends React.Component {
             lastName: ReactDOM.findDOMNode(this.lastName).value,
             username: ReactDOM.findDOMNode(this.username).value,
             email: ReactDOM.findDOMNode(this.email).value,
-            roles: this.state.roles,
+            roles: this.createRoles(),
             enabled: this.state.enabled
         }).then(() => {
             toast.success("Сохранено");
         })
+    }
+
+    createRoles() {
+        const roles = ["ROLE_USER"];
+
+        if(this.state.admin) {
+            roles.push("ROLE_ADMIN");
+        }
+
+        console.log(roles);
+
+        return roles;
+    }
+
+    toggleAdmin() {
+        this.setState({admin: !this.state.admin});
     }
 
     toggleEnabled() {
@@ -108,6 +125,10 @@ class AdminUser extends React.Component {
                         }}
                     />
                 </FormGroup>
+
+                <Checkbox checked={this.state.admin} onChange={this.toggleAdmin.bind(this)}>
+                    Администратор
+                </Checkbox>
 
                 <Checkbox checked={this.state.enabled} onChange={this.toggleEnabled.bind(this)}>
                     Активный

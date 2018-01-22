@@ -4,6 +4,7 @@ import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
+import RoleUtil from "../../util/RoleUtil";
 import {Button, Glyphicon, ButtonGroup, ButtonToolbar} from "react-bootstrap";
 
 const dateOptions = {
@@ -43,17 +44,6 @@ class AdminUsers extends React.Component {
 
     editUser(user) {
         browserHistory.push("/admin/user/" + user.id);
-    }
-
-    formatRoles(roles) {
-        let formattedRoles = "";
-
-        roles.forEach(function (role) {
-            role = role.replace("ROLE_", "");
-            formattedRoles = formattedRoles.concat(role + " ");
-        });
-
-        return formattedRoles;
     }
 
     formatDate(time) {
@@ -131,10 +121,10 @@ class AdminUsers extends React.Component {
                 />
 
                 <Column
-                    header={<Cell>Роли</Cell>}
+                    header={<Cell>Администратор</Cell>}
                     cell={({rowIndex}) => (
                         <Cell>
-                            {this.formatRoles(users[rowIndex].roles)}
+                            {RoleUtil.isAdmin(users[rowIndex].roles) ? "Да" : "Нет"}
                         </Cell>
                     )}
                     width={120}
