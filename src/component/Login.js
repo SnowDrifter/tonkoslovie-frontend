@@ -63,7 +63,7 @@ class Login extends React.Component {
                             </Row>
                         </FormGroup>
 
-                        <span style={{color: "red"}}>{this.props.user.errorMessage}</span>
+                        <div className="login-error-message">{this.props.user.errorMessage}</div>
 
                         <Button type="submit" className="pull-right" bsStyle="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>
@@ -74,14 +74,14 @@ class Login extends React.Component {
                     <div className="login-oauth-panel">
                         <div className="text-center">Войти с помощью</div>
                         <div className="login-social-links-wrapper">
-                        <div className="login-social-links">
-                            <a href={apiEndpoint + "/api/oauth/login/google"}>
-                                <img className="login-social-icon-image" src="/assets/social/google.svg"/>
-                            </a>
-                            <a href={apiEndpoint + "/api/oauth/login/facebook"}>
-                                <img className="login-social-icon-image" src="/assets/social/facebook.svg"/>
-                            </a>
-                        </div>
+                            <div className="login-social-links">
+                                <a href={apiEndpoint + "/api/oauth/login/google"}>
+                                    <img className="login-social-icon-image" src="/assets/social/google.svg"/>
+                                </a>
+                                <a href={apiEndpoint + "/api/oauth/login/facebook"}>
+                                    <img className="login-social-icon-image" src="/assets/social/facebook.svg"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </Modal.Body>
