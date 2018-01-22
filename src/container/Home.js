@@ -1,6 +1,7 @@
 import React from "react";
-import {Jumbotron} from "react-bootstrap";
+import {Jumbotron, Image} from "react-bootstrap";
 import Helmet from "react-helmet";
+import "./Home.less";
 
 class Home extends React.Component {
     render() {
@@ -9,6 +10,7 @@ class Home extends React.Component {
 
             <Jumbotron>
                 <h1 style={{textAlign: "center"}}>ÞΣԿb †﻿ØĤҠØϾ/\ØβUମ ∏Ø/\bϾҠØՐØ</h1>
+                <Image className="home-image" src="/assets/image/main.jpg" thumbnail/>
             </Jumbotron>
         </div>
     }
