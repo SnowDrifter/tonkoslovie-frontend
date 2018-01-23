@@ -7,7 +7,7 @@ const cacheResponseDirective = require('express-cache-response-directive');
 
 const app = express();
 const compiler = webpack(config);
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 
 app.use(compression());
 
