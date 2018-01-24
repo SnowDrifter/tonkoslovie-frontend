@@ -16,8 +16,8 @@
   },
   "scripts": {
     "dev": "set API_ENDPOINT=http://localhost:8080&& set MEDIA_ENDPOINT=http://localhost&& webpack-dev-server --config webpack/webpack.config.js --inline --hot --host 0.0.0.0 --port 3000",
-    "prod": "NODE_ENV=production API_ENDPOINT=http://tonkoslovie.ru:8080 MEDIA_ENDPOINT=http://tonkoslovie.ru:8081 node server.js",
-    "prod-win": "set NODE_ENV=production&& set API_ENDPOINT=http://tonkoslovie.ru:8080&& set MEDIA_ENDPOINT=http://tonkoslovie.ru:8081&& node server.js",
+    "prod": "NODE_ENV=production API_ENDPOINT=https://tonkoslovie.ru MEDIA_ENDPOINT=https://tonkoslovie.ru node server.js",
+    "prod-win": "set NODE_ENV=production&& set API_ENDPOINT=https://tonkoslovie.ru&& set MEDIA_ENDPOINT=https://tonkoslovie.ru&& node server.js",
     "build": "webpack -d"
   },
   "keywords": [],
