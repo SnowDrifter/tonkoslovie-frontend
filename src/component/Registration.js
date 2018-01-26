@@ -245,7 +245,7 @@ class Registration extends React.Component {
                             <Col md={10}>
                                 <FormGroup validationState={this.state.username.validationState}>
                                     <ControlLabel>Никнейм</ControlLabel>
-                                    <Overlay show={this.state.username.showPopover} target={() => ReactDOM.findDOMNode(this.username)} placement="left">
+                                    <Overlay show={this.state.username.showPopover} target={this.username} placement="left">
                                         <Popover id="usernamePopover" style={{width: 250}}>{this.state.username.message}</Popover>
                                     </Overlay>
 
@@ -262,7 +262,7 @@ class Registration extends React.Component {
                             <Col md={10}>
                                 <FormGroup validationState={this.state.password.validationState}>
                                     <ControlLabel>Пароль</ControlLabel>
-                                    <Overlay show={this.state.password.showPopover} target={() => ReactDOM.findDOMNode(this.password)} placement="left">
+                                    <Overlay show={this.state.password.showPopover} target={this.password} placement="left">
                                         <Popover id="passwordPopover" style={{width: 250}}>{this.state.password.message}</Popover>
                                     </Overlay>
 
@@ -279,7 +279,7 @@ class Registration extends React.Component {
                             <Col md={10}>
                                 <FormGroup validationState={this.state.confirmPassword.validationState}>
                                     <ControlLabel>Повторите пароль</ControlLabel>
-                                    <Overlay show={this.state.confirmPassword.showPopover} target={() => ReactDOM.findDOMNode(this.confirmPassword)} placement="left">
+                                    <Overlay show={this.state.confirmPassword.showPopover} target={this.confirmPassword} placement="left">
                                         <Popover style={{width: 250}} id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
                                     </Overlay>
 
@@ -296,7 +296,7 @@ class Registration extends React.Component {
                             <Col md={10}>
                                 <FormGroup validationState={this.state.email.validationState}>
                                     <ControlLabel>Email</ControlLabel>
-                                    <Overlay show={this.state.email.showPopover} target={() => ReactDOM.findDOMNode(this.email)} placement="left">
+                                    <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
                                         <Popover id="emailPopover" style={{width: 250}}>{this.state.email.message}</Popover>
                                     </Overlay>
 
