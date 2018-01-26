@@ -241,7 +241,8 @@ class Registration extends React.Component {
                 <form>
                     <FormGroup onSubmit={this.sendRegistration.bind(this)}>
                         <Row>
-                            <Col md={12}>
+                            <Col md={1}/>
+                            <Col md={10}>
                                 <FormGroup validationState={this.state.username.validationState}>
                                     <ControlLabel>Никнейм</ControlLabel>
                                     <Overlay show={this.state.username.showPopover} target={() => ReactDOM.findDOMNode(this.username)} placement="left">
@@ -251,14 +252,14 @@ class Registration extends React.Component {
                                     <FormControl ref={username => {
                                         this.username = username
                                     }} type="text" autoFocus/>
-
                                 </FormGroup>
-
                             </Col>
+                            <Col md={1}/>
                         </Row>
 
                         <Row>
-                            <Col md={12}>
+                            <Col md={1}/>
+                            <Col md={10}>
                                 <FormGroup validationState={this.state.password.validationState}>
                                     <ControlLabel>Пароль</ControlLabel>
                                     <Overlay show={this.state.password.showPopover} target={() => ReactDOM.findDOMNode(this.password)} placement="left">
@@ -270,10 +271,12 @@ class Registration extends React.Component {
                                     }} type="password"/>
                                 </FormGroup>
                             </Col>
+                            <Col md={1}/>
                         </Row>
 
                         <Row>
-                            <Col md={12}>
+                            <Col md={1}/>
+                            <Col md={10}>
                                 <FormGroup validationState={this.state.confirmPassword.validationState}>
                                     <ControlLabel>Повторите пароль</ControlLabel>
                                     <Overlay show={this.state.confirmPassword.showPopover} target={() => ReactDOM.findDOMNode(this.confirmPassword)} placement="left">
@@ -285,10 +288,12 @@ class Registration extends React.Component {
                                     }} type="password"/>
                                 </FormGroup>
                             </Col>
+                            <Col md={1}/>
                         </Row>
 
                         <Row>
-                            <Col md={12}>
+                            <Col md={1}/>
+                            <Col md={10}>
                                 <FormGroup validationState={this.state.email.validationState}>
                                     <ControlLabel>Email</ControlLabel>
                                     <Overlay show={this.state.email.showPopover} target={() => ReactDOM.findDOMNode(this.email)} placement="left">
@@ -300,32 +305,39 @@ class Registration extends React.Component {
                                     }} type="email"/>
                                 </FormGroup>
                             </Col>
+                            <Col md={1}/>
                         </Row>
 
                         <Row>
-                            <Col md={12}>
-                                <FormGroup controlId="formControlsSelect">
+                            <Col md={1}/>
+                            <Col md={5}>
+                                <FormGroup>
                                     <ControlLabel>Имя</ControlLabel>
                                     <FormControl ref={firstName => {
                                         this.firstName = firstName
                                     }} type="text"/>
                                 </FormGroup>
                             </Col>
-                        </Row>
 
-                        <Row>
-                            <Col md={12}>
-                                <FormGroup controlId="formControlsSelect">
+                            <Col md={5}>
+                                <FormGroup>
                                     <ControlLabel>Фамилия</ControlLabel>
                                     <FormControl ref={lastName => {
                                         this.lastName = lastName
                                     }} type="text"/>
                                 </FormGroup>
                             </Col>
+                            <Col md={1}/>
                         </Row>
                     </FormGroup>
-                    <Button disabled={this.state.disableSubmit} type="submit" className="pull-right" bsStyle="success"
-                            onClick={this.sendRegistration.bind(this)}>Сохранить</Button>
+
+                    <Row>
+                        <Col md={11}>
+                            <Button disabled={this.state.disableSubmit} type="submit" className="pull-right" bsStyle="success"
+                                    onClick={this.sendRegistration.bind(this)}>Сохранить</Button>
+                        </Col>
+                        <Col md={1}/>
+                    </Row>
                 </form>
             </Panel>
 
