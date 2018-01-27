@@ -26,12 +26,6 @@ class Registration extends React.Component {
             showErrorModal: false,
             modalErrorText: null,
 
-            username: {
-                validationState: null,
-                showPopover: false,
-                message: null
-            },
-
             password: {
                 validationState: null,
                 showPopover: false,
@@ -55,20 +49,30 @@ class Registration extends React.Component {
     validateForm() {
         let success = true;
 
-        const username = ReactDOM.findDOMNode(this.username).value;
+        const email = ReactDOM.findDOMNode(this.email).value;
+        const emailPattern = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
 
-        if (username == "") {
+        if (email == "") {
             this.setState({
-                username: {
+                email: {
                     validationState: "error",
                     showPopover: true,
                     message: "Поле должно быть заполнено"
                 }
             });
             success = false;
+        } else if (!emailPattern.test(email)) {
+            this.setState({
+                email: {
+                    validationState: "error",
+                    showPopover: true,
+                    message: "Неправильный формат электронной почты"
+                }
+            });
+            success = false;
         } else {
             this.setState({
-                username: {
+                email: {
                     validationState: "success",
                     showPopover: false
                 }
@@ -76,7 +80,6 @@ class Registration extends React.Component {
         }
 
         const password = ReactDOM.findDOMNode(this.password).value;
-
         const confirmPassword = ReactDOM.findDOMNode(this.confirmPassword).value;
 
         if (password == "") {
@@ -133,36 +136,6 @@ class Registration extends React.Component {
             });
         }
 
-        const email = ReactDOM.findDOMNode(this.email).value;
-        const emailPattern = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-
-        if (email == "") {
-            this.setState({
-                email: {
-                    validationState: "error",
-                    showPopover: true,
-                    message: "Поле должно быть заполнено"
-                }
-            });
-            success = false;
-        } else if (!emailPattern.test(email)) {
-            this.setState({
-                email: {
-                    validationState: "error",
-                    showPopover: true,
-                    message: "Неправильный формат электронной почты"
-                }
-            });
-            success = false;
-        } else {
-            this.setState({
-                email: {
-                    validationState: "success",
-                    showPopover: false
-                }
-            });
-        }
-
         return success;
     }
 
@@ -196,16 +169,6 @@ class Registration extends React.Component {
                                     validationState: "error",
                                     message: error.message,
                                     showPopover: true
-                                }
-                            });
-                        }
-
-                        if (error.field == "username") {
-                            this.setState({
-                                username: {
-                                    validationState: "error",
-                                    showPopover: true,
-                                    message: error.message,
                                 }
                             });
                         }
@@ -243,12 +206,8 @@ class Registration extends React.Component {
                         <Row>
                             <Col md={1}/>
                             <Col md={10}>
-                                <FormGroup validationState={this.state.username.validationState}>
+                                <FormGroup>
                                     <ControlLabel>Никнейм</ControlLabel>
-                                    <Overlay show={this.state.username.showPopover} target={this.username} placement="left">
-                                        <Popover id="usernamePopover" style={{width: 250}}>{this.state.username.message}</Popover>
-                                    </Overlay>
-
                                     <FormControl ref={username => {
                                         this.username = username
                                     }} type="text" autoFocus/>
