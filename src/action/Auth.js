@@ -31,7 +31,7 @@ export function login(payload) {
         });
 
         client.post("/api/user/login", {
-            username: payload.username,
+            email: payload.email,
             password: payload.password
         })
             .then(function (response) {

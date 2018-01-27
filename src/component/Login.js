@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
 import * as UserActions from "../action/Auth";
 import "./Login.less";
-const apiEndpoint = process.env.API_ENDPOINT || "";
+const apiEndpoint = process.env.API_ENDPOINT;
 
 class Login extends React.Component {
 
@@ -23,10 +23,10 @@ class Login extends React.Component {
     sendLogin(event) {
         event.preventDefault();
 
-        const username = ReactDOM.findDOMNode(this.username).value;
+        const email = ReactDOM.findDOMNode(this.email).value;
         const password = ReactDOM.findDOMNode(this.password).value;
 
-        this.props.actions.login({username: username, password: password});
+        this.props.actions.login({email: email, password: password});
     }
 
     render() {
@@ -42,10 +42,10 @@ class Login extends React.Component {
                         <FormGroup>
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="usernameForm">
-                                        <ControlLabel>Никнейм</ControlLabel>
-                                        <FormControl ref={username => {
-                                            this.username = username
+                                    <FormGroup controlId="emailForm">
+                                        <ControlLabel>Email</ControlLabel>
+                                        <FormControl ref={email => {
+                                            this.email = email
                                         }} type="text" autoFocus/>
                                     </FormGroup>
                                 </Col>
