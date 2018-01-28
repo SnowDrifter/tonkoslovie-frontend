@@ -5,7 +5,8 @@ import {connect} from "react-redux";
 import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
 import * as UserActions from "../action/Auth";
 import "./Login.less";
-const apiEndpoint = process.env.API_ENDPOINT;
+import Oauth from "./Oauth";
+
 
 class Login extends React.Component {
 
@@ -71,19 +72,7 @@ class Login extends React.Component {
 
                     <hr/>
 
-                    <div className="login-oauth-panel">
-                        <div className="text-center">Войти с помощью</div>
-                        <div className="login-social-links-wrapper">
-                            <div className="login-social-links">
-                                <a href={apiEndpoint + "/api/oauth/login/google"}>
-                                    <img className="login-social-icon-image" src="/assets/social/google.svg"/>
-                                </a>
-                                <a href={apiEndpoint + "/api/oauth/login/facebook"}>
-                                    <img className="login-social-icon-image" src="/assets/social/facebook.svg"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <Oauth/>
                 </Modal.Body>
             </Modal>
         </div>

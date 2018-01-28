@@ -15,6 +15,7 @@ import {
     Popover
 } from "react-bootstrap";
 import "./Registration.less"
+import Oauth from "./Oauth";
 
 class Registration extends React.Component {
     constructor(props) {
@@ -298,6 +299,10 @@ class Registration extends React.Component {
                         <Col md={1}/>
                     </Row>
                 </form>
+
+                <hr/>
+
+                <Oauth/>
             </Panel>
 
             <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)}>
@@ -310,19 +315,6 @@ class Registration extends React.Component {
                         <div className="text-center">Для завершения необходимо подтвердить электронную почту.</div>
                         <br/>
                     </div>
-                    <Button type="submit" className="center-block"
-                            onClick={this.hideSuccessModal.bind(this)}>ОК</Button>
-                </Modal.Body>
-            </Modal>
-
-            <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{this.state.modalTitle}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="text-center">Регистрация прошла успешно!</div>
-                    <div className="text-center">Для завершения необходимо подтвердить электронную почту.</div>
-                    <br/>
                     <Button type="submit" className="center-block"
                             onClick={this.hideSuccessModal.bind(this)}>ОК</Button>
                 </Modal.Body>
