@@ -44,9 +44,9 @@ class AdminUser extends React.Component {
                 loaded: true
             });
 
-            ReactDOM.findDOMNode(this.firstName).value = user.firstName;
-            ReactDOM.findDOMNode(this.lastName).value = user.lastName;
-            ReactDOM.findDOMNode(this.username).value = user.username;
+            ReactDOM.findDOMNode(this.firstName).value = user.firstName || "";
+            ReactDOM.findDOMNode(this.lastName).value = user.lastName || "";
+            ReactDOM.findDOMNode(this.username).value = user.username || "";
             ReactDOM.findDOMNode(this.email).value = user.email;
         })
     }
