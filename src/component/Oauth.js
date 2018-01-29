@@ -13,9 +13,9 @@ class Oauth extends React.Component {
 
             <div className="oauth-social-links-wrapper" style={{height: height}}>
                 <div className="oauth-social-links">
-                    {/*<a href={apiEndpoint + "/api/oauth/login/vk"}>*/}
-                        {/*<img className="oauth-social-icon-image" src="/assets/social/vk.svg"/>*/}
-                    {/*</a>*/}
+                    <a href={apiEndpoint + "/api/oauth/login/vk"}>
+                        <img className="oauth-social-icon-image" src="/assets/social/vk.svg"/>
+                    </a>
                     <a href={apiEndpoint + "/api/oauth/login/google"}>
                         <img className="oauth-social-icon-image" src="/assets/social/google.svg"/>
                     </a>
