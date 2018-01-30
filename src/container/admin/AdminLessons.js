@@ -1,15 +1,10 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory, Link} from "react-router"
+import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {
-    Button,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
 
 
 class AdminLessons extends React.Component {
@@ -65,12 +60,12 @@ class AdminLessons extends React.Component {
     render() {
         let lessons = this.state.lessons;
 
-        const body = <div>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Уроки</h4>
             <Table
                 rowHeight={50}
                 rowsCount={lessons.length}
-                width={1140}
+                width={1110}
                 height={600}
                 headerHeight={30}>
 
@@ -109,8 +104,11 @@ class AdminLessons extends React.Component {
                         <Cell>
                             <ButtonToolbar>
                                 <ButtonGroup>
-                                    <Button onClick={() => this.editLesson(lessons[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
-                                    <Button bsSize="small" onClick={() => this.deleteLesson(lessons[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
+                                    <Button onClick={() => this.editLesson(lessons[rowIndex])} bsSize="small"><Glyphicon
+                                        glyph="pencil"/></Button>
+                                    <Button bsSize="small" onClick={() => this.deleteLesson(lessons[rowIndex].id)}
+                                            className="pull-right" bsStyle="danger"> <Glyphicon
+                                        glyph="remove"/></Button>
                                 </ButtonGroup>
                             </ButtonToolbar>
                         </Cell>
@@ -120,7 +118,7 @@ class AdminLessons extends React.Component {
             </Table>
             <br/>
             <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;

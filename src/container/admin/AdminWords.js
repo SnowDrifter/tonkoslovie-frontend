@@ -4,13 +4,8 @@ import {Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {
-    Button,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
-import Word from "../../component/admin/AdminWord"
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
+import Word from "../../component/admin/AdminWord";
 
 
 class AdminWords extends React.Component {
@@ -74,13 +69,13 @@ class AdminWords extends React.Component {
     render() {
         let words = this.state.words;
 
-        const body = <div>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Слова</h4>
             <Table
                 rowHeight={50}
                 rowsCount={words.length}
-                width={1140}
-                height={800}
+                width={1110}
+                height={600}
                 headerHeight={30}>
 
                 <Column
@@ -140,7 +135,7 @@ class AdminWords extends React.Component {
                   modalTitle={this.state.modalTitle}
                   word={this.state.word}
                   hideModal={this.hideModal}/>
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;

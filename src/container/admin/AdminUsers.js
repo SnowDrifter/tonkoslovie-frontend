@@ -5,7 +5,7 @@ import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
 import RoleUtil from "../../util/RoleUtil";
-import {Button, Glyphicon, ButtonGroup, ButtonToolbar} from "react-bootstrap";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
 
 const dateOptions = {
     year: "numeric",
@@ -58,12 +58,12 @@ class AdminUsers extends React.Component {
     render() {
         let users = this.state.users;
 
-        const body = <div>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Пользователи</h4>
             <Table
                 rowHeight={50}
                 rowsCount={users.length}
-                width={1140}
+                width={1100}
                 height={600}
                 headerHeight={30}>
 
@@ -154,7 +154,7 @@ class AdminUsers extends React.Component {
                     width={50}
                 />
             </Table>
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;

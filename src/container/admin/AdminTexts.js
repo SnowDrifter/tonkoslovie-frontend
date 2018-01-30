@@ -1,15 +1,10 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory, Link} from "react-router"
+import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {
-    Button,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
 
 
 class AdminTexts extends React.Component {
@@ -27,7 +22,7 @@ class AdminTexts extends React.Component {
         this.updateTexts = this.updateTexts.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateTexts();
     }
 
@@ -43,7 +38,7 @@ class AdminTexts extends React.Component {
     }
 
     deleteText(textId) {
-        if(confirm("Удалить текст №" + textId + "?")) {
+        if (confirm("Удалить текст №" + textId + "?")) {
             client.delete("/api/content/text", {
                 params: {
                     id: textId
@@ -55,7 +50,7 @@ class AdminTexts extends React.Component {
     }
 
     addNewText() {
-         browserHistory.push("/admin/text")
+        browserHistory.push("/admin/text")
     }
 
     editText(text) {
@@ -65,12 +60,12 @@ class AdminTexts extends React.Component {
     render() {
         let texts = this.state.texts;
 
-        const body = <div>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Тексты</h4>
             <Table
                 rowHeight={50}
                 rowsCount={texts.length}
-                width={1140}
+                width={1110}
                 height={600}
                 headerHeight={30}>
 
@@ -114,7 +109,7 @@ class AdminTexts extends React.Component {
             <br/>
             <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
 
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;

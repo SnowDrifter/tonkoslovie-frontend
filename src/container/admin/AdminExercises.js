@@ -1,15 +1,9 @@
 import React from "react";
 import client from "../../util/client";
-import {browserHistory, Link} from "react-router"
+import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
-import {
-    Button,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar,
-    Panel
-} from "react-bootstrap";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
 
 
 class AdminExercises extends React.Component {

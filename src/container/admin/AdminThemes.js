@@ -4,7 +4,7 @@ import {browserHistory, Link} from "react-router";
 import {Table, Column, Cell} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Button, Glyphicon, ButtonGroup, ButtonToolbar} from "react-bootstrap";
+import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
 
 
 class AdminThemes extends React.Component {
@@ -60,12 +60,12 @@ class AdminThemes extends React.Component {
     render() {
         let themes = this.state.themes;
 
-        const body = <div>
+        const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Темы упражнений</h4>
             <Table
                 rowHeight={50}
                 rowsCount={themes.length}
-                width={1140}
+                width={1110}
                 height={600}
                 headerHeight={30}>
 
@@ -108,7 +108,7 @@ class AdminThemes extends React.Component {
             </Table>
             <br/>
             <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
-        </div>;
+        </Panel>;
 
         if (this.state.loaded) {
             return body;
