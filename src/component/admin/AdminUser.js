@@ -72,8 +72,6 @@ class AdminUser extends React.Component {
             roles.push("ROLE_ADMIN");
         }
 
-        console.log(roles);
-
         return roles;
     }
 

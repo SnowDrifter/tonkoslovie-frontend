@@ -87,6 +87,7 @@ export function saveToken(token) {
 }
 
 export function logout() {
+    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     localStorage.removeItem("token");
 
     return (dispatch) => {
