@@ -1,4 +1,20 @@
 body {
-  margin: 0;
   background: url("/assets/pattern/pattern.png") repeat;
+}
+
+@media (min-width: 767px) {
+  .navbar-default .navbar-nav > .active:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    content: " ";
+    border-bottom: 3px solid #b4b4b4;
+  }
+}
+
+.navbar-default {
+  border-radius: 0;
+  border-bottom: none;
+  box-shadow: 0 0 4px 4px rgb(200, 200, 200);
 }
