@@ -71,10 +71,12 @@ class AdminWords extends React.Component {
 
         const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Слова</h4>
+
+            <div style={{overflow: "auto"}}>
             <Table
                 rowHeight={50}
                 rowsCount={words.length}
-                width={1110}
+                width={1100}
                 height={600}
                 headerHeight={30}>
 
@@ -127,6 +129,7 @@ class AdminWords extends React.Component {
                     width={100}
                 />
             </Table>
+            </div>
 
             <br/>
             <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>

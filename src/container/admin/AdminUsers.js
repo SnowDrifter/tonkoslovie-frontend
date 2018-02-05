@@ -60,6 +60,8 @@ class AdminUsers extends React.Component {
 
         const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Пользователи</h4>
+
+            <div style={{overflow: "auto"}}>
             <Table
                 rowHeight={50}
                 rowsCount={users.length}
@@ -154,6 +156,7 @@ class AdminUsers extends React.Component {
                     width={50}
                 />
             </Table>
+            </div>
         </Panel>;
 
         if (this.state.loaded) {

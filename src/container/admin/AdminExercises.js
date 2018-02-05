@@ -61,10 +61,12 @@ class AdminExercises extends React.Component {
 
         const body = <Panel>
             <h4><Link to="/admin">Главная</Link> / Упражнения</h4>
+
+            <div style={{overflow: "auto"}}>
             <Table
                 rowHeight={50}
                 rowsCount={exercises.length}
-                width={1110}
+                width={1100}
                 height={600}
                 headerHeight={30}>
 
@@ -102,6 +104,8 @@ class AdminExercises extends React.Component {
                     width={100}
                 />
             </Table>
+            </div>
+
             <br/>
             <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
         </Panel>;
