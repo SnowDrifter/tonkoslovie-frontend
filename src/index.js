@@ -1,5 +1,7 @@
 import App from "./container/App.js";
-import Registration from "./component/Registration.js";
+import Registration from "./component/registration/Registration.js";
+import RegistrationSuccess from "./component/registration/RegistrationSuccess.js";
+import RegistrationError from "./component/registration/RegistrationError.js";
 import Err500 from "./component/Err500.js";
 import Err404 from "./component/Err404.js";
 import Err403 from "./component/Err403.js";
@@ -41,6 +43,8 @@ render((
                 <Route path="/" component={App}>
                     <IndexRoute component={Home}/>
                     <Route path="/registration" component={Registration}/>
+                    <Route path="/registration/success" component={RegistrationSuccess}/>
+                    <Route path="/registration/error" component={RegistrationError}/>
                     <Route authorize={["ROLE_ADMIN"]} component={RestrictedContainer}>
                         <Route path="/admin" component={Admin}/>
                         <Route path="/admin/words" component={AdminWords}/>

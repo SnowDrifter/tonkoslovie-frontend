@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../util/client";
+import client from "../../util/client";
 import {browserHistory} from "react-router"
 import {
     Panel,
@@ -15,7 +15,7 @@ import {
     Popover
 } from "react-bootstrap";
 import "./Registration.less"
-import Oauth from "./Oauth";
+import Oauth from "../Oauth";
 
 class Registration extends React.Component {
     constructor(props) {
@@ -207,11 +207,15 @@ class Registration extends React.Component {
                         <Row>
                             <Col md={1}/>
                             <Col md={10}>
-                                <FormGroup>
-                                    <ControlLabel>Никнейм</ControlLabel>
-                                    <FormControl ref={username => {
-                                        this.username = username
-                                    }} type="text" autoFocus/>
+                                <FormGroup validationState={this.state.email.validationState}>
+                                    <ControlLabel>Email <span style={{color: "red"}}>*</span></ControlLabel>
+                                    <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
+                                        <Popover id="emailPopover" style={{width: 250}}>{this.state.email.message}</Popover>
+                                    </Overlay>
+
+                                    <FormControl ref={email => {
+                                        this.email = email
+                                    }} type="email"/>
                                 </FormGroup>
                             </Col>
                             <Col md={1}/>
@@ -219,9 +223,9 @@ class Registration extends React.Component {
 
                         <Row>
                             <Col md={1}/>
-                            <Col md={10}>
+                            <Col md={5}>
                                 <FormGroup validationState={this.state.password.validationState}>
-                                    <ControlLabel>Пароль</ControlLabel>
+                                    <ControlLabel>Пароль <span style={{color: "red"}}>*</span></ControlLabel>
                                     <Overlay show={this.state.password.showPopover} target={this.password} placement="left">
                                         <Popover id="passwordPopover" style={{width: 250}}>{this.state.password.message}</Popover>
                                     </Overlay>
@@ -231,14 +235,10 @@ class Registration extends React.Component {
                                     }} type="password"/>
                                 </FormGroup>
                             </Col>
-                            <Col md={1}/>
-                        </Row>
 
-                        <Row>
-                            <Col md={1}/>
-                            <Col md={10}>
+                            <Col md={5}>
                                 <FormGroup validationState={this.state.confirmPassword.validationState}>
-                                    <ControlLabel>Повторите пароль</ControlLabel>
+                                    <ControlLabel>Повторите пароль <span style={{color: "red"}}>*</span></ControlLabel>
                                     <Overlay show={this.state.confirmPassword.showPopover} target={this.confirmPassword} placement="left">
                                         <Popover style={{width: 250}} id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
                                     </Overlay>
@@ -254,15 +254,11 @@ class Registration extends React.Component {
                         <Row>
                             <Col md={1}/>
                             <Col md={10}>
-                                <FormGroup validationState={this.state.email.validationState}>
-                                    <ControlLabel>Email</ControlLabel>
-                                    <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
-                                        <Popover id="emailPopover" style={{width: 250}}>{this.state.email.message}</Popover>
-                                    </Overlay>
-
-                                    <FormControl ref={email => {
-                                        this.email = email
-                                    }} type="email"/>
+                                <FormGroup>
+                                    <ControlLabel>Никнейм</ControlLabel>
+                                    <FormControl ref={username => {
+                                        this.username = username
+                                    }} type="text" autoFocus/>
                                 </FormGroup>
                             </Col>
                             <Col md={1}/>
