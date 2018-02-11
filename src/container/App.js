@@ -39,13 +39,19 @@ class App extends React.Component {
 
         return (
             <div>
-                <Navbar onToggle={this.toggleExpandNavbar.bind(this)}
-                        expanded={this.state.expandNavbar}>
+                <Navbar expanded={this.state.expandNavbar}>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <Link to="/"> Главная</Link>
                         </Navbar.Brand>
-                        <Navbar.Toggle />
+
+                        <button type="button"
+                                className={`navbar-toggle ${this.state.expandNavbar ? "" : "collapsed"}`}
+                                onClick={this.toggleExpandNavbar.bind(this)}>
+                            <span className="icon-bar"/>
+                            <span className="icon-bar"/>
+                            <span className="icon-bar"/>
+                        </button>
                     </Navbar.Header>
 
                     <Navbar.Collapse>
