@@ -6,7 +6,7 @@ import {connect} from "react-redux"
 class RestrictedContainer extends AuthorizedComponent {
     constructor(props) {
         super(props);
-        this.userRoles = props.user.user.roles ? props.user.user.roles.split(", ") : null;
+        this.userRoles = props.user.user.roles ? props.user.user.roles.split(",") : null;
         this.notAuthorizedPath = "/accessDenied";
     }
 
