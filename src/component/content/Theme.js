@@ -10,6 +10,7 @@ import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";
 import SimpleConfirmModal from "../SimpleConfirmModal";
+import {browserHistory} from "react-router";
 
 class Theme extends React.Component {
 
@@ -37,6 +38,7 @@ class Theme extends React.Component {
         this.addSolvedExercise = this.addSolvedExercise.bind(this);
         this.hideSuccessModal = this.hideSuccessModal.bind(this);
         this.removeProgress = this.removeProgress.bind(this);
+        this.backToThemesPage = this.backToThemesPage.bind(this);
     }
 
     loadTheme(themeId) {
@@ -100,6 +102,10 @@ class Theme extends React.Component {
         }
     }
 
+    backToThemesPage() {
+        browserHistory.push("/themes");
+    }
+
     hideSuccessModal() {
         this.setState({showSuccessModal: false});
     }
@@ -155,6 +161,7 @@ class Theme extends React.Component {
             <SimpleConfirmModal showModal={this.state.showSuccessModal}
                                 hideModal={this.hideSuccessModal}
                                 confirmFunction={this.removeProgress}
+                                negativeFunction={this.backToThemesPage}
                                 modalTitle="Новые упражнения закончились, начать заново?"/>
         </Panel>;
 
