@@ -7,6 +7,7 @@ import * as UserActions from "../action/Auth";
 import {LinkContainer} from "react-router-bootstrap";
 import {Link} from "react-router";
 import {ToastContainer, toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.less"
 
 class App extends React.Component {
