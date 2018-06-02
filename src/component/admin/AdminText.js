@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {
     Button,
     ButtonGroup,
+    ButtonToolbar,
     ControlLabel,
     FormControl,
     FormGroup,
@@ -260,9 +261,11 @@ class Text extends React.Component {
                                  hideModal={this.hideModal}
                                  saveTextPart={this.saveTextPart}/>
 
-                <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
-                <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
-                <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                <ButtonToolbar>
+                    <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
+                    <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
+                    <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                </ButtonToolbar>
             </Panel.Body>
         </Panel>;
 

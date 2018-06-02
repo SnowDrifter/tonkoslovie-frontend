@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Button, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
+import {Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
 import client from "../../util/client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
@@ -198,8 +198,10 @@ class AdminExercise extends React.Component {
                             <ControlLabel><h4>Ответы</h4></ControlLabel>
                             {answerForms}
                         </FormGroup>
-                        <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
-                        <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
+                        <ButtonToolbar>
+                            <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
+                            <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
+                        </ButtonToolbar>
                     </div>
                 </Jumbotron>
 
