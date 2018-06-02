@@ -118,10 +118,12 @@ class AdminWords extends React.Component {
                                     <ButtonToolbar>
                                         <ButtonGroup>
                                             <Button bsSize="small"
-                                                    onClick={() => this.showEditWord(words[rowIndex])}><Glyphicon glyph="pencil"/>
+                                                    onClick={() => this.showEditWord(words[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
                                             </Button>
-                                            <Button bsSize="small" onClick={() => this.deleteWord(words[rowIndex].id)}
-                                                    className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteWord(words[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>

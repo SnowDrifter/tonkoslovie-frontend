@@ -97,11 +97,13 @@ class AdminThemes extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button onClick={() => this.editTheme(themes[rowIndex])}
-                                                    bsSize="small"><Glyphicon glyph="pencil"/>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.editTheme(themes[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
                                             </Button>
-                                            <Button bsSize="small" onClick={() => this.deleteTheme(themes[rowIndex].id)}
-                                                    className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteTheme(themes[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>

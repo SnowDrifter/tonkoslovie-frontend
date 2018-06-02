@@ -277,10 +277,12 @@ class TextPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall">
+                    <Glyphicon glyph="pencil"/>
+                </Button>
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall" bsStyle="danger">
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -292,10 +294,14 @@ class QuestionPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall"
+                        onClick={() => this.props.editPart(this.props.index)}>
+                    <Glyphicon glyph="pencil"/>
+                </Button>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -313,11 +319,13 @@ class ChoicePart extends React.Component {
             {words.join(", ")}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/>
+                <Button bsSize="xsmall"
+                        onClick={() => this.props.editPart(this.props.index)}>
+                    <Glyphicon glyph="pencil"/>
                 </Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
                 </Button>
             </ButtonGroup>
         </div>
@@ -329,8 +337,9 @@ class LineBreakPart extends React.Component {
         return <div className="admin-line-break-part ">
             ¶
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
                 </Button>
             </ButtonGroup>
         </div>

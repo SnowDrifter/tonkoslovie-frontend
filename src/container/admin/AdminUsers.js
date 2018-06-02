@@ -148,8 +148,9 @@ class AdminUsers extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button onClick={() => this.editUser(users[rowIndex])}
-                                                    bsSize="small"><Glyphicon glyph="pencil"/>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.editUser(users[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>

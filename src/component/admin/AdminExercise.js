@@ -204,8 +204,8 @@ class AdminExercise extends React.Component {
                     </div>
                 </Jumbotron>
 
-                <Button onClick={this.saveExercise.bind(this)} className="pull-right"
-                        bsStyle="success">Сохранить</Button>
+                <Button bsStyle="success" className="pull-right"
+                        onClick={this.saveExercise.bind(this)}>Сохранить</Button>
             </Panel.Body>
         </Panel>;
 

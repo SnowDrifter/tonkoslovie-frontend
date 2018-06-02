@@ -107,12 +107,13 @@ class AdminLessons extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button onClick={() => this.editLesson(lessons[rowIndex])}
-                                                    bsSize="small"><Glyphicon glyph="pencil"/>
-                                            </Button>
                                             <Button bsSize="small"
-                                                    onClick={() => this.deleteLesson(lessons[rowIndex].id)}
-                                                    className="pull-right" bsStyle="danger"><Glyphicon glyph="remove"/>
+                                                    onClick={() => this.editLesson(lessons[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
+                                            </Button>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteLesson(lessons[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>

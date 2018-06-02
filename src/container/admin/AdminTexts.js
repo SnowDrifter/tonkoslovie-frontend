@@ -97,11 +97,13 @@ class AdminTexts extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button onClick={() => this.editText(texts[rowIndex])}
-                                                    bsSize="small"><Glyphicon glyph="pencil"/>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.editText(texts[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
                                             </Button>
-                                            <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
-                                                    className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteText(texts[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>

@@ -96,11 +96,14 @@ class AdminExercises extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button onClick={() => this.editExercise(exercises[rowIndex])}
-                                                    bsSize="small"><Glyphicon glyph="pencil"/></Button>
                                             <Button bsSize="small"
-                                                    onClick={() => this.deleteLExercise(exercises[rowIndex].id)}
-                                                    className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
+                                                    onClick={() => this.editExercise(exercises[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
+                                            </Button>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteLExercise(exercises[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
+                                            </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
                                 </Cell>

@@ -131,8 +131,10 @@ class AdminTheme extends React.Component {
         this.state.exercises.map((exercise, index) => {
             exercises.push(<ListGroupItem bsStyle="info" key={index}>
                 {exercise.title}
-                <Button className="pull-right" onClick={() => this.removeExercise(index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall" bsStyle="danger" className="pull-right"
+                        onClick={() => this.removeExercise(index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ListGroupItem>);
         });
 

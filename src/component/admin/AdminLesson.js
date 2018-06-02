@@ -197,8 +197,10 @@ class Lesson extends React.Component {
         this.state.texts.map((text, index) => {
             texts.push(<ListGroupItem bsStyle="info" key={index}>
                 {text.title}
-                <Button className="pull-right" onClick={() => this.removeText(index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall" bsStyle="danger" className="pull-right"
+                        onClick={() => this.removeText(index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ListGroupItem>);
         });
 
