@@ -137,11 +137,10 @@ class AdminExercise extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-
                 <ul className="breadcrumb">
                     <li><Link to="/admin">Главная</Link></li>
                     <li><Link to="/admin/exercises">Упражнения</Link></li>
-                    <li className="active">{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</li>
+                    <li>{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</li>
                 </ul>
 
                 <Jumbotron>

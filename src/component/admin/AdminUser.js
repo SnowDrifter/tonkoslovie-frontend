@@ -78,8 +78,12 @@ class AdminUser extends React.Component {
     render() {
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/users">Пользователи </Link>
-                    / {"Пользователь № " + (this.state.id)}</h4>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/exercises">Пользователи</Link></li>
+                    <li>{"Пользователь № " + (this.state.id)}</li>
+                </ul>
+
                 <Jumbotron>
                     <FormGroup>
                         <ControlLabel><h4>Имя</h4></ControlLabel>

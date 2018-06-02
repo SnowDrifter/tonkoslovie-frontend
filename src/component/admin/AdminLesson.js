@@ -251,9 +251,12 @@ class Lesson extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / <Link
-                    to="/admin/lessons">Уроки</Link> / {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}
-                </h4>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/exercises">Уроки</Link></li>
+                    <li>{(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</li>
+                </ul>
+
                 <Jumbotron>
                     <h3>Заголовок</h3>
                     <FormGroup>
@@ -278,13 +281,15 @@ class Lesson extends React.Component {
 
                     <h3>Текст урока</h3>
                     <Panel>
-                        <Editor
-                            editorState={this.state.content}
-                            toolbarClassName="toolbarClassName"
-                            wrapperClassName="wrapperClassName"
-                            editorClassName="editorClassName"
-                            onEditorStateChange={this.handTextChange}
-                        />
+                        <Panel.Body>
+                            <Editor
+                                editorState={this.state.content}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                onEditorStateChange={this.handTextChange}
+                            />
+                        </Panel.Body>
                     </Panel>
 
                     <h3>Добавленные тексты</h3>
@@ -293,22 +298,24 @@ class Lesson extends React.Component {
                     </ListGroup>
 
                     <Panel>
-                        <FormGroup>
-                            <ControlLabel>Поиск текста</ControlLabel>
-                            <FormControl
-                                type="text"
-                                inputRef={textTitle => {
-                                    this.textTitle = textTitle
-                                }}
-                                placeholder="Начните вводить данные для выбора"
-                                onChange={this.searchText.bind(this)}
-                            />
-                        </FormGroup>
+                        <Panel.Body>
+                            <FormGroup>
+                                <ControlLabel>Поиск текста</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    inputRef={textTitle => {
+                                        this.textTitle = textTitle
+                                    }}
+                                    placeholder="Начните вводить данные для выбора"
+                                    onChange={this.searchText.bind(this)}
+                                />
+                            </FormGroup>
 
-                        Варианты:
-                        <ListGroup>
-                            {foundTexts}
-                        </ListGroup>
+                            Варианты:
+                            <ListGroup>
+                                {foundTexts}
+                            </ListGroup>
+                        </Panel.Body>
                     </Panel>
 
                     <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>

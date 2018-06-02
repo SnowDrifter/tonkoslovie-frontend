@@ -154,8 +154,12 @@ class AdminTheme extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/themes">Темы
-                    упражнений</Link> / {(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</h4>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/exercises">Темы упражнений</Link></li>
+                    <li>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</li>
+                </ul>
+
                 <Jumbotron>
                     <FormGroup>
                         <ControlLabel><h4>Заголовок</h4></ControlLabel>
@@ -172,6 +176,7 @@ class AdminTheme extends React.Component {
                     </ListGroup>
 
                     <Panel>
+                        <Panel.Body>
                         <FormGroup>
                             <ControlLabel>Поиск упражнения</ControlLabel>
                             <FormControl
@@ -188,6 +193,7 @@ class AdminTheme extends React.Component {
                         <ListGroup>
                             {foundExercises}
                         </ListGroup>
+                        </Panel.Body>
                     </Panel>
 
                     <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>

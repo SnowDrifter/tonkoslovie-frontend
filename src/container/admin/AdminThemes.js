@@ -62,7 +62,10 @@ class AdminThemes extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / Темы упражнений</h4>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li>Темы упражнений</li>
+                </ul>
 
                 <div style={{overflow: "auto"}}>
                     <Table

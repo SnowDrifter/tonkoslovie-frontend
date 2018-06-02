@@ -62,7 +62,10 @@ class AdminTexts extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / Тексты</h4>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li>Тексты</li>
+                </ul>
 
                 <div style={{overflow: "auto"}}>
                     <Table

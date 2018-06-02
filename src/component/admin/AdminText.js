@@ -226,9 +226,12 @@ class Text extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / <Link
-                    to="/admin/texts">Тексты</Link> / {(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}
-                </h4>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/exercises">Тексты</Link></li>
+                    <li>{(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</li>
+                </ul>
+
                 <Jumbotron>
                     <FormGroup>
                         <ControlLabel><h4>Заголовок</h4></ControlLabel>

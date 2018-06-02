@@ -61,7 +61,10 @@ class AdminExercises extends React.Component {
 
         const body = <Panel>
             <Panel.Body>
-                <h4><Link to="/admin">Главная</Link> / Упражнения</h4>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li>Упражнения</li>
+                </ul>
 
                 <div style={{overflow: "auto"}}>
                     <Table
