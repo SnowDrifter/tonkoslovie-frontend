@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-    Panel,
-    FormGroup,
-    ControlLabel,
-    FormControl,
     Button,
     ButtonGroup,
-    ProgressBar,
+    ControlLabel,
+    FormControl,
+    FormGroup,
+    Glyphicon,
     Jumbotron,
-    Glyphicon
+    Panel,
+    ProgressBar
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
@@ -19,7 +19,7 @@ import CreatePartModal from "./CreatePartModal";
 import * as partTypes from "../content/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 class Text extends React.Component {
 
@@ -225,38 +225,42 @@ class Text extends React.Component {
         }
 
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/texts">Тексты</Link> / {(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</h4>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
+            <Panel.Body>
+                <h4><Link to="/admin">Главная</Link> / <Link
+                    to="/admin/texts">Тексты</Link> / {(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}
+                </h4>
+                <Jumbotron>
+                    <FormGroup>
+                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                        <FormControl
+                            inputRef={title => {
+                                this.title = title
+                            }}
+                        />
+                    </FormGroup>
 
-                {soundComponent}
+                    {soundComponent}
 
-                <h4>Элементы текста</h4>
-                {elements}
-            </Jumbotron>
+                    <h4>Элементы текста</h4>
+                    {elements}
+                </Jumbotron>
 
-            <EditPartModal showModal={this.state.showEditPartModal}
-                           modalTitle={this.state.modalTitle}
-                           currentPartIndex={this.state.currentPartIndex}
-                           currentPart={this.state.currentPart}
-                           hideModal={this.hideModal}
-                           saveTextPart={this.saveTextPart}/>
+                <EditPartModal showModal={this.state.showEditPartModal}
+                               modalTitle={this.state.modalTitle}
+                               currentPartIndex={this.state.currentPartIndex}
+                               currentPart={this.state.currentPart}
+                               hideModal={this.hideModal}
+                               saveTextPart={this.saveTextPart}/>
 
-            <CreatePartModal showModal={this.state.showCreatePartModal}
-                             modalTitle={this.state.modalTitle}
-                             hideModal={this.hideModal}
-                             saveTextPart={this.saveTextPart}/>
+                <CreatePartModal showModal={this.state.showCreatePartModal}
+                                 modalTitle={this.state.modalTitle}
+                                 hideModal={this.hideModal}
+                                 saveTextPart={this.saveTextPart}/>
 
-            <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
-            <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
-            <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
+                <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
+                <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {
@@ -310,9 +314,11 @@ class ChoicePart extends React.Component {
 
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
+                    glyph="pencil"/>
+                </Button>
                 <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                        bsStyle="danger"><Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -324,7 +330,8 @@ class LineBreakPart extends React.Component {
             ¶
             <ButtonGroup className="button-block">
                 <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                        bsStyle="danger"><Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }

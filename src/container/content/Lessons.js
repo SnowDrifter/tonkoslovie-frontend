@@ -1,6 +1,6 @@
 import React from "react";
 import client from "../../util/client";
-import {Panel, Image} from "react-bootstrap";
+import {Image, Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
 import Loader from "../../component/Loader";
@@ -58,10 +58,13 @@ class Lessons extends React.Component {
         const body = <div>
             <Helmet title="Уроки | Тонкословие"/>
 
-            <Panel header="Уроки">
-                <ul className="lessons-list">
-                    {lessonPreviews}
-                </ul>
+            <Panel>
+                <Panel.Heading>Уроки</Panel.Heading>
+                <Panel.Body>
+                    <ul className="lessons-list">
+                        {lessonPreviews}
+                    </ul>
+                </Panel.Body>
             </Panel>
         </div>;
 

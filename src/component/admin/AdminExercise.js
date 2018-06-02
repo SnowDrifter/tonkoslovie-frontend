@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Panel, Jumbotron, FormGroup, ControlLabel, FormControl, Button} from "react-bootstrap";
+import {Button, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
 import client from "../../util/client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {Link} from "react-router";
-import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
+import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import Loader from "../../component/Loader";
 import "./AdminExercise.less";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 
 class AdminExercise extends React.Component {
@@ -136,64 +136,77 @@ class AdminExercise extends React.Component {
         }
 
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/exercises">Упражнения</Link> / {(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</h4>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
+            <Panel.Body>
 
-                <h4>Оригинал</h4>
-                <Panel>
-                    <Editor
-                        editorState={this.state.original}
-                        onEditorStateChange={this.handleOriginalChange}
-                    />
-                </Panel>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/exercises">Упражнения</Link></li>
+                    <li className="active">{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</li>
+                </ul>
 
-                <h4>Словарь</h4>
-                <Panel>
-                    <Editor
-                        editorState={this.state.dictionary}
-                        onEditorStateChange={this.handleDictionaryChange}
-                    />
-                </Panel>
-
-                <FormGroup>
-                    <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
-                    <FormControl componentClass="select" ref={part => {
-                        this["type"] = part
-                    }}>
-                        <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
-                        <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
-                    </FormControl>
-                </FormGroup>
-
-                <FormGroup>
-                    <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
-                    <FormControl
-                        componentClass="textarea"
-                        inputRef={answerRegex => {
-                            this.answerRegex = answerRegex
-                        }}
-                    />
-                </FormGroup>
-
-                <div className="admin-exercise-answer-panel">
+                <Jumbotron>
                     <FormGroup>
-                        <ControlLabel><h4>Ответы</h4></ControlLabel>
-                        {answerForms}
+                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                        <FormControl
+                            inputRef={title => {
+                                this.title = title
+                            }}
+                        />
                     </FormGroup>
-                    <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
-                    <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
-                </div>
-            </Jumbotron>
 
-            <Button onClick={this.saveExercise.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                    <h4>Оригинал</h4>
+                    <Panel>
+                        <Panel.Body>
+                            <Editor
+                                editorState={this.state.original}
+                                onEditorStateChange={this.handleOriginalChange}
+                            />
+                        </Panel.Body>
+                    </Panel>
+
+                    <h4>Словарь</h4>
+                    <Panel>
+                        <Panel.Body>
+                            <Editor
+                                editorState={this.state.dictionary}
+                                onEditorStateChange={this.handleDictionaryChange}
+                            />
+                        </Panel.Body>
+                    </Panel>
+
+                    <FormGroup>
+                        <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
+                        <FormControl componentClass="select" ref={part => {
+                            this["type"] = part
+                        }}>
+                            <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
+                            <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
+                        </FormControl>
+                    </FormGroup>
+
+                    <FormGroup>
+                        <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
+                        <FormControl
+                            componentClass="textarea"
+                            inputRef={answerRegex => {
+                                this.answerRegex = answerRegex
+                            }}
+                        />
+                    </FormGroup>
+
+                    <div className="admin-exercise-answer-panel">
+                        <FormGroup>
+                            <ControlLabel><h4>Ответы</h4></ControlLabel>
+                            {answerForms}
+                        </FormGroup>
+                        <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
+                        <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
+                    </div>
+                </Jumbotron>
+
+                <Button onClick={this.saveExercise.bind(this)} className="pull-right"
+                        bsStyle="success">Сохранить</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

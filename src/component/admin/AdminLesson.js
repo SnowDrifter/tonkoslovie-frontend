@@ -2,25 +2,25 @@ import React from "react";
 import ReactDOM from "react-dom";
 import client from "../../util/client";
 import {
-    Panel,
-    Jumbotron,
-    FormGroup,
+    Button,
+    Checkbox,
     ControlLabel,
     FormControl,
-    Button,
+    FormGroup,
     Glyphicon,
+    Jumbotron,
     ListGroup,
     ListGroupItem,
-    ProgressBar,
-    Checkbox
+    Panel,
+    ProgressBar
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import {convertToRaw, ContentState, convertFromHTML, EditorState} from "draft-js";
-import { toast } from "react-toastify";
+import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
+import {toast} from "react-toastify";
 
 
 class Lesson extends React.Component {
@@ -248,69 +248,73 @@ class Lesson extends React.Component {
         }
 
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/lessons">Уроки</Link> / {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</h4>
-            <Jumbotron>
-                <h3>Заголовок</h3>
-                <FormGroup>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
-
-                {previewComponent}
-
-                <h3>Аннотация</h3>
-                <FormGroup>
-                    <FormControl
-                        componentClass="textarea"
-                        inputRef={annotation => {
-                            this.annotation = annotation
-                        }}
-                    />
-                </FormGroup>
-
-                <h3>Текст урока</h3>
-                <Panel>
-                    <Editor
-                        editorState={this.state.content}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
-                        editorClassName="editorClassName"
-                        onEditorStateChange={this.handTextChange}
-                    />
-                </Panel>
-
-                <h3>Добавленные тексты</h3>
-                <ListGroup>
-                    {texts}
-                </ListGroup>
-
-                <Panel>
+            <Panel.Body>
+                <h4><Link to="/admin">Главная</Link> / <Link
+                    to="/admin/lessons">Уроки</Link> / {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}
+                </h4>
+                <Jumbotron>
+                    <h3>Заголовок</h3>
                     <FormGroup>
-                        <ControlLabel>Поиск текста</ControlLabel>
                         <FormControl
-                            type="text"
-                            inputRef={textTitle => {
-                                this.textTitle = textTitle
+                            inputRef={title => {
+                                this.title = title
                             }}
-                            placeholder="Начните вводить данные для выбора"
-                            onChange={this.searchText.bind(this)}
                         />
                     </FormGroup>
 
-                    Варианты:
-                    <ListGroup>
-                        {foundTexts}
-                    </ListGroup>
-                </Panel>
+                    {previewComponent}
 
-                <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
-                    Опубликовать урок
-                </Checkbox>
-            </Jumbotron>
-            <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                    <h3>Аннотация</h3>
+                    <FormGroup>
+                        <FormControl
+                            componentClass="textarea"
+                            inputRef={annotation => {
+                                this.annotation = annotation
+                            }}
+                        />
+                    </FormGroup>
+
+                    <h3>Текст урока</h3>
+                    <Panel>
+                        <Editor
+                            editorState={this.state.content}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onEditorStateChange={this.handTextChange}
+                        />
+                    </Panel>
+
+                    <h3>Добавленные тексты</h3>
+                    <ListGroup>
+                        {texts}
+                    </ListGroup>
+
+                    <Panel>
+                        <FormGroup>
+                            <ControlLabel>Поиск текста</ControlLabel>
+                            <FormControl
+                                type="text"
+                                inputRef={textTitle => {
+                                    this.textTitle = textTitle
+                                }}
+                                placeholder="Начните вводить данные для выбора"
+                                onChange={this.searchText.bind(this)}
+                            />
+                        </FormGroup>
+
+                        Варианты:
+                        <ListGroup>
+                            {foundTexts}
+                        </ListGroup>
+                    </Panel>
+
+                    <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
+                        Опубликовать урок
+                    </Checkbox>
+                </Jumbotron>
+                <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

@@ -52,10 +52,13 @@ class ExercisesThemes extends React.Component {
         const body = <div>
             <Helmet title="Темы упражнений | Тонкословие"/>
 
-            <Panel header="Темы упражнений">
-                <ul className="exercise-theme-list">
-                    {themePreviews}
-                </ul>
+            <Panel>
+                <Panel.Heading>Темы упражнений</Panel.Heading>
+                <Panel.Body>
+                    <ul className="exercise-theme-list">
+                        {themePreviews}
+                    </ul>
+                </Panel.Body>
             </Panel>
         </div>;
 

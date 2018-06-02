@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    Panel,
-    PageHeader,
-    Jumbotron
-} from "react-bootstrap";
+import {Jumbotron, PageHeader, Panel} from "react-bootstrap";
 import client from "../../util/client";
 import "./Text.less"
 import Helmet from "react-helmet";
@@ -151,18 +147,20 @@ class Theme extends React.Component {
         let title = this.state.title + " | Тонкословие";
 
         let body = <Panel>
-            <span className="pull-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
-            <Helmet title={title}/>
-            <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
-            <ExerciseComponent nextExercise={this.nextExercise}
-                               exercise={this.state.currentExercise}
-                               addSolvedExercise={this.addSolvedExercise}/>
+            <Panel.Body>
+                <span className="pull-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
+                <Helmet title={title}/>
+                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+                <ExerciseComponent nextExercise={this.nextExercise}
+                                   exercise={this.state.currentExercise}
+                                   addSolvedExercise={this.addSolvedExercise}/>
 
-            <SimpleConfirmModal showModal={this.state.showSuccessModal}
-                                hideModal={this.hideSuccessModal}
-                                confirmFunction={this.removeProgress}
-                                negativeFunction={this.backToThemesPage}
-                                modalTitle="Новые упражнения закончились, начать заново?"/>
+                <SimpleConfirmModal showModal={this.state.showSuccessModal}
+                                    hideModal={this.hideSuccessModal}
+                                    confirmFunction={this.removeProgress}
+                                    negativeFunction={this.backToThemesPage}
+                                    modalTitle="Новые упражнения закончились, начать заново?"/>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

@@ -1,6 +1,6 @@
 import React from "react";
 import client from "../../util/client";
-import {Panel, PageHeader, Jumbotron, ListGroup} from "react-bootstrap";
+import {Jumbotron, ListGroup, PageHeader, Panel} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
@@ -69,12 +69,14 @@ class Lesson extends React.Component {
         const textList = this.createTextList();
 
         let body = <Panel>
-            <Helmet title={title}/>
-            <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+            <Panel.Body>
+                <Helmet title={title}/>
+                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-            <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
 
-            {textList}
+                {textList}
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

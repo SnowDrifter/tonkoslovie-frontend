@@ -1,21 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-    Panel,
-    FormGroup,
+    Button,
+    Checkbox,
     ControlLabel,
     FormControl,
-    Button,
-    Jumbotron,
+    FormGroup,
     Glyphicon,
+    Jumbotron,
     ListGroup,
     ListGroupItem,
-    Checkbox
+    Panel
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 class AdminTheme extends React.Component {
 
@@ -151,47 +151,50 @@ class AdminTheme extends React.Component {
         }
 
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/themes">Темы упражнений</Link> / {(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</h4>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
-
-                <h3>Добавленные упражнения</h3>
-                <ListGroup>
-                    {exercises}
-                </ListGroup>
-
-                <Panel>
+            <Panel.Body>
+                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/themes">Темы
+                    упражнений</Link> / {(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</h4>
+                <Jumbotron>
                     <FormGroup>
-                        <ControlLabel>Поиск упражнения</ControlLabel>
+                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
                         <FormControl
-                            type="text"
-                            inputRef={exerciseTitle => {
-                                this.exerciseTitle = exerciseTitle
+                            inputRef={title => {
+                                this.title = title
                             }}
-                            placeholder="Начните вводить данные для выбора"
-                            onChange={this.searchExercise.bind(this)}
                         />
                     </FormGroup>
 
-                    Варианты:
+                    <h3>Добавленные упражнения</h3>
                     <ListGroup>
-                        {foundExercises}
+                        {exercises}
                     </ListGroup>
-                </Panel>
 
-                <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
-                    Опубликовать тему
-                </Checkbox>
-            </Jumbotron>
+                    <Panel>
+                        <FormGroup>
+                            <ControlLabel>Поиск упражнения</ControlLabel>
+                            <FormControl
+                                type="text"
+                                inputRef={exerciseTitle => {
+                                    this.exerciseTitle = exerciseTitle
+                                }}
+                                placeholder="Начните вводить данные для выбора"
+                                onChange={this.searchExercise.bind(this)}
+                            />
+                        </FormGroup>
 
-            <Button onClick={this.saveTheme.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                        Варианты:
+                        <ListGroup>
+                            {foundExercises}
+                        </ListGroup>
+                    </Panel>
+
+                    <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
+                        Опубликовать тему
+                    </Checkbox>
+                </Jumbotron>
+
+                <Button onClick={this.saveTheme.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

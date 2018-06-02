@@ -1,13 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-    Panel,
-    PageHeader,
-    FormGroup,
-    FormControl,
-    Button,
-    Jumbotron
-} from "react-bootstrap";
+import {Button, FormControl, FormGroup, Jumbotron, PageHeader, Panel} from "react-bootstrap";
 import client from "../../util/client";
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
@@ -112,19 +105,22 @@ class Text extends React.Component {
         }
 
         let body = <Panel>
-            <Helmet title={title}/>
-            <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+            <Panel.Body>
+                <Helmet title={title}/>
+                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
 
-            <Jumbotron className="text-body" style={{textAlign: "justify"}}>
-                <form className="form-inline">
-                    {components}
-                    <br style={{lineHeight: "40px"}}/>
-                    <Button bsSize="large" type="submit" onClick={this.checkAnswers.bind(this)} className="pull-right"
-                            bsStyle="success">Проверить</Button>
-                </form>
-            </Jumbotron>
+                <Jumbotron className="text-body" style={{textAlign: "justify"}}>
+                    <form className="form-inline">
+                        {components}
+                        <br style={{lineHeight: "40px"}}/>
+                        <Button bsSize="large" type="submit" onClick={this.checkAnswers.bind(this)}
+                                className="pull-right"
+                                bsStyle="success">Проверить</Button>
+                    </form>
+                </Jumbotron>
 
-            {soundComponent}
+                {soundComponent}
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {
@@ -152,17 +148,17 @@ class QuestionPart extends React.Component {
     }
 
     calculateInputLength(part) {
-        if(part.data.length > part.placeholder.length) {
-            if(part.data.length <= 3) {
+        if (part.data.length > part.placeholder.length) {
+            if (part.data.length <= 3) {
                 return 70;
             } else {
-                return (part.data.length  + 1) * 8 + 10;
+                return (part.data.length + 1) * 8 + 10;
             }
         } else {
-            if(part.placeholder.length <= 3) {
+            if (part.placeholder.length <= 3) {
                 return 70;
             } else {
-                return (part.placeholder.length  + 1) * 8 + 10;
+                return (part.placeholder.length + 1) * 8 + 10;
             }
         }
     }
@@ -212,7 +208,7 @@ class ChoicePart extends React.Component {
 
     checkChoiceVariant(currentVariant, variants) {
         return variants.some(value => {
-            if (value.title == currentVariant) {
+            if (value.title === currentVariant) {
                 return !!value.right;
             }
         });

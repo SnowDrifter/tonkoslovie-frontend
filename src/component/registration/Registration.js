@@ -201,7 +201,9 @@ class Registration extends React.Component {
         let title = "Регистрация";
 
         return <div className="registration-body">
-            <Panel header={title}>
+            <Panel>
+                <Panel.Heading>{title}</Panel.Heading>
+                <Panel.Body>
                 <form>
                     <FormGroup onSubmit={this.sendRegistration.bind(this)}>
                         <Row>
@@ -299,6 +301,7 @@ class Registration extends React.Component {
                 <hr/>
 
                 <Oauth/>
+                </Panel.Body>
             </Panel>
 
             <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)}>

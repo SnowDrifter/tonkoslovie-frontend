@@ -1,9 +1,9 @@
 import React from "react";
 import client from "../../util/client";
 import {browserHistory, Link} from "react-router";
-import {Table, Column, Cell} from "fixed-data-table-2";
+import {Cell, Column, Table} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
-import {Button, Glyphicon, ButtonGroup, ButtonToolbar, Panel} from "react-bootstrap";
+import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
 
 
 class AdminExercises extends React.Component {
@@ -60,54 +60,59 @@ class AdminExercises extends React.Component {
         let exercises = this.state.exercises;
 
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / Упражнения</h4>
+            <Panel.Body>
+                <h4><Link to="/admin">Главная</Link> / Упражнения</h4>
 
-            <div style={{overflow: "auto"}}>
-            <Table
-                rowHeight={50}
-                rowsCount={exercises.length}
-                width={1100}
-                height={600}
-                headerHeight={30}>
+                <div style={{overflow: "auto"}}>
+                    <Table
+                        rowHeight={50}
+                        rowsCount={exercises.length}
+                        width={1100}
+                        height={600}
+                        headerHeight={30}>
 
-                <Column
-                    header={<Cell>№</Cell>}
-                    cell={({rowIndex}) => (
-                        <Cell>{exercises[rowIndex].id}</Cell>
-                    )}
-                    fixed={true}
-                    width={80}
-                />
+                        <Column
+                            header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>{exercises[rowIndex].id}</Cell>
+                            )}
+                            fixed={true}
+                            width={80}
+                        />
 
-                <Column
-                    header={<Cell>Заголовок</Cell>}
-                    cell={({rowIndex}) => (
-                        <Cell>
-                            {exercises[rowIndex].title}
-                        </Cell>
-                    )}
-                    flexGrow={1}
-                    width={100}
-                />
+                        <Column
+                            header={<Cell>Заголовок</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {exercises[rowIndex].title}
+                                </Cell>
+                            )}
+                            flexGrow={1}
+                            width={100}
+                        />
 
-                <Column
-                    cell={({rowIndex}) => (
-                        <Cell>
-                            <ButtonToolbar>
-                                <ButtonGroup>
-                                    <Button onClick={() => this.editExercise(exercises[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
-                                    <Button bsSize="small" onClick={() => this.deleteLExercise(exercises[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
-                                </ButtonGroup>
-                            </ButtonToolbar>
-                        </Cell>
-                    )}
-                    width={100}
-                />
-            </Table>
-            </div>
+                        <Column
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    <ButtonToolbar>
+                                        <ButtonGroup>
+                                            <Button onClick={() => this.editExercise(exercises[rowIndex])}
+                                                    bsSize="small"><Glyphicon glyph="pencil"/></Button>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.deleteLExercise(exercises[rowIndex].id)}
+                                                    className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
+                                        </ButtonGroup>
+                                    </ButtonToolbar>
+                                </Cell>
+                            )}
+                            width={100}
+                        />
+                    </Table>
+                </div>
 
-            <br/>
-            <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
+                <br/>
+                <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

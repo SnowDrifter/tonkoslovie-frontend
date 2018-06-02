@@ -1,14 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-    Panel,
-    FormGroup,
-    ControlLabel,
-    FormControl,
-    Button,
-    Jumbotron,
-    Checkbox
-} from "react-bootstrap";
+import {Button, Checkbox, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
 import client from "../../util/client";
@@ -68,7 +60,7 @@ class AdminUser extends React.Component {
     createRoles() {
         const roles = ["ROLE_USER"];
 
-        if(this.state.admin) {
+        if (this.state.admin) {
             roles.push("ROLE_ADMIN");
         }
 
@@ -85,55 +77,57 @@ class AdminUser extends React.Component {
 
     render() {
         const body = <Panel>
-            <h4><Link to="/admin">Главная</Link> / <Link to="/admin/users">Пользователи </Link>
-                / {"Пользователь № " + (this.state.id)}</h4>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Имя</h4></ControlLabel>
-                    <FormControl
-                        inputRef={firstName => {
-                            this.firstName = firstName
-                        }}
-                    />
-                </FormGroup>
+            <Panel.Body>
+                <h4><Link to="/admin">Главная</Link> / <Link to="/admin/users">Пользователи </Link>
+                    / {"Пользователь № " + (this.state.id)}</h4>
+                <Jumbotron>
+                    <FormGroup>
+                        <ControlLabel><h4>Имя</h4></ControlLabel>
+                        <FormControl
+                            inputRef={firstName => {
+                                this.firstName = firstName
+                            }}
+                        />
+                    </FormGroup>
 
-                <FormGroup>
-                    <ControlLabel><h4>Фамилия</h4></ControlLabel>
-                    <FormControl
-                        inputRef={lastName => {
-                            this.lastName = lastName
-                        }}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <ControlLabel><h4>Фамилия</h4></ControlLabel>
+                        <FormControl
+                            inputRef={lastName => {
+                                this.lastName = lastName
+                            }}
+                        />
+                    </FormGroup>
 
-                <FormGroup>
-                    <ControlLabel><h4>Никнейм</h4></ControlLabel>
-                    <FormControl
-                        inputRef={username => {
-                            this.username = username
-                        }}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <ControlLabel><h4>Никнейм</h4></ControlLabel>
+                        <FormControl
+                            inputRef={username => {
+                                this.username = username
+                            }}
+                        />
+                    </FormGroup>
 
-                <FormGroup>
-                    <ControlLabel><h4>Почта</h4></ControlLabel>
-                    <FormControl
-                        inputRef={email => {
-                            this.email = email
-                        }}
-                    />
-                </FormGroup>
+                    <FormGroup>
+                        <ControlLabel><h4>Почта</h4></ControlLabel>
+                        <FormControl
+                            inputRef={email => {
+                                this.email = email
+                            }}
+                        />
+                    </FormGroup>
 
-                <Checkbox checked={this.state.admin} onChange={this.toggleAdmin.bind(this)}>
-                    Администратор
-                </Checkbox>
+                    <Checkbox checked={this.state.admin} onChange={this.toggleAdmin.bind(this)}>
+                        Администратор
+                    </Checkbox>
 
-                <Checkbox checked={this.state.enabled} onChange={this.toggleEnabled.bind(this)}>
-                    Активный
-                </Checkbox>
-            </Jumbotron>
+                    <Checkbox checked={this.state.enabled} onChange={this.toggleEnabled.bind(this)}>
+                        Активный
+                    </Checkbox>
+                </Jumbotron>
 
-            <Button onClick={this.saveUser.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                <Button onClick={this.saveUser.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {
