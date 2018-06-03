@@ -156,7 +156,7 @@ class AdminTheme extends React.Component {
             <Panel.Body>
                 <ul className="breadcrumb">
                     <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/exercises">Темы упражнений</Link></li>
+                    <li><Link to="/admin/themes">Темы упражнений</Link></li>
                     <li>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</li>
                 </ul>
 

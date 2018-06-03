@@ -253,7 +253,7 @@ class Lesson extends React.Component {
             <Panel.Body>
                 <ul className="breadcrumb">
                     <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/exercises">Уроки</Link></li>
+                    <li><Link to="/admin/lessons">Уроки</Link></li>
                     <li>{(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</li>
                 </ul>
 

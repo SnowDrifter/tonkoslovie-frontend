@@ -80,7 +80,7 @@ class AdminUser extends React.Component {
             <Panel.Body>
                 <ul className="breadcrumb">
                     <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/exercises">Пользователи</Link></li>
+                    <li><Link to="/admin/users">Пользователи</Link></li>
                     <li>{"Пользователь № " + (this.state.id)}</li>
                 </ul>
 

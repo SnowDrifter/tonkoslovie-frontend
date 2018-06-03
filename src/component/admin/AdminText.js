@@ -229,7 +229,7 @@ class Text extends React.Component {
             <Panel.Body>
                 <ul className="breadcrumb">
                     <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/exercises">Тексты</Link></li>
+                    <li><Link to="/admin/texts">Тексты</Link></li>
                     <li>{(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</li>
                 </ul>
 
