@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {Jumbotron, ListGroup, PageHeader, Panel} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
@@ -24,7 +24,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        client.get("/api/content/lesson", {
+        Client.get("/api/content/lesson", {
             params: {
                 id: lessonId
             }

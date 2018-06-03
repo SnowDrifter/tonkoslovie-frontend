@@ -4,7 +4,7 @@ import {
 } from "../constant/Routing"
 
 /* eslint-disable no-unused-vars */
-export const redirect = store => next => action => {
+export const Redirect = store => next => action => {
   if (action.type === ROUTING) {
     browserHistory[action.payload.method](action.payload.nextUrl)
   }

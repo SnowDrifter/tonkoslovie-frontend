@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
@@ -39,7 +39,7 @@ class Exercise extends React.Component {
     }
 
     loadExercise(exerciseId) {
-        client.get("/api/content/exercise", {
+        Client.get("/api/content/exercise", {
             params: {
                 id: exerciseId
             }
@@ -94,7 +94,7 @@ class Exercise extends React.Component {
             window.sessionStorage.removeItem("loadedExercises");
         }
 
-        client.get("/api/content/exercise/randomId", {
+        Client.get("/api/content/exercise/randomId", {
             params: {
                 excludeIds: excludeExercises.join(",")
             }

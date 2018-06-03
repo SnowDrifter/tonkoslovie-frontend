@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import "./AdminWord.less"
 
@@ -19,7 +19,7 @@ class Word extends React.Component {
         let russianText = ReactDOM.findDOMNode(this.russianText).value;
         let polishText = ReactDOM.findDOMNode(this.polishText).value;
 
-        client.post("/api/content/word", {
+        Client.post("/api/content/word", {
             id: this.props.word.id,
             russianText: russianText,
             polishText: polishText

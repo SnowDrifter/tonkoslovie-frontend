@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory, Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
@@ -26,7 +26,7 @@ class AdminExercises extends React.Component {
     }
 
     updateExercises() {
-        client.get("/api/content/exercises")
+        Client.get("/api/content/exercises")
             .then(response => {
                 const exercises = response.data;
                 this.setState({
@@ -38,7 +38,7 @@ class AdminExercises extends React.Component {
 
     deleteLExercise(exerciseId) {
         if (confirm("Удалить упражнение №" + exerciseId + "?")) {
-            client.delete("/api/content/exercise", {
+            Client.delete("/api/content/exercise", {
                 params: {
                     id: exerciseId
                 }

@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory, Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -32,7 +32,7 @@ class AdminUsers extends React.Component {
     }
 
     updateUsers() {
-        client.get("/api/user/users")
+        Client.get("/api/user/users")
             .then(response => {
                 const users = response.data;
                 this.setState({

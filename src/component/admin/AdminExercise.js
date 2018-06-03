@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -38,7 +38,7 @@ class AdminExercise extends React.Component {
     }
 
     loadExercise(exerciseId) {
-        client.get("/api/content/exercise", {
+        Client.get("/api/content/exercise", {
             params: {
                 id: exerciseId
             }
@@ -81,7 +81,7 @@ class AdminExercise extends React.Component {
             answers.push(ReactDOM.findDOMNode(this["answer-" + i]).value);
         }
 
-        client.post("/api/content/exercise", {
+        Client.post("/api/content/exercise", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
@@ -145,7 +145,7 @@ class AdminExercise extends React.Component {
 
                 <Jumbotron>
                     <FormGroup>
-                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                        <ControlLabel><h3>Заголовок</h3></ControlLabel>
                         <FormControl
                             inputRef={title => {
                                 this.title = title
@@ -153,7 +153,7 @@ class AdminExercise extends React.Component {
                         />
                     </FormGroup>
 
-                    <h4>Оригинал</h4>
+                    <h3>Оригинал</h3>
                     <Panel>
                         <Panel.Body>
                             <Editor
@@ -163,7 +163,7 @@ class AdminExercise extends React.Component {
                         </Panel.Body>
                     </Panel>
 
-                    <h4>Словарь</h4>
+                    <h3>Словарь</h3>
                     <Panel>
                         <Panel.Body>
                             <Editor
@@ -174,17 +174,17 @@ class AdminExercise extends React.Component {
                     </Panel>
 
                     <FormGroup>
-                        <ControlLabel><h4>Вариант перевода</h4></ControlLabel>
                         <FormControl componentClass="select" ref={part => {
                             this["type"] = part
                         }}>
+                        <ControlLabel><h3>Вариант перевода</h3></ControlLabel>
                             <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
                             <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
                         </FormControl>
                     </FormGroup>
 
                     <FormGroup>
-                        <ControlLabel><h4>Регулярное выражение для проверки ответов</h4></ControlLabel>
+                        <ControlLabel><h3>Регулярное выражение для проверки ответов</h3></ControlLabel>
                         <FormControl
                             componentClass="textarea"
                             inputRef={answerRegex => {
@@ -195,7 +195,7 @@ class AdminExercise extends React.Component {
 
                     <div className="admin-exercise-answer-panel">
                         <FormGroup>
-                            <ControlLabel><h4>Ответы</h4></ControlLabel>
+                            <ControlLabel><h3>Ответы</h3></ControlLabel>
                             {answerForms}
                         </FormGroup>
                         <ButtonToolbar>

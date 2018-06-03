@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {Button, FormControl, FormGroup, Jumbotron, PageHeader, Panel} from "react-bootstrap";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
@@ -30,7 +30,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        client.get("/api/content/text", {
+        Client.get("/api/content/text", {
             params: {
                 id: textId
             }

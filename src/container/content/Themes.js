@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
@@ -24,7 +24,7 @@ class ExercisesThemes extends React.Component {
     }
 
     updateThemes() {
-        client.get("/api/content/themes")
+        Client.get("/api/content/themes")
             .then(response => {
                 const themes = response.data;
                 this.setState({themes: themes, loaded: true})

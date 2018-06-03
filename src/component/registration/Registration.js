@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory} from "react-router"
 import {
     Panel,
@@ -152,7 +152,7 @@ class Registration extends React.Component {
             const firstName = ReactDOM.findDOMNode(this.firstName).value;
             const lastName = ReactDOM.findDOMNode(this.lastName).value;
 
-            client.post("/api/user/registration", {
+            Client.post("/api/user/registration", {
                 username: username,
                 password: password,
                 email: email,

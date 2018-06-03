@@ -1,4 +1,4 @@
-import client from "../util/client";
+import Client from "../util/Client";
 import {SHOW_LOGIN, HIDE_LOGIN, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT} from "../constant/User";
 import {ROUTING} from "../constant/Routing";
 
@@ -30,7 +30,7 @@ export function login(payload) {
             type: LOGIN_REQUEST
         });
 
-        client.post("/api/user/login", {
+        Client.post("/api/user/login", {
             email: payload.email,
             password: payload.password
         })

@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import EditPartModal from "./EditPartModal";
 import CreatePartModal from "./CreatePartModal";
 import * as partTypes from "../content/TextPartTypes";
@@ -51,7 +51,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        client.get("/api/content/text", {
+        Client.get("/api/content/text", {
             params: {
                 id: textId
             }
@@ -69,7 +69,7 @@ class Text extends React.Component {
     }
 
     saveText() {
-        client.post("/api/content/text", {
+        Client.post("/api/content/text", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             parts: this.state.textParts ? this.state.textParts : [],
@@ -133,7 +133,7 @@ class Text extends React.Component {
 
     deleteSoundFile() {
         if (confirm("Удалить звуковую дорожку?")) {
-            client.delete("/api/media/sound", {
+            Client.delete("/api/media/sound", {
                 params: {
                     fileName: this.state.soundFileName
                 }
@@ -162,7 +162,7 @@ class Text extends React.Component {
             }
         };
 
-        client.post("/api/media/sound", data, config)
+        Client.post("/api/media/sound", data, config)
             .then((response) => {
                 this.setState({soundFileName: response.data.fileName, progressUploadFile: null});
                 this.saveText();
@@ -195,7 +195,7 @@ class Text extends React.Component {
 
         if (this.state.soundFileName) {
             soundComponent = <div>
-                <h4>Звуковая дорожка</h4>
+                <h3>Звуковая дорожка</h3>
                 <ReactPlayer
                     width="100%"
                     height={40}
@@ -235,7 +235,7 @@ class Text extends React.Component {
 
                 <Jumbotron>
                     <FormGroup>
-                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
+                        <ControlLabel><h3>Заголовок</h3></ControlLabel>
                         <FormControl
                             inputRef={title => {
                                 this.title = title
@@ -245,7 +245,7 @@ class Text extends React.Component {
 
                     {soundComponent}
 
-                    <h4>Элементы текста</h4>
+                    <h3>Элементы текста</h3>
                     {elements}
                 </Jumbotron>
 

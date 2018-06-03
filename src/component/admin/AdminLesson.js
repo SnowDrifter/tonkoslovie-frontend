@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {
     Button,
     Checkbox,
@@ -48,7 +48,7 @@ class Lesson extends React.Component {
     }
 
     loadLesson(lessonId) {
-        client.get("/api/content/lesson", {
+        Client.get("/api/content/lesson", {
             params: {
                 id: lessonId
             }
@@ -77,7 +77,7 @@ class Lesson extends React.Component {
     }
 
     saveLesson() {
-        client.post("/api/content/lesson", {
+        Client.post("/api/content/lesson", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             annotation: ReactDOM.findDOMNode(this.annotation).value,
@@ -97,7 +97,7 @@ class Lesson extends React.Component {
     searchText() {
         let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
 
-        client.get("/api/content/texts/findByTitle", {
+        Client.get("/api/content/texts/findByTitle", {
             params: {
                 title: searchTitle
             }
@@ -159,7 +159,7 @@ class Lesson extends React.Component {
             }
         };
 
-        client.post("/api/media/image", data, config)
+        Client.post("/api/media/image", data, config)
             .then((response) => {
                 this.setState({previewFileName: response.data.fileName, progressUploadFile: null});
                 this.saveLesson();
@@ -172,7 +172,7 @@ class Lesson extends React.Component {
 
     deletePreview() {
         if (confirm("Удалить превью?")) {
-            client.delete("/api/media/image", {
+            Client.delete("/api/media/image", {
                 params: {
                     fileName: this.state.previewFileName
                 }
@@ -222,10 +222,10 @@ class Lesson extends React.Component {
 
         if (this.state.previewFileName) {
             previewComponent = <div>
-                <h4>Превью</h4>
+                <h3>Превью</h3>
                 <img src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + this.state.previewFileName}/>
                 <br/>
-                <Button onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
+                <Button style={{marginTop: "5px"}} onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>
         } else {
             previewComponent = <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {Image, Panel} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {Link} from "react-router";
@@ -24,7 +24,7 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        client.get("/api/content/lessons")
+        Client.get("/api/content/lessons")
             .then(response => {
                 const lessons = response.data;
                 this.setState({lessons: lessons, loaded: true})

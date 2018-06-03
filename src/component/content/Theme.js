@@ -1,6 +1,6 @@
 import React from "react";
 import {Jumbotron, PageHeader, Panel} from "react-bootstrap";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import "./Text.less"
 import Helmet from "react-helmet";
 import Loader from "../Loader";
@@ -38,7 +38,7 @@ class Theme extends React.Component {
     }
 
     loadTheme(themeId) {
-        client.get("/api/content/theme", {
+        Client.get("/api/content/theme", {
             params: {
                 id: themeId,
                 randomExercises: true

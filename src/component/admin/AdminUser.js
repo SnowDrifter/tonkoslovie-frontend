@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {Button, Checkbox, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {toast} from "react-toastify";
 import RoleUtil from "../../util/RoleUtil";
 
@@ -23,7 +23,7 @@ class AdminUser extends React.Component {
     }
 
     loadUser(userId) {
-        client.get("/api/user/", {
+        Client.get("/api/user/", {
             params: {
                 id: userId
             }
@@ -44,7 +44,7 @@ class AdminUser extends React.Component {
     }
 
     saveUser() {
-        client.post("/api/user/update", {
+        Client.post("/api/user/update", {
             id: this.state.id,
             firstName: ReactDOM.findDOMNode(this.firstName).value,
             lastName: ReactDOM.findDOMNode(this.lastName).value,

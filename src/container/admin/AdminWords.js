@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -31,7 +31,7 @@ class AdminWords extends React.Component {
     }
 
     updateWords() {
-        client.get("/api/content/words")
+        Client.get("/api/content/words")
             .then(response => {
                 const words = response.data;
                 this.setState({
@@ -52,7 +52,7 @@ class AdminWords extends React.Component {
 
     deleteWord(wordId) {
         if (confirm("Удалить слово №" + wordId + "?")) {
-            client.delete("/api/content/word", {
+            Client.delete("/api/content/word", {
                 params: {
                     id: wordId
                 }

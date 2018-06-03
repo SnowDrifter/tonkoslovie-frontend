@@ -30,11 +30,11 @@ import React from "react"
 import {render} from "react-dom"
 import {Router, IndexRoute, Route, browserHistory} from "react-router"
 import {Provider} from "react-redux"
-import configureStore from "./store/configureStore"
+import ConfigureStore from "./store/ConfigureStore"
 import RestrictedContainer from "./container/RestrictedContainer"
 
 
-const store = configureStore();
+const store = ConfigureStore();
 
 render((
     <div>

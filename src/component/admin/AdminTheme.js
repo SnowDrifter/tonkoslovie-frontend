@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {Link} from "react-router";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {toast} from "react-toastify";
 
 class AdminTheme extends React.Component {
@@ -40,7 +40,7 @@ class AdminTheme extends React.Component {
     }
 
     loadTheme(themeId) {
-        client.get("/api/content/theme", {
+        Client.get("/api/content/theme", {
             params: {
                 id: themeId
             }
@@ -59,7 +59,7 @@ class AdminTheme extends React.Component {
     }
 
     saveTheme() {
-        client.post("/api/content/theme", {
+        Client.post("/api/content/theme", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             published: this.state.published,
@@ -76,7 +76,7 @@ class AdminTheme extends React.Component {
     searchExercise() {
         let searchTitle = ReactDOM.findDOMNode(this.exerciseTitle).value;
 
-        client.get("/api/content/exercises/findByTitle", {
+        Client.get("/api/content/exercises/findByTitle", {
             params: {
                 title: searchTitle
             }

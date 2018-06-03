@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory, Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -27,7 +27,7 @@ class AdminLessons extends React.Component {
     }
 
     updateLessons() {
-        client.get("/api/content/lessons?onlyPublished=false")
+        Client.get("/api/content/lessons?onlyPublished=false")
             .then(response => {
                 const lessons = response.data;
                 this.setState({
@@ -39,7 +39,7 @@ class AdminLessons extends React.Component {
 
     deleteLesson(lessonId) {
         if (confirm("Удалить урок №" + lessonId + "?")) {
-            client.delete("/api/content/lesson", {
+            Client.delete("/api/content/lesson", {
                 params: {
                     id: lessonId
                 }

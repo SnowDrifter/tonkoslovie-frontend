@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory, Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -27,7 +27,7 @@ class AdminTexts extends React.Component {
     }
 
     updateTexts() {
-        client.get("/api/content/texts")
+        Client.get("/api/content/texts")
             .then(response => {
                 const texts = response.data;
                 this.setState({
@@ -39,7 +39,7 @@ class AdminTexts extends React.Component {
 
     deleteText(textId) {
         if (confirm("Удалить текст №" + textId + "?")) {
-            client.delete("/api/content/text", {
+            Client.delete("/api/content/text", {
                 params: {
                     id: textId
                 }

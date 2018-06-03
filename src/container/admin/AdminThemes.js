@@ -1,5 +1,5 @@
 import React from "react";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {browserHistory, Link} from "react-router";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
@@ -27,7 +27,7 @@ class AdminThemes extends React.Component {
     }
 
     updateThemes() {
-        client.get("/api/content/themes?onlyPublished=false")
+        Client.get("/api/content/themes?onlyPublished=false")
             .then(response => {
                 const themes = response.data;
                 this.setState({
@@ -39,7 +39,7 @@ class AdminThemes extends React.Component {
 
     deleteTheme(themeId) {
         if (confirm("Удалить тему №" + themeId + "?")) {
-            client.delete("/api/content/theme", {
+            Client.delete("/api/content/theme", {
                 params: {
                     id: themeId
                 }
