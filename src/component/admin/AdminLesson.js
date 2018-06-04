@@ -21,6 +21,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import {toast} from "react-toastify";
+import {browserHistory} from "react-router"
 import TagUtil from "../../util/TagUtil";
 
 
@@ -94,6 +95,10 @@ class Lesson extends React.Component {
             this.setState({
                 id: response.data.id,
             });
+
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/lesson/" + response.data.id)
+            }
 
             toast.success("Сохранено");
         })

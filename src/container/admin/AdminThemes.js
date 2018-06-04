@@ -119,7 +119,7 @@ class AdminThemes extends React.Component {
 
                 <br/>
                 <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
-            </Panel.Body>;
+            </Panel.Body>
         </Panel>;
 
         if (this.state.loaded) {

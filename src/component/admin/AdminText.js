@@ -13,7 +13,7 @@ import {
     ProgressBar
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import Client from "../../util/Client";
 import EditPartModal from "./EditPartModal";
 import CreatePartModal from "./CreatePartModal";
@@ -78,6 +78,10 @@ class Text extends React.Component {
             this.setState({
                 id: response.data.id,
             });
+
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/text/" + response.data.id)
+            }
 
             toast.success("Сохранено");
         })

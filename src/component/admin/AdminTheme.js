@@ -13,7 +13,7 @@ import {
     Panel
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import Client from "../../util/Client";
 import {toast} from "react-toastify";
 
@@ -68,6 +68,10 @@ class AdminTheme extends React.Component {
             this.setState({
                 id: response.data.id
             });
+
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/theme/" + response.data.id)
+            }
 
             toast.success("Сохранено");
         })

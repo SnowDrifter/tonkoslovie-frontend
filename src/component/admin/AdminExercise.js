@@ -6,7 +6,7 @@ import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import Loader from "../../component/Loader";
 import "./AdminExercise.less";
@@ -100,6 +100,10 @@ class AdminExercise extends React.Component {
             this.setState({
                 id: response.data.id,
             });
+
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/exercise/" + response.data.id)
+            }
 
             toast.success("Сохранено");
         })
