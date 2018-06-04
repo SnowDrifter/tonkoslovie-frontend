@@ -21,6 +21,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import {toast} from "react-toastify";
+import TagUtil from "../../util/TagUtil";
 
 
 class Lesson extends React.Component {
@@ -42,6 +43,7 @@ class Lesson extends React.Component {
         if (this.props.params.lessonId) {
             this.loadLesson(this.props.params.lessonId)
         }
+
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
         this.handTextChange = this.handTextChange.bind(this);
@@ -55,16 +57,19 @@ class Lesson extends React.Component {
         }).then(response => {
             const lesson = response.data;
 
-            const blocksFromHTML = convertFromHTML(lesson.content);
-            const contentState = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap
-            );
+            if (TagUtil.isNotEmptyTag(lesson.content)) {
+                const blocksFromHTML = convertFromHTML(lesson.content);
+                const contentState = ContentState.createFromBlockArray(
+                    blocksFromHTML.contentBlocks,
+                    blocksFromHTML.entityMap
+                );
+
+                this.setState({content: EditorState.createWithContent(contentState)});
+            }
 
             this.setState({
                 id: lesson.id,
                 texts: lesson.texts,
-                content: EditorState.createWithContent(contentState),
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
                 progressUploadFile: null,
@@ -176,14 +181,12 @@ class Lesson extends React.Component {
                 params: {
                     fileName: this.state.previewFileName
                 }
-            })
-                .then(() => {
-                    this.setState({previewFileName: null});
-                    this.saveLesson();
-                })
-                .catch(() => {
-                    toast.error("Произошла ошибка во время удаления");
-                });
+            }).then(() => {
+                this.setState({previewFileName: null});
+                this.saveLesson();
+            }).catch(() => {
+                toast.error("Произошла ошибка во время удаления");
+            });
         }
     }
 

@@ -11,6 +11,7 @@ import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js
 import Loader from "../../component/Loader";
 import "./AdminExercise.less";
 import {toast} from "react-toastify";
+import TagUtil from "../../util/TagUtil"
 
 
 class AdminExercise extends React.Component {
@@ -47,23 +48,29 @@ class AdminExercise extends React.Component {
 
             const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-            const originalBlocksFromHTML = convertFromHTML(exercise.original);
-            const originalState = ContentState.createFromBlockArray(
-                originalBlocksFromHTML.contentBlocks,
-                originalBlocksFromHTML.entityMap
-            );
+            if (TagUtil.isNotEmptyTag(exercise.original)) {
+                const originalBlocksFromHTML = convertFromHTML(exercise.original);
+                const originalState = ContentState.createFromBlockArray(
+                    originalBlocksFromHTML.contentBlocks,
+                    originalBlocksFromHTML.entityMap
+                );
 
-            const dictionaryBlocksFromHTML = convertFromHTML(exercise.dictionary);
-            const dictionaryState = ContentState.createFromBlockArray(
-                dictionaryBlocksFromHTML.contentBlocks,
-                dictionaryBlocksFromHTML.entityMap
-            );
+                this.setState({original: EditorState.createWithContent(originalState)});
+            }
+
+            if (TagUtil.isNotEmptyTag(exercise.dictionary)) {
+                const dictionaryBlocksFromHTML = convertFromHTML(exercise.dictionary);
+                const dictionaryState = ContentState.createFromBlockArray(
+                    dictionaryBlocksFromHTML.contentBlocks,
+                    dictionaryBlocksFromHTML.entityMap
+                );
+
+                this.setState({dictionary: EditorState.createWithContent(dictionaryState)});
+            }
 
             this.setState({
                 id: exercise.id,
                 answersCount: answersCount,
-                original: EditorState.createWithContent(originalState),
-                dictionary: EditorState.createWithContent(dictionaryState),
                 answers: exercise.answers || [],
                 loaded: true
             });
