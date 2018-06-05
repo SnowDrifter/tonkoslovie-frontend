@@ -2,18 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Client from "../../util/Client";
 import {browserHistory} from "react-router"
-import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
-    Button,
-    Modal,
-    Overlay,
-    Popover
-} from "react-bootstrap";
+import {Button, Col, ControlLabel, FormControl, FormGroup, Modal, Overlay, Panel, Popover, Row} from "react-bootstrap";
 import "./Registration.less"
 import Oauth from "../Oauth";
 
@@ -149,15 +138,11 @@ class Registration extends React.Component {
             const username = ReactDOM.findDOMNode(this.username).value;
             const password = ReactDOM.findDOMNode(this.password).value;
             const email = ReactDOM.findDOMNode(this.email).value;
-            const firstName = ReactDOM.findDOMNode(this.firstName).value;
-            const lastName = ReactDOM.findDOMNode(this.lastName).value;
 
             Client.post("/api/user/registration", {
                 username: username,
                 password: password,
-                email: email,
-                firstName: firstName,
-                lastName: lastName
+                email: email
             }).then(() => {
                 this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
             }).catch((error) => {
@@ -204,103 +189,84 @@ class Registration extends React.Component {
             <Panel>
                 <Panel.Heading>{title}</Panel.Heading>
                 <Panel.Body>
-                <form>
-                    <FormGroup onSubmit={this.sendRegistration.bind(this)}>
-                        <Row>
-                            <Col md={1}/>
-                            <Col md={10}>
-                                <FormGroup validationState={this.state.email.validationState}>
-                                    <ControlLabel>Email <span style={{color: "red"}}>*</span></ControlLabel>
-                                    <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
-                                        <Popover id="emailPopover" style={{width: 250}}>{this.state.email.message}</Popover>
-                                    </Overlay>
+                    <form>
+                        <FormGroup onSubmit={this.sendRegistration.bind(this)}>
+                            <Row>
+                                <Col md={2}/>
+                                <Col md={8}>
+                                    <FormGroup validationState={this.state.email.validationState}>
+                                        <ControlLabel>Email <span style={{color: "red"}}>*</span></ControlLabel>
+                                        <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
+                                            <Popover id="emailPopover" className="registration-popover">
+                                                {this.state.email.message}
+                                            </Popover>
+                                        </Overlay>
 
-                                    <FormControl ref={email => {
-                                        this.email = email
-                                    }} type="email"/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={1}/>
-                        </Row>
+                                        <FormControl ref={email => {
+                                            this.email = email
+                                        }} type="email"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
 
-                        <Row>
-                            <Col md={1}/>
-                            <Col md={5}>
-                                <FormGroup validationState={this.state.password.validationState}>
-                                    <ControlLabel>Пароль <span style={{color: "red"}}>*</span></ControlLabel>
-                                    <Overlay show={this.state.password.showPopover} target={this.password} placement="left">
-                                        <Popover id="passwordPopover" style={{width: 250}}>{this.state.password.message}</Popover>
-                                    </Overlay>
+                            <Row>
+                                <Col md={2}/>
+                                <Col md={8}>
+                                    <FormGroup validationState={this.state.password.validationState}>
+                                        <ControlLabel>Пароль <span style={{color: "red"}}>*</span></ControlLabel>
+                                        <Overlay show={this.state.password.showPopover} target={this.password} placement="left">
+                                            <Popover id="passwordPopover" className="registration-popover">
+                                                {this.state.password.message}
+                                            </Popover>
+                                        </Overlay>
 
-                                    <FormControl ref={password => {
-                                        this.password = password
-                                    }} type="password"/>
-                                </FormGroup>
-                            </Col>
+                                        <FormControl ref={password => {
+                                            this.password = password
+                                        }} type="password"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
 
-                            <Col md={5}>
-                                <FormGroup validationState={this.state.confirmPassword.validationState}>
-                                    <ControlLabel>Повторите пароль <span style={{color: "red"}}>*</span></ControlLabel>
-                                    <Overlay show={this.state.confirmPassword.showPopover} target={this.confirmPassword} placement="left">
-                                        <Popover style={{width: 250}} id="confirmPasswordPopover">{this.state.confirmPassword.message}</Popover>
-                                    </Overlay>
+                            <Row>
+                                <Col md={2}/>
+                                <Col md={8}>
+                                    <FormGroup validationState={this.state.confirmPassword.validationState}>
+                                        <ControlLabel>Повторите пароль <span
+                                            style={{color: "red"}}>*</span></ControlLabel>
+                                        <Overlay show={this.state.confirmPassword.showPopover}
+                                                 target={this.confirmPassword} placement="left">
+                                            <Popover id="confirmPasswordPopover" className="registration-popover">
+                                                {this.state.confirmPassword.message}
+                                            </Popover>
+                                        </Overlay>
 
-                                    <FormControl ref={confirmPassword => {
-                                        this.confirmPassword = confirmPassword
-                                    }} type="password"/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={1}/>
-                        </Row>
+                                        <FormControl ref={confirmPassword => {
+                                            this.confirmPassword = confirmPassword
+                                        }} type="password"/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
 
-                        <Row>
-                            <Col md={1}/>
-                            <Col md={10}>
-                                <FormGroup>
-                                    <ControlLabel>Никнейм</ControlLabel>
-                                    <FormControl ref={username => {
-                                        this.username = username
-                                    }} type="text" autoFocus/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={1}/>
-                        </Row>
+                            <Row>
+                                <Col md={2}/>
+                                <Col md={8}>
+                                    <FormGroup>
+                                        <ControlLabel>Никнейм</ControlLabel>
+                                        <FormControl ref={username => {
+                                            this.username = username
+                                        }} type="text" autoFocus/>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        </FormGroup>
 
-                        <Row>
-                            <Col md={1}/>
-                            <Col md={5}>
-                                <FormGroup>
-                                    <ControlLabel>Имя</ControlLabel>
-                                    <FormControl ref={firstName => {
-                                        this.firstName = firstName
-                                    }} type="text"/>
-                                </FormGroup>
-                            </Col>
+                        <Button className="center-block" disabled={this.state.disableSubmit} type="submit" bsStyle="success"
+                                onClick={this.sendRegistration.bind(this)}>Отправить</Button>
+                    </form>
 
-                            <Col md={5}>
-                                <FormGroup>
-                                    <ControlLabel>Фамилия</ControlLabel>
-                                    <FormControl ref={lastName => {
-                                        this.lastName = lastName
-                                    }} type="text"/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={1}/>
-                        </Row>
-                    </FormGroup>
+                    <hr/>
 
-                    <Row>
-                        <Col md={11}>
-                            <Button disabled={this.state.disableSubmit} type="submit" className="pull-right" bsStyle="success"
-                                    onClick={this.sendRegistration.bind(this)}>Сохранить</Button>
-                        </Col>
-                        <Col md={1}/>
-                    </Row>
-                </form>
-
-                <hr/>
-
-                <Oauth/>
+                    <Oauth/>
                 </Panel.Body>
             </Panel>
 
