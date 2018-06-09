@@ -1,18 +1,17 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const webpack = require("webpack");
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
+    mode: process.env.NODE_ENV,
     entry: ['./src/index.js'],
-
     output: {
         path: path.resolve('./src'),
         publicPath: "/assets/",
         filename: 'bundle.js'
     },
-
     module: {
         rules: [
             {
@@ -52,7 +51,6 @@ module.exports = {
             }
         ]
     },
-
     devServer: {
         contentBase: './src',
         inline: true,
@@ -74,35 +72,28 @@ module.exports = {
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                parallel: true,
+                sourceMap: false,
+                uglifyOptions: {
+                    output: {
+                        comments: false,
+                        beautify: false
+                    }
+                }
+            }),
+            new CompressionPlugin({
+                algorithm: 'gzip',
+                test: /\.js$|\.html$/,
+            }),
+            new webpack.optimize.OccurrenceOrderPlugin(),
+            new webpack.LoaderOptionsPlugin({
+                minimize: true,
+                debug: false
+            })
+        ]
+    }
 };
-
-if (IS_PRODUCTION) {
-    module.exports.plugins.push(
-        new webpack.LoaderOptionsPlugin({
-            minimize: true,
-            debug: false
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            parallel: true,
-            beautify: false,
-            sourceMap: false,
-            mangle: true,
-            compress: {
-                sequences: true,
-                booleans: true,
-                loops: true,
-                unused: true,
-                warnings: false,
-                drop_console: true,
-                screw_ie8: true
-            },
-            comments: false
-        }),
-        new CompressionPlugin({
-            algorithm: 'gzip',
-            regExp: /\.js$|\.html$/
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin()
-    );
-}
