@@ -2,15 +2,16 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require("webpack");
 
 module.exports = {
     mode: process.env.NODE_ENV,
     entry: ['./src/index.js'],
     output: {
-        path: path.resolve('./src'),
+        path: path.resolve(__dirname, 'assets'),
         publicPath: "/assets/",
-        filename: 'bundle.js'
+        filename: 'bundle.[hash].js'
     },
     module: {
         rules: [
@@ -51,13 +52,11 @@ module.exports = {
             }
         ]
     },
-    devServer: {
-        contentBase: './src',
-        inline: true,
-        historyApiFallback: true,
-        disableHostCheck: true
-    },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.ejs',
+            filename: path.resolve(__dirname, 'assets/index.html')
+        }),
         new CopyWebpackPlugin([
             {from: 'static'}
         ]),

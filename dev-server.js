@@ -1,22 +1,20 @@
-const express = require('express');
 const webpack = require('webpack');
-const config = require('./webpack/webpack.config.js');
+const WebpackDevServer = require('webpack-dev-server');
+const config = require('./webpack/webpack.config');
 const webpackMiddleware = require("webpack-dev-middleware");
 const compiler = webpack(config);
-const compression = require('compression');
-const cacheResponseDirective = require('express-cache-response-directive');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-const app = express();
-
-app.use(compression());
-
-app.use(cacheResponseDirective());
+const app = new WebpackDevServer(webpack(config));
 
 app.use(webpackMiddleware(compiler, {
     publicPath: config.output.publicPath,
+    hot: true,
+    open: true,
+    historyApiFallback: true,
+    disableHostCheck: true,
     index: "index.html",
     stats: {
         colors: true
