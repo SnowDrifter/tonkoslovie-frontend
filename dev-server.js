@@ -7,15 +7,17 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-const app = new WebpackDevServer(webpack(config));
-
-app.use(webpackMiddleware(compiler, {
-    publicPath: config.output.publicPath,
+const devServerConfig = {
     hot: true,
     open: true,
     historyApiFallback: true,
-    disableHostCheck: true,
-    index: "index.html",
+    disableHostCheck: true
+};
+
+const app = new WebpackDevServer(webpack(config), devServerConfig);
+
+app.use(webpackMiddleware(compiler, {
+    publicPath: config.output.publicPath,
     stats: {
         colors: true
     }
