@@ -107,7 +107,7 @@ class Lesson extends React.Component {
     searchText() {
         let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
 
-        Client.get("/api/content/texts/findByTitle", {
+        Client.get("/api/content/texts/find", {
             params: {
                 title: searchTitle
             }

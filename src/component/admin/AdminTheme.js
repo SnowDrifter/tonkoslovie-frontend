@@ -80,7 +80,7 @@ class AdminTheme extends React.Component {
     searchExercise() {
         let searchTitle = ReactDOM.findDOMNode(this.exerciseTitle).value;
 
-        Client.get("/api/content/exercises/findByTitle", {
+        Client.get("/api/content/exercises/find", {
             params: {
                 title: searchTitle
             }

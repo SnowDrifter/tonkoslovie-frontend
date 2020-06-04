@@ -94,7 +94,7 @@ class Exercise extends React.Component {
             window.sessionStorage.removeItem("loadedExercises");
         }
 
-        Client.get("/api/content/exercise/randomId", {
+        Client.get("/api/content/exercise/random_id", {
             params: {
                 excludeIds: excludeExercises.join(",")
             }
