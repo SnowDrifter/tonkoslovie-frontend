@@ -27,7 +27,7 @@ class AdminLessons extends React.Component {
     }
 
     updateLessons() {
-        Client.get("/api/content/lessons?onlyPublished=false")
+        Client.get("/api/content/lessons?unpublished=true")
             .then(response => {
                 const lessons = response.data;
                 this.setState({

@@ -27,7 +27,7 @@ class AdminThemes extends React.Component {
     }
 
     updateThemes() {
-        Client.get("/api/content/themes?onlyPublished=false")
+        Client.get("/api/content/themes?unpublished=true")
             .then(response => {
                 const themes = response.data;
                 this.setState({
