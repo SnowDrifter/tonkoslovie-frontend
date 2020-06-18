@@ -70,7 +70,7 @@ class AdminExercises extends React.Component {
                     <Table
                         rowHeight={50}
                         rowsCount={exercises.length}
-                        width={1100}
+                        width={900}
                         height={600}
                         headerHeight={30}>
 
