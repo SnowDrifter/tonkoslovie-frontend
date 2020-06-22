@@ -1,26 +1,14 @@
 import React from "react";
-import client from "../../util/client";
-import {Table, Column, Cell} from "fixed-data-table-2";
+import Client from "../../util/Client";
+import {Link} from "react-router";
+import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
-    Button,
-    Modal,
-    Form,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
-import {Link} from 'react-router'
-import Word from '../../component/admin/AdminWord'
+import Loader from "../../component/Loader";
+import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import Word from "../../component/admin/AdminWord";
 
 
-class Words extends React.Component {
+class AdminWords extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,7 +17,8 @@ class Words extends React.Component {
             words: [],
             showModal: false,
             word: {},
-            modalTitle: null
+            modalTitle: null,
+            loaded: false
         };
 
         this.showEditWord = this.showEditWord.bind(this);
@@ -42,10 +31,13 @@ class Words extends React.Component {
     }
 
     updateWords() {
-        client.get('/api/content/words')
+        Client.get("/api/content/words")
             .then(response => {
                 const words = response.data;
-                this.setState({words});
+                this.setState({
+                    words: words,
+                    loaded: true
+                });
             });
     }
 
@@ -60,14 +52,13 @@ class Words extends React.Component {
 
     deleteWord(wordId) {
         if (confirm("Удалить слово №" + wordId + "?")) {
-            client.delete('/api/content/word', {
+            Client.delete("/api/content/word", {
                 params: {
                     id: wordId
                 }
-            })
-                .then(() => {
-                    this.updateWords();
-                });
+            }).then(() => {
+                this.updateWords();
+            });
         }
     }
 
@@ -78,75 +69,90 @@ class Words extends React.Component {
     render() {
         let words = this.state.words;
 
-        return (
-            <div>
-                <Table
-                    rowHeight={50}
-                    rowsCount={words.length}
-                    width={1140}
-                    height={800}
-                    headerHeight={30}>
+        const body = <Panel>
+            <Panel.Body>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li >Слова</li>
+                </ul>
 
-                    <Column
-                        header={<Cell>№</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>{words[rowIndex].id}</Cell>
-                        )}
-                        fixed={true}
-                        width={80}
-                    />
+                <div style={{overflow: "auto"}}>
+                    <Table
+                        rowHeight={50}
+                        rowsCount={words.length}
+                        width={1100}
+                        height={600}
+                        headerHeight={30}>
 
-                    <Column
-                        header={<Cell>Русский текст</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {words[rowIndex].russianText}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                        <Column
+                            header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>{words[rowIndex].id}</Cell>
+                            )}
+                            fixed={true}
+                            width={80}
+                        />
 
-                    <Column
-                        header={<Cell>Польский текст</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {words[rowIndex].polishText}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                        <Column
+                            header={<Cell>Русский текст</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {words[rowIndex].russianText}
+                                </Cell>
+                            )}
+                            flexGrow={1}
+                            width={100}
+                        />
 
-                    <Column
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                <ButtonToolbar>
-                                    <ButtonGroup>
-                                        <Button bsSize="small"
-                                                onClick={() => this.showEditWord(words[rowIndex])}><Glyphicon
-                                            glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteWord(words[rowIndex].id)}
-                                                className="pull-right" bsStyle="danger"> <Glyphicon
-                                            glyph="remove"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            </Cell>
-                        )}
-                        width={100}
-                    />
-                </Table>
+                        <Column
+                            header={<Cell>Польский текст</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {words[rowIndex].polishText}
+                                </Cell>
+                            )}
+                            flexGrow={1}
+                            width={100}
+                        />
+
+                        <Column
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    <ButtonToolbar>
+                                        <ButtonGroup>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.showEditWord(words[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
+                                            </Button>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteWord(words[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
+                                            </Button>
+                                        </ButtonGroup>
+                                    </ButtonToolbar>
+                                </Cell>
+                            )}
+                            width={100}
+                        />
+                    </Table>
+                </div>
 
                 <br/>
-                <Button onClick={this.showAddWord.bind(this)} bsStyle="success">Добавить слово</Button>
+                <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
 
                 <Word showModal={this.state.showModal}
                       modalTitle={this.state.modalTitle}
                       word={this.state.word}
                       hideModal={this.hideModal}/>
-            </div>
-        );
+            </Panel.Body>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
-export default Words;
+export default AdminWords;

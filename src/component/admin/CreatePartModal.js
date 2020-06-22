@@ -8,16 +8,14 @@ import {
     FormControl,
     Button,
     ButtonToolbar,
-    ButtonGroup,
     Modal,
     Form,
     InputGroup,
-    Jumbotron,
-    Glyphicon,
     ToggleButtonGroup,
     ToggleButton
 } from "react-bootstrap";
-import * as  partTypes from "../TextPartTypes";
+import * as  partTypes from "../content/TextPartTypes";
+import { toast } from "react-toastify";
 
 class CreatePartModal extends React.Component {
 
@@ -31,9 +29,9 @@ class CreatePartModal extends React.Component {
     }
 
     saveTextPart() {
-        let textPart = {};
         let type = this.state.type;
 
+        let textPart = {};
         textPart.type = type;
 
         if (type == partTypes.TEXT) {
@@ -46,17 +44,22 @@ class CreatePartModal extends React.Component {
         }
 
         if (type == partTypes.CHOICE) {
-            const choiceVariants = [];
-            const choiceCount = this.state.choicesCount;
+            if (this.checkRightAnswer()) {
+                const choiceVariants = [];
+                const choiceCount = this.state.choicesCount;
 
-            for (let i = 0; i < choiceCount; i++) {
-                let choiceVariant = {};
-                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
-                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
-                choiceVariants.push(choiceVariant);
+                for (let i = 0; i < choiceCount; i++) {
+                    let choiceVariant = {};
+                    choiceVariant.title = ReactDOM.findDOMNode(this["form-" + i]).value;
+                    choiceVariant.right = ReactDOM.findDOMNode(this["right-" + i]).checked;
+                    choiceVariants.push(choiceVariant);
+                }
+
+                textPart.choiceVariants = choiceVariants;
+            } else {
+                toast.error("Необходим хотя бы один правильный ответ");
+                return;
             }
-
-            textPart.choiceVariants = choiceVariants;
         }
 
         this.props.saveTextPart(null, textPart);
@@ -81,12 +84,24 @@ class CreatePartModal extends React.Component {
         }
     }
 
+    checkRightAnswer() {
+        const choiceCount = this.state.choicesCount;
+
+        for (let i = 0; i < choiceCount; i++) {
+            if (ReactDOM.findDOMNode(this["right-" + i]).checked) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     render() {
         let body;
         let type = this.state.type;
 
         if (type == partTypes.TEXT) {
-            body = <FormGroup controlId="formInlineName">
+            body = <FormGroup controlId="textForm">
                 <ControlLabel>Текст</ControlLabel>
                 <FormControl
                     inputRef={data => {
@@ -117,17 +132,16 @@ class CreatePartModal extends React.Component {
             </div>
         } else if (type == partTypes.CHOICE) {
             const choiceForms = [];
-            const choiceCount = this.state.choicesCount;
 
-            for (let i = 0; i < choiceCount; i++) {
-                choiceForms.push(<InputGroup  key={i}>
+            for (let i = 0; i < this.state.choicesCount; i++) {
+                choiceForms.push(<InputGroup key={i} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
-                                this['right-' + i] = part
+                                this["right-" + i] = part
                             }}/>
                         </InputGroup.Addon>
                         <FormControl ref={part => {
-                            this['form-' + i] = part
+                            this["form-" + i] = part
                         }}/>
                     </InputGroup>
                 );

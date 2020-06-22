@@ -1,33 +1,20 @@
 import React from "react";
-import client from "../../util/client";
-import {browserHistory} from 'react-router'
-import {Table, Column, Cell} from "fixed-data-table-2";
+import Client from "../../util/Client";
+import {browserHistory, Link} from "react-router";
+import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
-    Button,
-    Modal,
-    Form,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import Loader from "../../component/Loader";
+import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
 
 
-class Texts extends React.Component {
+class AdminTexts extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            texts: []
+            texts: [],
+            loaded: false
         };
 
         this.deleteText = this.deleteText.bind(this);
@@ -35,21 +22,24 @@ class Texts extends React.Component {
         this.updateTexts = this.updateTexts.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateTexts();
     }
 
     updateTexts() {
-        client.get('/api/content/texts')
+        Client.get("/api/content/texts")
             .then(response => {
                 const texts = response.data;
-                this.setState({texts: texts})
+                this.setState({
+                    texts: texts,
+                    loaded: true
+                })
             });
     }
 
     deleteText(textId) {
-        if(confirm("Удалить текст №" + textId + "?")) {
-            client.delete('/api/content/text', {
+        if (confirm("Удалить текст №" + textId + "?")) {
+            Client.delete("/api/content/text", {
                 params: {
                     id: textId
                 }
@@ -60,7 +50,7 @@ class Texts extends React.Component {
     }
 
     addNewText() {
-         browserHistory.push("/admin/text")
+        browserHistory.push("/admin/text")
     }
 
     editText(text) {
@@ -70,58 +60,74 @@ class Texts extends React.Component {
     render() {
         let texts = this.state.texts;
 
-        return (
-            <div>
-                <Table
-                    rowHeight={50}
-                    rowsCount={texts.length}
-                    width={1140}
-                    height={600}
-                    headerHeight={30}>
+        const body = <Panel>
+            <Panel.Body>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li>Тексты</li>
+                </ul>
 
-                    <Column
-                        header={<Cell>№</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>{texts[rowIndex].id}</Cell>
-                        )}
-                        fixed={true}
-                        width={80}
-                    />
+                <div style={{overflow: "auto"}}>
+                    <Table
+                        rowHeight={50}
+                        rowsCount={texts.length}
+                        width={1100}
+                        height={600}
+                        headerHeight={30}>
 
-                    <Column
-                        header={<Cell>Название</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {texts[rowIndex].title}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                        <Column
+                            header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>{texts[rowIndex].id}</Cell>
+                            )}
+                            fixed={true}
+                            width={80}
+                        />
 
-                    <Column
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                <ButtonToolbar>
-                                    <ButtonGroup>
-                                        <Button onClick={() => this.editText(texts[rowIndex])} bsSize="small"><Glyphicon
-                                            glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteText(texts[rowIndex].id)}
-                                                className="pull-right" bsStyle="danger"> <Glyphicon
-                                            glyph="remove"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            </Cell>
-                        )}
-                        width={100}
-                    />
-                </Table>
+                        <Column
+                            header={<Cell>Название</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {texts[rowIndex].title}
+                                </Cell>
+                            )}
+                            flexGrow={1}
+                            width={100}
+                        />
+
+                        <Column
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    <ButtonToolbar>
+                                        <ButtonGroup>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.editText(texts[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
+                                            </Button>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteText(texts[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
+                                            </Button>
+                                        </ButtonGroup>
+                                    </ButtonToolbar>
+                                </Cell>
+                            )}
+                            width={100}
+                        />
+                    </Table>
+                </div>
+
                 <br/>
                 <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
+            </Panel.Body>
+        </Panel>;
 
-            </div>
-        );
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
-export default Texts
+export default AdminTexts;

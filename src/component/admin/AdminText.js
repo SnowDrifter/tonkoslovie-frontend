@@ -1,28 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
+    Button,
+    ButtonGroup,
+    ButtonToolbar,
     ControlLabel,
     FormControl,
-    Button,
-    ButtonToolbar,
-    ButtonGroup,
-    FieldGroup,
-    ProgressBar,
-    Modal,
-    Form,
+    FormGroup,
+    Glyphicon,
     Jumbotron,
-    Glyphicon
+    Panel,
+    ProgressBar
 } from "react-bootstrap";
-import client from "../../util/client";
-import style from './AdminText.less'
-import EditPartModal from './EditPartModal'
-import CreatePartModal from './CreatePartModal'
-import * as partTypes from  '../TextPartTypes'
-import ReactPlayer from 'react-player'
+import Loader from "../../component/Loader";
+import {browserHistory, Link} from "react-router";
+import Client from "../../util/Client";
+import EditPartModal from "./EditPartModal";
+import CreatePartModal from "./CreatePartModal";
+import * as partTypes from "../content/TextPartTypes";
+import ReactPlayer from "react-player";
+import "./AdminText.less";
+import {toast} from "react-toastify";
 
 class Text extends React.Component {
 
@@ -38,7 +36,8 @@ class Text extends React.Component {
             currentPartIndex: null,
             textParts: [],
             progressUploadFile: null,
-            soundFileName: null
+            soundFileName: null,
+            loaded: !this.props.params.textId
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -52,7 +51,7 @@ class Text extends React.Component {
     }
 
     loadText(textId) {
-        client.get('/api/content/text', {
+        Client.get("/api/content/text", {
             params: {
                 id: textId
             }
@@ -61,7 +60,8 @@ class Text extends React.Component {
             this.setState({
                 id: text.id,
                 textParts: text.parts,
-                soundFileName: text.soundFileName
+                soundFileName: text.soundFileName,
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.title).value = text.title;
@@ -69,7 +69,7 @@ class Text extends React.Component {
     }
 
     saveText() {
-        client.post('/api/content/text', {
+        Client.post("/api/content/text", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             parts: this.state.textParts ? this.state.textParts : [],
@@ -79,7 +79,11 @@ class Text extends React.Component {
                 id: response.data.id,
             });
 
-            alert("Сохранено");
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/text/" + response.data.id)
+            }
+
+            toast.success("Сохранено");
         })
     }
 
@@ -133,7 +137,7 @@ class Text extends React.Component {
 
     deleteSoundFile() {
         if (confirm("Удалить звуковую дорожку?")) {
-            client.delete('/api/media/sound', {
+            Client.delete("/api/media/sound", {
                 params: {
                     fileName: this.state.soundFileName
                 }
@@ -148,13 +152,13 @@ class Text extends React.Component {
     uploadSound() {
         const sound = this.sound.files[0];
         if (sound == undefined) {
-            alert("Выберите файл");
+            toast.error("Выберите файл");
             return;
         }
 
         const data = new FormData();
-        data.append('file', sound);
-        data.append('textId', this.state.id);
+        data.append("file", sound);
+        data.append("textId", this.state.id);
 
         let config = {
             onUploadProgress: (progressEvent) => {
@@ -162,14 +166,14 @@ class Text extends React.Component {
             }
         };
 
-        client.post('/api/media/sound', data, config)
+        Client.post("/api/media/sound", data, config)
             .then((response) => {
                 this.setState({soundFileName: response.data.fileName, progressUploadFile: null});
                 this.saveText();
             })
             .catch(() => {
                 this.setState({progressUploadFile: null});
-                alert("Произошла ошибка во время загрузки");
+                toast.error("Произошла ошибка во время загрузки");
             });
     }
 
@@ -195,11 +199,12 @@ class Text extends React.Component {
 
         if (this.state.soundFileName) {
             soundComponent = <div>
-                <h4>Звуковая дорожка</h4>
+                <h3>Звуковая дорожка</h3>
                 <ReactPlayer
+                    width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.NGINX_ENDPOINT + '/tonkoslovie/sounds/' + this.state.soundFileName}/>
+                    url={process.env.MEDIA_ENDPOINT + "/tonkoslovie/sounds/" + this.state.soundFileName}/>
                 <Button onClick={this.deleteSoundFile.bind(this)}>Удалить дорожку</Button>
             </div>
         } else {
@@ -217,46 +222,62 @@ class Text extends React.Component {
                 <ProgressBar striped
                              className="admin-text-progressbar"
                              active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
-                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              bsStyle="success"
                              now={this.state.progressUploadFile}
                              label={(this.state.progressUploadFile) + "%"}/>
             </div>
         }
 
-        return <Panel>
-            <Jumbotron>
-                <FormGroup>
-                    <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
+        const body = <Panel>
+            <Panel.Body>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/texts">Тексты</Link></li>
+                    <li>{(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</li>
+                </ul>
 
-                {soundComponent}
+                <Jumbotron>
+                    <FormGroup>
+                        <ControlLabel><h3>Заголовок</h3></ControlLabel>
+                        <FormControl
+                            inputRef={title => {
+                                this.title = title
+                            }}
+                        />
+                    </FormGroup>
 
-                <h4>Элементы текста</h4>
-                {elements}
-            </Jumbotron>
+                    {soundComponent}
 
-            <EditPartModal showModal={this.state.showEditPartModal}
-                           modalTitle={this.state.modalTitle}
-                           currentPartIndex={this.state.currentPartIndex}
-                           currentPart={this.state.currentPart}
-                           hideModal={this.hideModal}
-                           saveTextPart={this.saveTextPart}/>
+                    <h3>Элементы текста</h3>
+                    {elements}
+                </Jumbotron>
 
-            <CreatePartModal showModal={this.state.showCreatePartModal}
-                             modalTitle={this.state.modalTitle}
-                             hideModal={this.hideModal}
-                             saveTextPart={this.saveTextPart}/>
+                <EditPartModal showModal={this.state.showEditPartModal}
+                               modalTitle={this.state.modalTitle}
+                               currentPartIndex={this.state.currentPartIndex}
+                               currentPart={this.state.currentPart}
+                               hideModal={this.hideModal}
+                               saveTextPart={this.saveTextPart}/>
 
-            <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
-            <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
-            <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-        </Panel>
+                <CreatePartModal showModal={this.state.showCreatePartModal}
+                                 modalTitle={this.state.modalTitle}
+                                 hideModal={this.hideModal}
+                                 saveTextPart={this.saveTextPart}/>
+
+                <ButtonToolbar>
+                    <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
+                    <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
+                    <Button onClick={this.saveText.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                </ButtonToolbar>
+            </Panel.Body>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
@@ -266,10 +287,12 @@ class TextPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall">
+                    <Glyphicon glyph="pencil"/>
+                </Button>
+                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall" bsStyle="danger">
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -281,10 +304,14 @@ class QuestionPart extends React.Component {
             {this.props.data}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall"
+                        onClick={() => this.props.editPart(this.props.index)}>
+                    <Glyphicon glyph="pencil"/>
+                </Button>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -299,13 +326,17 @@ class ChoicePart extends React.Component {
         });
 
         return <div className="admin-choice-part">
-            {words.join(', ')}
+            {words.join(", ")}
 
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} bsSize="xsmall"><Glyphicon
-                    glyph="pencil"/></Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall"
+                        onClick={() => this.props.editPart(this.props.index)}>
+                    <Glyphicon glyph="pencil"/>
+                </Button>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }
@@ -316,8 +347,10 @@ class LineBreakPart extends React.Component {
         return <div className="admin-line-break-part ">
             ¶
             <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.removePart(this.props.index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={() => this.props.removePart(this.props.index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ButtonGroup>
         </div>
     }

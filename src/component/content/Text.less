@@ -1,0 +1,32 @@
+.text-part {
+  display: inline;
+  margin-left: 3px;
+  margin-top: 2px;
+  white-space: pre-line;
+}
+
+.text-body {
+  padding-bottom: 80px;
+}
+
+  // Fix default bootstrap padding
+.has-feedback .form-control {
+  padding-right: 5px !important;
+}
+
+// Force form-inline for mobile
+@media (max-width: 767px) {
+  .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+}

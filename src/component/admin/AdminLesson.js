@@ -1,27 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
+import Client from "../../util/Client";
 import {
-    Panel,
-    Jumbotron,
-    FormGroup,
-    Row,
-    Col,
+    Button,
+    Checkbox,
     ControlLabel,
     FormControl,
-    Button,
-    Form,
+    FormGroup,
     Glyphicon,
+    Jumbotron,
     ListGroup,
     ListGroupItem,
-    ProgressBar,
-    Checkbox
+    Panel,
+    ProgressBar
 } from "react-bootstrap";
-
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import draftToHtml from 'draftjs-to-html';
-import {convertToRaw, ContentState, convertFromHTML, EditorState} from 'draft-js';
+import Loader from "../../component/Loader";
+import {Link} from "react-router";
+import {Editor} from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
+import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
+import {toast} from "react-toastify";
+import {browserHistory} from "react-router"
+import TagUtil from "../../util/TagUtil";
 
 
 class Lesson extends React.Component {
@@ -31,43 +32,49 @@ class Lesson extends React.Component {
 
         this.state = {
             id: null,
-            relatedTexts: [],
+            texts: [],
             foundTexts: [],
-            text: EditorState.createEmpty(),
+            content: EditorState.createEmpty(),
             published: false,
             previewFileName: null,
-            progressUploadFile: null
+            progressUploadFile: null,
+            loaded: !this.props.params.lessonId
         };
 
         if (this.props.params.lessonId) {
             this.loadLesson(this.props.params.lessonId)
         }
+
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
         this.handTextChange = this.handTextChange.bind(this);
     }
 
     loadLesson(lessonId) {
-        client.get('/api/content/lesson', {
+        Client.get("/api/content/lesson", {
             params: {
                 id: lessonId
             }
         }).then(response => {
             const lesson = response.data;
 
-            const blocksFromHTML = convertFromHTML(lesson.text);
-            const contentState = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap
-            );
+            if (TagUtil.isNotEmptyTag(lesson.content)) {
+                const blocksFromHTML = convertFromHTML(lesson.content);
+                const contentState = ContentState.createFromBlockArray(
+                    blocksFromHTML.contentBlocks,
+                    blocksFromHTML.entityMap
+                );
+
+                this.setState({content: EditorState.createWithContent(contentState)});
+            }
 
             this.setState({
                 id: lesson.id,
-                relatedTexts: lesson.relatedTexts,
-                text: EditorState.createWithContent(contentState),
+                texts: lesson.texts,
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
-                progressUploadFile: null
+                progressUploadFile: null,
+                loaded: true
             });
 
             ReactDOM.findDOMNode(this.title).value = lesson.title;
@@ -76,27 +83,31 @@ class Lesson extends React.Component {
     }
 
     saveLesson() {
-        client.post('/api/content/lesson', {
+        Client.post("/api/content/lesson", {
             id: this.state.id,
             title: ReactDOM.findDOMNode(this.title).value,
             annotation: ReactDOM.findDOMNode(this.annotation).value,
-            text: draftToHtml(convertToRaw(this.state.text.getCurrentContent())),
+            content: draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
             published: this.state.published,
-            relatedTexts: this.state.relatedTexts ? this.state.relatedTexts : [],
+            texts: this.state.texts || [],
             previewImage: this.state.previewFileName
         }).then((response) => {
             this.setState({
                 id: response.data.id,
             });
 
-            alert("Сохранено");
+            if (!this.props.params.lessonId) {
+                browserHistory.push("/admin/lesson/" + response.data.id)
+            }
+
+            toast.success("Сохранено");
         })
     }
 
     searchText() {
         let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
 
-        client.get('/api/content/texts/findByTitle', {
+        Client.get("/api/content/texts/find", {
             params: {
                 title: searchTitle
             }
@@ -110,7 +121,7 @@ class Lesson extends React.Component {
 
     checkTextAlreadyAdded(text) {
         let alreadyAdded = false;
-        this.state.relatedTexts.forEach(function (oldText, index, array) {
+        this.state.texts.forEach(function (oldText) {
             if (oldText.id == text.id) {
                 alreadyAdded = true;
             }
@@ -126,31 +137,31 @@ class Lesson extends React.Component {
         foundTexts.splice(index, 1);
         this.setState({foundTexts: foundTexts});
 
-        this.setState({relatedTexts: this.state.relatedTexts.concat(text)});
+        this.setState({texts: this.state.texts.concat(text)});
     }
 
     removeText(textId) {
-        let relatedTexts = this.state.relatedTexts;
-        relatedTexts.splice(textId, 1);
-        this.setState({relatedTexts: relatedTexts});
+        let texts = this.state.texts;
+        texts.splice(textId, 1);
+        this.setState({texts: texts});
     }
 
-    handTextChange(text) {
+    handTextChange(content) {
         this.setState({
-            text: text
+            content: content
         });
     }
 
     uploadPreviewImage() {
         const preview = this.preview.files[0];
         if (preview == undefined) {
-            alert("Выберите файл");
+            toast.error("Выберите файл");
             return;
         }
 
         const data = new FormData();
-        data.append('file', preview);
-        data.append('lessonId', this.state.id);
+        data.append("file", preview);
+        data.append("lessonId", this.state.id);
 
         let config = {
             onUploadProgress: (progressEvent) => {
@@ -158,31 +169,29 @@ class Lesson extends React.Component {
             }
         };
 
-        client.post('/api/media/image', data, config)
+        Client.post("/api/media/image", data, config)
             .then((response) => {
                 this.setState({previewFileName: response.data.fileName, progressUploadFile: null});
                 this.saveLesson();
             })
             .catch(() => {
                 this.setState({progressUploadFile: null});
-                alert("Произошла ошибка во время загрузки");
+                toast.error("Произошла ошибка во время загрузки");
             });
     }
 
     deletePreview() {
         if (confirm("Удалить превью?")) {
-            client.delete('/api/media/image', {
+            Client.delete("/api/media/image", {
                 params: {
                     fileName: this.state.previewFileName
                 }
-            })
-                .then(() => {
-                    this.setState({previewFileName: null});
-                    this.saveLesson();
-                })
-                .catch(() => {
-                    alert("Произошла ошибка во время удаления");
-                });
+            }).then(() => {
+                this.setState({previewFileName: null});
+                this.saveLesson();
+            }).catch(() => {
+                toast.error("Произошла ошибка во время удаления");
+            });
         }
     }
 
@@ -193,11 +202,13 @@ class Lesson extends React.Component {
     render() {
         let texts = [];
 
-        this.state.relatedTexts.map((text, index) => {
+        this.state.texts.map((text, index) => {
             texts.push(<ListGroupItem bsStyle="info" key={index}>
                 {text.title}
-                <Button className="pull-right" onClick={() => this.removeText(index)} bsSize="xsmall"
-                        bsStyle="danger"><Glyphicon glyph="remove"/></Button>
+                <Button bsSize="xsmall" bsStyle="danger" className="pull-right"
+                        onClick={() => this.removeText(index)}>
+                    <Glyphicon glyph="remove"/>
+                </Button>
             </ListGroupItem>);
         });
 
@@ -219,10 +230,10 @@ class Lesson extends React.Component {
 
         if (this.state.previewFileName) {
             previewComponent = <div>
-                <h4>Превью</h4>
-                <img src={process.env.NGINX_ENDPOINT + '/tonkoslovie/images/200_200-' + this.state.previewFileName}/>
+                <h3>Превью</h3>
+                <img src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + this.state.previewFileName}/>
                 <br/>
-                <Button onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
+                <Button style={{marginTop: "5px"}} onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>
         } else {
             previewComponent = <div>
@@ -239,78 +250,95 @@ class Lesson extends React.Component {
                 <ProgressBar striped
                              className="admin-text-progressbar"
                              active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
-                             style={{visibility: this.state.progressUploadFile ? 'visible ' : 'hidden'}}
+                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              bsStyle="success"
                              now={this.state.progressUploadFile}
                              label={(this.state.progressUploadFile) + "%"}/>
             </div>
         }
 
-        return <Panel>
-            <Jumbotron>
-                <h3>Заголовок</h3>
-                <FormGroup>
-                    <FormControl
-                        inputRef={title => {
-                            this.title = title
-                        }}
-                    />
-                </FormGroup>
+        const body = <Panel>
+            <Panel.Body>
+                <ul className="breadcrumb">
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li><Link to="/admin/lessons">Уроки</Link></li>
+                    <li>{(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</li>
+                </ul>
 
-                {previewComponent}
-
-                <h3>Аннотация</h3>
-                <FormGroup>
-                    <FormControl
-                        componentClass="textarea"
-                        inputRef={annotation => {
-                            this.annotation = annotation
-                        }}
-                    />
-                </FormGroup>
-
-                <h3>Текст урока</h3>
-                <Panel>
-                    <Editor
-                        editorState={this.state.text}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
-                        editorClassName="editorClassName"
-                        onEditorStateChange={this.handTextChange}
-                    />
-                </Panel>
-
-                <h3>Добавленные тексты</h3>
-                <ListGroup>
-                    {texts}
-                </ListGroup>
-
-                <Panel>
+                <Jumbotron>
+                    <h3>Заголовок</h3>
                     <FormGroup>
-                        <ControlLabel>Поиск текста</ControlLabel>
                         <FormControl
-                            type="text"
-                            inputRef={textTitle => {
-                                this.textTitle = textTitle
+                            inputRef={title => {
+                                this.title = title
                             }}
-                            placeholder="Начните вводить данные для выбора"
-                            onChange={this.searchText.bind(this)}
                         />
                     </FormGroup>
 
-                    Варианты:
+                    {previewComponent}
+
+                    <h3>Аннотация</h3>
+                    <FormGroup>
+                        <FormControl
+                            componentClass="textarea"
+                            inputRef={annotation => {
+                                this.annotation = annotation
+                            }}
+                        />
+                    </FormGroup>
+
+                    <h3>Текст урока</h3>
+                    <Panel>
+                        <Panel.Body>
+                            <Editor
+                                editorState={this.state.content}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                onEditorStateChange={this.handTextChange}
+                            />
+                        </Panel.Body>
+                    </Panel>
+
+                    <h3>Добавленные тексты</h3>
                     <ListGroup>
-                        {foundTexts}
+                        {texts}
                     </ListGroup>
-                </Panel>
 
-                <Checkbox checked={this.state.published} onClick={this.togglePublished.bind(this)}>
-                    Опубликовать урок
-                </Checkbox>
+                    <Panel>
+                        <Panel.Body>
+                            <FormGroup>
+                                <ControlLabel>Поиск текста</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    inputRef={textTitle => {
+                                        this.textTitle = textTitle
+                                    }}
+                                    placeholder="Начните вводить данные для выбора"
+                                    onChange={this.searchText.bind(this)}
+                                />
+                            </FormGroup>
 
-            </Jumbotron>
-            <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-        </Panel>
+                            Варианты:
+                            <ListGroup>
+                                {foundTexts}
+                            </ListGroup>
+                        </Panel.Body>
+                    </Panel>
+
+                    <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
+                        Опубликовать урок
+                    </Checkbox>
+                </Jumbotron>
+                <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+            </Panel.Body>
+        </Panel>;
+
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 

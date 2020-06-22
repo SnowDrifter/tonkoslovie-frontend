@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
-import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal} from "react-bootstrap";
-import * as UserActions from '../action/Auth'
-import style from './Login.less'
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {Button, ControlLabel, FormControl, FormGroup, Modal} from "react-bootstrap";
+import * as UserActions from "../action/Auth";
+import "./Login.less";
+import Oauth from "./Oauth";
+
 
 class Login extends React.Component {
 
@@ -16,57 +18,53 @@ class Login extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({ showLogin: props.user.showLogin });
+        this.setState({showLogin: props.user.showLogin});
     }
 
     sendLogin(event) {
         event.preventDefault();
 
-        const username = ReactDOM.findDOMNode(this.username).value;
+        const email = ReactDOM.findDOMNode(this.email).value;
         const password = ReactDOM.findDOMNode(this.password).value;
 
-        this.props.actions.login({username: username, password: password});
+        this.props.actions.login({email: email, password: password});
     }
 
     render() {
         let title = "Вход";
 
         return <div>
-            <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin}>
+            <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal">
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="login-modal-body">
-                    <form>
+                    <form className="login-form">
                         <FormGroup>
-                            <Row>
-                                <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
-                                        <ControlLabel>Никнейм</ControlLabel>
-                                        <FormControl ref={username => {
-                                            this.username = username
-                                        }} type="text" autoFocus/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                            <FormGroup controlId="emailForm">
+                                <ControlLabel>Email</ControlLabel>
+                                <FormControl ref={email => {
+                                    this.email = email
+                                }} type="text" autoFocus/>
+                            </FormGroup>
 
-                            <Row>
-                                <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
-                                        <ControlLabel>Пароль</ControlLabel>
-                                        <FormControl ref={password => {
-                                            this.password = password
-                                        }} type="password"/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                            <FormGroup controlId="passwordForm">
+                                <ControlLabel>Пароль</ControlLabel>
+                                <FormControl ref={password => {
+                                    this.password = password
+                                }} type="password"/>
+                            </FormGroup>
                         </FormGroup>
 
-                        <span style={{color: 'red'}}>{this.props.user.user.errorMessage}</span>
+                        <div className="login-error-message text-center">{this.props.user.errorMessage}</div>
 
-                        <Button type="submit" className="pull-right" bsStyle="success"
+                        <Button type="submit" className="center-block" bsStyle="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>
                     </form>
+
+                    <hr/>
+
+                    <Oauth/>
                 </Modal.Body>
             </Modal>
         </div>

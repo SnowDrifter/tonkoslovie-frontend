@@ -1,19 +1,8 @@
-import client from "../util/client";
+import Client from "../util/Client";
+import {SHOW_LOGIN, HIDE_LOGIN, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT} from "../constant/User";
+import {ROUTING} from "../constant/Routing";
 
-import {
-    SHOW_LOGIN,
-    HIDE_LOGIN,
-    LOGIN_REQUEST,
-    LOGIN_SUCCESS,
-    LOGIN_FAILURE,
-    LOGOUT
-} from '../constant/User'
-
-import {
-    ROUTING
-} from '../constant/Routing'
-
-export function showLogin(payload) {
+export function showLogin() {
     return (dispatch) => {
         dispatch({
             type: SHOW_LOGIN,
@@ -24,7 +13,7 @@ export function showLogin(payload) {
     }
 }
 
-export function hideLogin(payload) {
+export function hideLogin() {
     return (dispatch) => {
         dispatch({
             type: HIDE_LOGIN,
@@ -41,12 +30,12 @@ export function login(payload) {
             type: LOGIN_REQUEST
         });
 
-        client.post('/api/user/login', {
-            username: payload.username,
+        Client.post("/api/user/login", {
+            email: payload.email,
             password: payload.password
         })
             .then(function (response) {
-                localStorage.setItem('token', response.data.token);
+                localStorage.setItem("token", response.data.token);
 
                 dispatch({
                     type: LOGIN_SUCCESS,
@@ -59,12 +48,12 @@ export function login(payload) {
                 dispatch({
                     type: ROUTING,
                     payload: {
-                        method: 'replace',
-                        nextUrl: '/'
+                        method: "replace",
+                        nextUrl: "/"
                     }
                 });
             })
-            .catch(function (error) {
+            .catch(function () {
                 dispatch({
                     type: LOGIN_FAILURE,
                     payload: {
@@ -75,7 +64,32 @@ export function login(payload) {
     }
 }
 
+export function saveToken(token) {
+    return (dispatch) => {
+        localStorage.setItem("token", token);
+
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: {
+                isAuthenticated: true,
+                showLogin: false
+            }
+        });
+
+        dispatch({
+            type: ROUTING,
+            payload: {
+                method: "replace",
+                nextUrl: "/"
+            }
+        });
+    }
+}
+
 export function logout() {
+    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    localStorage.removeItem("token");
+
     return (dispatch) => {
         dispatch({
             type: LOGOUT,
@@ -84,22 +98,11 @@ export function logout() {
             }
         });
 
-        // client.get('/api/user/logout', {
-        //     headers: {
-        //         Authorization: localStorage.getItem("token")
-        //     }}
-        // )
-
-        client.get('/api/user/logout').then(function () {
-            localStorage.removeItem('token');
-        });
-
-
         dispatch({
             type: ROUTING,
             payload: {
-                method: 'replace',
-                nextUrl: '/'
+                method: "replace",
+                nextUrl: "/"
             }
         });
     }

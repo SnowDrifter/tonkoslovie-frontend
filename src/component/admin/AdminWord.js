@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "../../util/client";
-import {Panel, FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
-import style from './AdminWord.less'
+import Client from "../../util/Client";
+import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
+import "./AdminWord.less"
 
 
 class Word extends React.Component {
@@ -19,7 +19,7 @@ class Word extends React.Component {
         let russianText = ReactDOM.findDOMNode(this.russianText).value;
         let polishText = ReactDOM.findDOMNode(this.polishText).value;
 
-        client.post('/api/content/word', {
+        Client.post("/api/content/word", {
             id: this.props.word.id,
             russianText: russianText,
             polishText: polishText
@@ -43,7 +43,7 @@ class Word extends React.Component {
                         <FormGroup>
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="russianTextForm">
                                         <ControlLabel>Русский текст</ControlLabel>
                                         <FormControl
                                             inputRef={russianText => {
@@ -56,7 +56,7 @@ class Word extends React.Component {
 
                             <Row>
                                 <Col md={12}>
-                                    <FormGroup controlId="formInlineName">
+                                    <FormGroup controlId="polishTextForm">
                                         <ControlLabel>Польский текст</ControlLabel>
                                         <FormControl ref={polishText => {
                                             this.polishText = polishText

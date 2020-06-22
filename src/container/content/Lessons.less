@@ -1,0 +1,65 @@
+.lessons-list {
+
+  list-style-type: none;
+
+  div {
+    margin: 20px;
+  }
+
+  ul {
+    width: 500px;
+  }
+
+
+  li {
+    padding: 10px;
+    overflow: auto;
+  }
+
+  li:hover {
+    background: #eee;
+    cursor: pointer;
+  }
+
+  a, a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+  }
+
+}
+
+.lesson-preview {
+  border: 0;
+  float: left;
+  margin: 0 15px 0 0;
+}
+
+.lesson-title {
+  font: bold 20px Helvetica, Verdana, sans-serif;
+}
+
+.lesson-annotation {
+  font-size: 15px;
+  color: #333;
+}
+
+.lesson:last-child hr {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .lessons-list {
+    padding: 0 !important;
+    text-align:center;
+  }
+
+  .lesson-title::before {
+    display:block;
+    content: ' ';
+    clear:both;
+  }
+
+  .lesson-preview  {
+    margin-right: 0 !important;
+    float: none;
+  }
+}

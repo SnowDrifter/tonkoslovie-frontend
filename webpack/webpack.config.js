@@ -1,18 +1,18 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require("webpack");
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
+    mode: process.env.NODE_ENV,
     entry: ['./src/index.js'],
-
     output: {
-        path: path.resolve('./src'),
+        path: path.resolve(__dirname, 'assets'),
         publicPath: "/assets/",
-        filename: 'bundle.js'
+        filename: 'bundle.[hash].js'
     },
-
     module: {
         rules: [
             {
@@ -24,6 +24,11 @@ module.exports = {
                 options: {
                     presets: ["es2015"]
                 },
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader'
             },
             {
                 test: /\.less$/,
@@ -47,14 +52,11 @@ module.exports = {
             }
         ]
     },
-
-    devServer: {
-        contentBase: './src',
-        inline: true,
-        historyApiFallback: true,
-        disableHostCheck: true
-    },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.ejs',
+            filename: path.resolve(__dirname, 'assets/index.html')
+        }),
         new CopyWebpackPlugin([
             {from: 'static'}
         ]),
@@ -65,39 +67,32 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 'API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
-                'NGINX_ENDPOINT': JSON.stringify(process.env.NGINX_ENDPOINT),
+                "MEDIA_ENDPOINT": JSON.stringify(process.env.MEDIA_ENDPOINT),
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                parallel: true,
+                sourceMap: false,
+                uglifyOptions: {
+                    output: {
+                        comments: false,
+                        beautify: false
+                    }
+                }
+            }),
+            new CompressionPlugin({
+                algorithm: 'gzip',
+                test: /\.js$|\.html$/,
+            }),
+            new webpack.optimize.OccurrenceOrderPlugin(),
+            new webpack.LoaderOptionsPlugin({
+                minimize: true,
+                debug: false
+            })
+        ]
+    }
 };
-
-if (IS_PRODUCTION) {
-    module.exports.plugins.push(
-        new webpack.LoaderOptionsPlugin({
-            minimize: true,
-            debug: false
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            beautify: false,
-            sourceMap: false,
-            mangle: true,
-            compress: {
-                sequences: true,
-                booleans: true,
-                loops: true,
-                unused: true,
-                warnings: false,
-                drop_console: true,
-                unsafe: true,
-                screw_ie8: true
-            },
-            comments: false
-        }),
-        new CompressionPlugin({
-            algorithm: 'gzip',
-            regExp: /\.js$|\.html$/
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin()
-    );
-}

@@ -8,16 +8,13 @@ import {
     FormControl,
     Button,
     ButtonToolbar,
-    ButtonGroup,
     Modal,
     Form,
     InputGroup,
-    Jumbotron,
-    Glyphicon,
     ToggleButtonGroup,
     ToggleButton
 } from "react-bootstrap";
-import * as  partTypes from "../TextPartTypes";
+import * as  partTypes from "../content/TextPartTypes";
 
 class EditPartModal extends React.Component {
     constructor(props) {
@@ -39,7 +36,7 @@ class EditPartModal extends React.Component {
     }
 
     decreaseChoicesCount() {
-        if (this.state.choicesCount > 1) {
+        if (this.state.choiceVariants.length > 1) {
             let choiceVariants = this.state.choiceVariants;
             choiceVariants.pop();
             this.setState({choiceVariants: choiceVariants})
@@ -60,9 +57,9 @@ class EditPartModal extends React.Component {
     }
 
     saveTextPart() {
-        let textPart = this.props.currentPart;
         let type = this.state.type || this.props.currentPart.type;
 
+        let textPart = this.props.currentPart;
         textPart.type = type;
 
         if (type == partTypes.TEXT) {
@@ -80,8 +77,8 @@ class EditPartModal extends React.Component {
 
             for (let i = 0; i < choiceCount; i++) {
                 let choiceVariant = {};
-                choiceVariant.title = ReactDOM.findDOMNode(this['form-' + i]).value;
-                choiceVariant.right = ReactDOM.findDOMNode(this['right-' + i]).checked;
+                choiceVariant.title = ReactDOM.findDOMNode(this["form-" + i]).value;
+                choiceVariant.right = ReactDOM.findDOMNode(this["right-" + i]).checked;
                 choiceVariants.push(choiceVariant);
             }
 
@@ -138,14 +135,14 @@ class EditPartModal extends React.Component {
             const choiceForms = [];
 
             this.state.choiceVariants.map((value, index) => {
-                choiceForms.push(<InputGroup  key={index}>
+                choiceForms.push(<InputGroup key={index} className="admin-text-choice-part-input">
                         <InputGroup.Addon>
                             <input type="radio" name="rightGroup" ref={part => {
-                                this['right-' + index] = part
+                                this["right-" + index] = part
                             }} defaultChecked={value.right}/>
                         </InputGroup.Addon>
                         <FormControl ref={part => {
-                            this['form-' + index] = part
+                            this["form-" + index] = part
                         }}  defaultValue={value.title}/>
                     </InputGroup>
                 );

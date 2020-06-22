@@ -1,31 +1,20 @@
 import React from "react";
-import client from "../../util/client";
-import {browserHistory} from 'react-router'
-import {Table, Column, Cell} from "fixed-data-table-2";
+import Client from "../../util/Client";
+import {browserHistory, Link} from "react-router";
+import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import {
-    Panel,
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
-    Button,
-    Modal,
-    Form,
-    Glyphicon,
-    ButtonGroup,
-    ButtonToolbar
-} from "react-bootstrap";
+import Loader from "../../component/Loader";
+import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
 
 
-class Lessons extends React.Component {
+class AdminLessons extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            lessons: []
+            lessons: [],
+            loaded: false
         };
 
         this.deleteLesson = this.deleteLesson.bind(this);
@@ -38,16 +27,19 @@ class Lessons extends React.Component {
     }
 
     updateLessons() {
-        client.get('/api/content/lessons?onlyPublished=false')
+        Client.get("/api/content/lessons?unpublished=true")
             .then(response => {
                 const lessons = response.data;
-                this.setState({lessons: lessons})
+                this.setState({
+                    lessons: lessons,
+                    loaded: true
+                })
             });
     }
 
     deleteLesson(lessonId) {
         if (confirm("Удалить урок №" + lessonId + "?")) {
-            client.delete('/api/content/lesson', {
+            Client.delete("/api/content/lesson", {
                 params: {
                     id: lessonId
                 }
@@ -68,65 +60,84 @@ class Lessons extends React.Component {
     render() {
         let lessons = this.state.lessons;
 
-        return (
-            <div>
-                <Table
-                    rowHeight={50}
-                    rowsCount={lessons.length}
-                    width={1140}
-                    height={600}
-                    headerHeight={30}>
+        const body = <Panel>
+            <Panel.Body>
+                <ul className="breadcrumb" style={{width: 1100}}>
+                    <li><Link to="/admin">Главная</Link></li>
+                    <li>Уроки</li>
+                </ul>
 
-                    <Column
-                        header={<Cell>№</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>{lessons[rowIndex].id}</Cell>
-                        )}
-                        fixed={true}
-                        width={80}
-                    />
+                <div style={{overflow: "auto"}}>
+                    <Table
+                        rowHeight={50}
+                        rowsCount={lessons.length}
+                        width={1100}
+                        height={600}
+                        headerHeight={30}>
 
-                    <Column
-                        header={<Cell>Название</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {lessons[rowIndex].title}
-                            </Cell>
-                        )}
-                        flexGrow={1}
-                        width={100}
-                    />
+                        <Column
+                            header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>{lessons[rowIndex].id}</Cell>
+                            )}
+                            fixed={true}
+                            width={80}
+                        />
 
-                    <Column
-                        header={<Cell>Опубликован</Cell>}
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                {lessons[rowIndex].published ? "Да" : "Нет"}
-                            </Cell>
-                        )}
-                        width={120}
-                    />
+                        <Column
+                            header={<Cell>Название</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {lessons[rowIndex].title}
+                                </Cell>
+                            )}
+                            flexGrow={1}
+                            width={100}
+                        />
 
-                    <Column
-                        cell={({rowIndex}) => (
-                            <Cell>
-                                <ButtonToolbar>
-                                    <ButtonGroup>
-                                        <Button onClick={() => this.editLesson(lessons[rowIndex])} bsSize="small"><Glyphicon glyph="pencil"/></Button>
-                                        <Button bsSize="small" onClick={() => this.deleteLesson(lessons[rowIndex].id)} className="pull-right" bsStyle="danger"> <Glyphicon glyph="remove"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            </Cell>
-                        )}
-                        width={100}
-                    />
-                </Table>
+                        <Column
+                            header={<Cell>Опубликован</Cell>}
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    {lessons[rowIndex].published ? "Да" : "Нет"}
+                                </Cell>
+                            )}
+                            width={120}
+                        />
+
+                        <Column
+                            cell={({rowIndex}) => (
+                                <Cell>
+                                    <ButtonToolbar>
+                                        <ButtonGroup>
+                                            <Button bsSize="small"
+                                                    onClick={() => this.editLesson(lessons[rowIndex])}>
+                                                <Glyphicon glyph="pencil"/>
+                                            </Button>
+                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                                    onClick={() => this.deleteLesson(lessons[rowIndex].id)}>
+                                                <Glyphicon glyph="remove"/>
+                                            </Button>
+                                        </ButtonGroup>
+                                    </ButtonToolbar>
+                                </Cell>
+                            )}
+                            width={100}
+                        />
+                    </Table>
+                </div>
+
                 <br/>
                 <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
+            </Panel.Body>
+        </Panel>;
 
-            </div>
-        );
+        if (this.state.loaded) {
+            return body;
+        } else {
+            return <Loader/>;
+        }
     }
 }
 
-export default Lessons
+export default AdminLessons;
