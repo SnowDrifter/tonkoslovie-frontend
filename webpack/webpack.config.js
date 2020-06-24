@@ -1,24 +1,24 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
     mode: process.env.NODE_ENV,
-    entry: ['./src/index.js'],
+    entry: ["./src/index.js"],
     output: {
-        path: path.resolve(__dirname, 'assets'),
+        path: path.resolve(__dirname, "assets"),
         publicPath: "/assets/",
-        filename: 'bundle.[hash].js'
+        filename: "bundle.[hash].js"
     },
     module: {
         rules: [
             {
                 test: /\.js$/,
                 include: [
-                    path.join(process.cwd(), 'src')
+                    path.join(process.cwd(), "src")
                 ],
                 loader: "babel-loader",
                 options: {
@@ -28,19 +28,19 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'eslint-loader'
+                loader: "eslint-loader"
             },
             {
                 test: /\.less$/,
                 use: [
-                    'style-loader',
-                    {loader: 'css-loader', options: {importLoaders: 1}},
-                    'less-loader'
+                    "style-loader",
+                    {loader: "css-loader", options: {importLoaders: 1}},
+                    "less-loader"
                 ]
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: ["style-loader", "css-loader"]
             },
             {
                 test: /\.(png|jpg|gif|ico|svg)$/,
@@ -48,27 +48,27 @@ module.exports = {
             },
             {
                 test: /\.(ico|eot|otf|webp|ttf|woff|woff2)(\?.*)?$/,
-                use: 'file-loader?limit=100000'
+                use: "file-loader?limit=100000"
             }
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.ejs',
-            filename: path.resolve(__dirname, 'assets/index.html')
+            template: "./src/index.ejs",
+            filename: path.resolve(__dirname, "assets/index.html")
         }),
         new CopyWebpackPlugin([
-            {from: 'static'}
+            {from: "static"}
         ]),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
         }),
         new webpack.DefinePlugin({
-            'process.env': {
-                'API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
+            "process.env": {
+                "API_ENDPOINT": JSON.stringify(process.env.API_ENDPOINT),
                 "MEDIA_ENDPOINT": JSON.stringify(process.env.MEDIA_ENDPOINT),
-                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+                "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
             }
         })
     ],
@@ -85,7 +85,7 @@ module.exports = {
                 }
             }),
             new CompressionPlugin({
-                algorithm: 'gzip',
+                algorithm: "gzip",
                 test: /\.js$|\.html$/,
             }),
             new webpack.optimize.OccurrenceOrderPlugin(),
