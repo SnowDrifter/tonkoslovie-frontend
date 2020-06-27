@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 import React from "react";
 import {Jumbotron, Image} from "react-bootstrap";
 import Helmet from "react-helmet";

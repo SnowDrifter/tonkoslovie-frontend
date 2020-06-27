@@ -17,13 +17,8 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                include: [
-                    path.join(process.cwd(), "src")
-                ],
-                loader: "babel-loader",
-                options: {
-                    presets: ["es2015"]
-                },
+                exclude: /node_modules/,
+                loader: "babel-loader"
             },
             {
                 test: /\.js$/,

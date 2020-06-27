@@ -4,16 +4,6 @@
   "description": "",
   "repository": "ignored",
   "main": "index.js",
-  "babel": {
-    "presets": [
-      "react",
-      "es2015",
-      "stage-2"
-    ],
-    "plugins": [
-      "transform-regenerator"
-    ]
-  },
   "scripts": {
     "dev": "set NODE_ENV=development&& set API_ENDPOINT=http://localhost:8080&& set MEDIA_ENDPOINT=http://localhost&& node dev-server.js",
     "prod": "NODE_ENV=production API_ENDPOINT=https://tonkoslovie.ru MEDIA_ENDPOINT=https://tonkoslovie.ru node server.js",
@@ -60,22 +50,19 @@
     "yarn-upgrade-all": "^0.3.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-decorators-legacy": "^1.3.5",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/polyfill":"^7.10.1",
+    "@babel/preset-env":"^7.10.3",
+    "@babel/preset-react": "^7.10.1",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
     "compression-webpack-plugin": "^1.1.11",
     "css-loader": "^0.28.11",
-    "eslint": "^4.19.1",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-react": "^7.9.1",
+    "eslint": "^7.3.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-react": "^7.20.0",
     "file-loader": "^1.1.11",
-    "json-server": "^0.14.0",
     "react-router-role-authorization": "^1.1.4",
     "rollup-plugin-inject": "^2.0.0",
     "style-loader": "^0.21.0",
