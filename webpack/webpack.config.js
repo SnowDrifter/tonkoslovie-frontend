@@ -1,17 +1,18 @@
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const properties = require("./properties.js").load(process.env.NODE_ENV);
 
 module.exports = {
-    mode: process.env.NODE_ENV,
+    mode: properties.isDev ? "development" : "production",
     entry: ["./src/index.js"],
     output: {
-        path: path.resolve(__dirname, "assets"),
-        publicPath: "/assets/",
-        filename: "bundle.[hash].js"
+        path: path.resolve(__dirname, "../dist"),
+        publicPath: "/",
+        filename: "bundle.[hash].js",
     },
     module: {
         rules: [
@@ -49,8 +50,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.ejs",
-            filename: path.resolve(__dirname, "assets/index.html")
+            template: "./src/index.ejs"
         }),
         new CopyWebpackPlugin([
             {from: "static"}
@@ -61,21 +61,19 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             "process.env": {
-                "API_ENDPOINT": JSON.stringify(process.env.API_ENDPOINT),
-                "MEDIA_ENDPOINT": JSON.stringify(process.env.MEDIA_ENDPOINT),
+                "API_ENDPOINT": JSON.stringify(properties.apiHost),
+                "MEDIA_ENDPOINT": JSON.stringify(properties.mediaHost),
                 "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
             }
         })
     ],
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 parallel: true,
-                sourceMap: false,
-                uglifyOptions: {
+                terserOptions: {
                     output: {
-                        comments: false,
-                        beautify: false
+                        comments: false
                     }
                 }
             }),
