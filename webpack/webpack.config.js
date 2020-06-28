@@ -53,7 +53,10 @@ module.exports = {
             template: "./src/index.ejs"
         }),
         new CopyWebpackPlugin([
-            {from: "static"}
+            {
+                from: "static",
+                to: "static"
+            }
         ]),
         new webpack.ProvidePlugin({
             $: "jquery",
