@@ -1,19 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import {
-    Button,
-    Checkbox,
-    ControlLabel,
-    FormControl,
-    FormGroup,
-    Glyphicon,
-    Jumbotron,
-    ListGroup,
-    ListGroupItem,
-    Panel
-} from "react-bootstrap";
+import React, {createRef} from "react";
+import {withRouter} from "react-router-dom";
+import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ListGroupItem} from "react-bootstrap";
 import Loader from "../../component/Loader";
-import {browserHistory, Link} from "react-router";
 import Client from "../../util/Client";
 import {toast} from "react-toastify";
 
@@ -27,12 +15,17 @@ class AdminTheme extends React.Component {
             published: false,
             exercises: [],
             foundExercises: [],
-            loaded: !this.props.params.themeId
+            loaded: !props.match.params.themeId,
+            themeId: props.match.params.themeId,
+            exerciseTitle: null
         };
 
-        if (this.props.params.themeId) {
-            this.loadTheme(this.props.params.themeId)
+        if (this.state.themeId) {
+            this.loadTheme(this.state.themeId)
         }
+
+        this.titleInput = createRef();
+        this.exerciseTitle = createRef();
 
         this.removeExercise = this.removeExercise.bind(this);
         this.addExercise = this.addExercise.bind(this);
@@ -54,14 +47,14 @@ class AdminTheme extends React.Component {
                 loaded: true
             });
 
-            ReactDOM.findDOMNode(this.title).value = theme.title;
+            this.titleInput.current.value = theme.title;
         })
     }
 
     saveTheme() {
         Client.post("/api/content/theme", {
             id: this.state.id,
-            title: ReactDOM.findDOMNode(this.title).value,
+            title: this.titleInput.current.value,
             published: this.state.published,
             exercises: this.state.exercises || []
         }).then((response) => {
@@ -69,8 +62,8 @@ class AdminTheme extends React.Component {
                 id: response.data.id
             });
 
-            if (!this.props.params.lessonId) {
-                browserHistory.push("/admin/theme/" + response.data.id)
+            if (!this.state.themeId) {
+                this.props.history.push("/admin/theme/" + response.data.id);
             }
 
             toast.success("Сохранено");
@@ -78,7 +71,7 @@ class AdminTheme extends React.Component {
     }
 
     searchExercise() {
-        let searchTitle = ReactDOM.findDOMNode(this.exerciseTitle).value;
+        let searchTitle = this.exerciseTitle.current.value;
 
         Client.get("/api/content/exercises/find", {
             params: {
@@ -95,7 +88,7 @@ class AdminTheme extends React.Component {
     checkExerciseAlreadyAdded(exercise) {
         let alreadyAdded = false;
         this.state.exercises.forEach(function (oldExercise) {
-            if (oldExercise.id == exercise.id) {
+            if (oldExercise.id === exercise.id) {
                 alreadyAdded = true;
             }
         });
@@ -133,9 +126,9 @@ class AdminTheme extends React.Component {
         let exercises = [];
 
         this.state.exercises.map((exercise, index) => {
-            exercises.push(<ListGroupItem bsStyle="info" key={index}>
+            exercises.push(<ListGroupItem variant="info" key={index}>
                 {exercise.title}
-                <Button bsSize="xsmall" bsStyle="danger" className="pull-right"
+                <Button bsSize="xsmall" variant="danger" className="pull-right"
                         onClick={() => this.removeExercise(index)}>
                     <Glyphicon glyph="remove"/>
                 </Button>
@@ -156,58 +149,56 @@ class AdminTheme extends React.Component {
             foundExercises.push(<span key={0}>Ничего не найдено</span>);
         }
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb">
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/themes">Темы упражнений</Link></li>
-                    <li>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <Breadcrumb.Item href="/admin">Главная</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/admin/themes">Темы упражнений</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        active>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <Jumbotron>
-                    <FormGroup>
-                        <ControlLabel><h4>Заголовок</h4></ControlLabel>
-                        <FormControl
-                            inputRef={title => {
-                                this.title = title
-                            }}
-                        />
-                    </FormGroup>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label><Card.Title>Заголовок</Card.Title></Form.Label>
+                            <Form.Control ref={this.titleInput}/>
+                        </Form.Group>
 
-                    <h3>Добавленные упражнения</h3>
-                    <ListGroup>
-                        {exercises}
-                    </ListGroup>
-
-                    <Panel>
-                        <Panel.Body>
-                        <FormGroup>
-                            <ControlLabel>Поиск упражнения</ControlLabel>
-                            <FormControl
-                                type="text"
-                                inputRef={exerciseTitle => {
-                                    this.exerciseTitle = exerciseTitle
-                                }}
-                                placeholder="Начните вводить данные для выбора"
-                                onChange={this.searchExercise.bind(this)}
-                            />
-                        </FormGroup>
-
-                        Варианты:
+                        <Card.Title>Добавленные упражнения</Card.Title>
                         <ListGroup>
-                            {foundExercises}
+                            {exercises}
                         </ListGroup>
-                        </Panel.Body>
-                    </Panel>
 
-                    <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
-                        Опубликовать тему
-                    </Checkbox>
+                        <Card>
+                            <Card.Body>
+                                <Form.Group>
+                                    <Form.Label>Поиск упражнения</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        ref={this.exerciseTitle}
+                                        placeholder="Начните вводить данные для выбора"
+                                        onChange={this.searchExercise.bind(this)}
+                                    />
+                                </Form.Group>
+
+                                Варианты:
+                                <ListGroup>
+                                    {foundExercises}
+                                </ListGroup>
+                            </Card.Body>
+                        </Card>
+
+                        <Form.Group>
+                            <Form.Check type="checkbox" checked={this.state.published}
+                                        onChange={this.togglePublished.bind(this)} label="Опубликовать тему"/>
+                        </Form.Group>
+                        <Button onClick={this.saveTheme.bind(this)} className="float-right"
+                                variant="success">Сохранить</Button>
+                    </Form>
                 </Jumbotron>
-
-                <Button onClick={this.saveTheme.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
@@ -218,4 +209,4 @@ class AdminTheme extends React.Component {
 }
 
 
-export default AdminTheme;
+export default withRouter(AdminTheme);
