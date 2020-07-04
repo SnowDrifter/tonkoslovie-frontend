@@ -1,140 +1,65 @@
-import React from "react";
-import {withRouter} from "react-router-dom";
-import * as QueryString from "query-string"
-import {connect} from "react-redux";
-import {LinkContainer} from "react-router-bootstrap";
-import {Nav, Navbar} from "react-bootstrap";
-import {bindActionCreators} from "redux";
-import * as UserActions from "../action/Auth";
+@media (min-width: 767px) {
+  .navbar-default .navbar-nav > .active:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    content: " ";
+    border-bottom: 3px solid #b4b4b4;
+  }
+}
 
+.navbar-light .navbar-toggler .icon-bar {
+  background: #999999;
+}
 
-class Navigation extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        console.log("Navigation.cons");
-        console.log(props);
-
-        this.state = {
-            expandNavbar: false,
-            isAuthenticated: props.isAuthenticated
-        };
-
-        this.checkToken();
+.navbar {
+  .navbar-toggler {
+    .navbar-toggler:hover, &:focus {
+      background-color: transparent;
+      outline: 0;
     }
 
-    static getDerivedStateFromProps(props, state) {
-        return {
-            isAuthenticated: props.isAuthenticated
-        };
-    }
-
-    checkToken() {
-        const token = QueryString.parse(this.props.location.search).token;
-
-        if (token) {
-            this.props.actions.saveToken(token);
+    &.collapsed {
+      .icon-bar {
+        &:nth-of-type(1) {
+          transform: rotate(0deg);
+          top: 0;
         }
+        &:nth-of-type(2) {
+          opacity: 1;
+          width: 100%;
+          margin-left: 0;
+        }
+        &:nth-of-type(3) {
+          transform: rotate(0deg);
+          bottom: 0;
+        }
+      }
     }
 
-    logout() {
-        this.props.actions.logout();
+    .icon-bar {
+      position: relative;
+      display: block;
+      width: 22px;
+      height: 2px;
+      border-radius: 1px;
+      margin: 4px 0 4px 0;
+      transition: all 300ms ease-in-out;
+
+      &:nth-of-type(1) {
+        transform: rotate(45deg);
+        top: 6px;
+      }
+      &:nth-of-type(2) {
+        opacity: 0;
+        width: 0;
+        margin-left: 50%;
+      }
+      &:nth-of-type(3) {
+        transform: rotate(-45deg);
+        bottom: 6px;
+      }
     }
-
-    toggleExpandNavbar() {
-        this.setState({expandNavbar: !this.state.expandNavbar});
-    }
-
-    render() {
-        const isAuthenticated = this.state.isAuthenticated;
-
-        return (
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand>
-                    <LinkContainer to="/">
-                        <Nav>
-                            <Nav.Link>Главная</Nav.Link>
-                        </Nav>
-                    </LinkContainer>
-                </Navbar.Brand>
-
-                <button type="button" className="navbar-toggler collapsed" style={{zIndex: 2}}
-
-                        // data-toggle="collapse"
-                        // data-target="#navbarNav"
-                        // aria-controls="navbarNav"
-                        // aria-expanded="false"
-                        // aria-label="Toggle navigation"
-                >
-                    <span  style={{zIndex: 3}} className="icon-bar"/>
-                    <span className="icon-bar"/>
-                    <span className="icon-bar"/>
-                </button>
-
-                {/*<button type="button"*/}
-                        {/*className={`navbar-toggle ${this.state.expandNavbar ? "" : "collapsed"}`}*/}
-                        {/*onClick={this.toggleExpandNavbar.bind(this)}>*/}
-                    {/*<span className="icon-bar"/>*/}
-                    {/*<span className="icon-bar"/>*/}
-                    {/*<span className="icon-bar"/>*/}
-                {/*</button>*/}
-
-
-
-                <Navbar.Collapse>
-                    <Nav>
-                        <LinkContainer to="/lessons">
-                            <Nav.Link>Уроки</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/themes">
-                            <Nav.Link>Упражнения</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/about">
-                            <Nav.Link>О проекте</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/contacts">
-                            <Nav.Link>Контакты</Nav.Link>
-                        </LinkContainer>
-                    </Nav>
-                </Navbar.Collapse>
-
-                <Navbar.Collapse className="justify-content-end">
-                    <Nav>
-                        <Nav.Item>
-                            <LinkContainer to="/registration">
-                                <Nav.Link className={isAuthenticated ? "hidden" : ""}>Регистрация</Nav.Link>
-                            </LinkContainer>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link onClick={this.props.actions.showLogin}
-                                      className={isAuthenticated ? "hidden" : ""}>Вход</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link onClick={this.logout.bind(this)}
-                                      className={isAuthenticated ? "" : "hidden"}>Выход</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-        );
-    }
+  }
 }
-
-function mapStateToProps(state) {
-    console.log("Navigation.mapStateToProps");
-    console.log(state.AuthReducer);
-    console.log(state.AuthReducer.isAuthenticated);
-
-    return {
-        isAuthenticated: state.AuthReducer.isAuthenticated
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(UserActions, dispatch)
-    }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navigation))
