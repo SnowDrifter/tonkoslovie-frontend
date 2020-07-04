@@ -27,7 +27,7 @@
     "jwt-decode": "^2.2.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
