@@ -1,14 +1,14 @@
-import { browserHistory } from "react-router"
-import {
-  ROUTING
-} from "../constant/Routing"
+import {createBrowserHistory} from "history"
+import {ROUTING} from "../constant/Routing"
 
 /* eslint-disable no-unused-vars */
 export const Redirect = store => next => action => {
-  if (action.type === ROUTING) {
-    browserHistory[action.payload.method](action.payload.nextUrl)
-  }
+    const history = createBrowserHistory();
 
-  return next(action)
+    if (action.type === ROUTING) {
+        history[action.payload.method](action.payload.nextUrl)
+    }
+
+    return next(action)
 };
 /* eslint-enable no-unused-vars */

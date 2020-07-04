@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {Button, ControlLabel, FormControl, FormGroup, Modal} from "react-bootstrap";
+import {Button, FormControl, FormGroup, FormLabel, Modal} from "react-bootstrap";
 import * as UserActions from "../action/Auth";
 import "./Login.less";
 import Oauth from "./Oauth";
@@ -17,8 +17,10 @@ class Login extends React.Component {
         };
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({showLogin: props.user.showLogin});
+    static getDerivedStateFromProps(props, state) {
+        return {
+            showLogin: props.showLogin
+        };
     }
 
     sendLogin(event) {
@@ -34,7 +36,7 @@ class Login extends React.Component {
         let title = "Вход";
 
         return <div>
-            <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal">
+            <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
@@ -42,23 +44,23 @@ class Login extends React.Component {
                     <form className="login-form">
                         <FormGroup>
                             <FormGroup controlId="emailForm">
-                                <ControlLabel>Email</ControlLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl ref={email => {
                                     this.email = email
                                 }} type="text" autoFocus/>
                             </FormGroup>
 
                             <FormGroup controlId="passwordForm">
-                                <ControlLabel>Пароль</ControlLabel>
+                                <FormLabel>Пароль</FormLabel>
                                 <FormControl ref={password => {
                                     this.password = password
                                 }} type="password"/>
                             </FormGroup>
                         </FormGroup>
 
-                        <div className="login-error-message text-center">{this.props.user.errorMessage}</div>
+                        <div className="login-error-message text-center">{this.props.user ? this.props.user.errorMessage : undefined}</div>
 
-                        <Button type="submit" className="center-block" bsStyle="success"
+                        <Button type="submit" className="center-block" variant="success"
                                 onClick={this.sendLogin.bind(this)}>Войти</Button>
                     </form>
 
@@ -73,7 +75,7 @@ class Login extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        showLogin: state.AuthReducer.showLogin
     }
 }
 
