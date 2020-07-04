@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 import {Router} from "react-router-dom"
 import ConfigureStore from "./store/ConfigureStore"
 
-import history from "./middleware/History";
+import history from "./util/History";
 import App from "./container/App";
 
 const store = ConfigureStore();
@@ -13,7 +13,7 @@ render((
     <div>
         <Provider store={store}>
             <Router history={history}>
-               <App/>
+                <App/>
             </Router>
         </Provider>
     </div>
