@@ -1,10 +1,11 @@
 import React from "react";
 import Client from "../../util/Client";
-import {browserHistory, Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
+import {BsPencil, BsX} from "react-icons/bs";
 
 
 class AdminLessons extends React.Component {
@@ -50,28 +51,28 @@ class AdminLessons extends React.Component {
     }
 
     addNewLesson() {
-        browserHistory.push("/admin/lesson")
+        this.props.history.push("/admin/lesson")
     }
 
     editLesson(lesson) {
-        browserHistory.push("/admin/lesson/" + lesson.id);
+        this.props.history.push("/admin/lesson/" + lesson.id);
     }
 
     render() {
         let lessons = this.state.lessons;
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb" style={{width: 1100}}>
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li>Уроки</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>Уроки</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{overflow: "auto"}}>
                     <Table
                         rowHeight={50}
                         rowsCount={lessons.length}
-                        width={1100}
+                        width={1068}
                         height={600}
                         headerHeight={30}>
 
@@ -102,7 +103,7 @@ class AdminLessons extends React.Component {
                                     {lessons[rowIndex].published ? "Да" : "Нет"}
                                 </Cell>
                             )}
-                            width={120}
+                            width={100}
                         />
 
                         <Column
@@ -110,13 +111,13 @@ class AdminLessons extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button bsSize="small"
+                                            <Button size="small"
                                                     onClick={() => this.editLesson(lessons[rowIndex])}>
-                                                <Glyphicon glyph="pencil"/>
+                                               <BsPencil/>
                                             </Button>
-                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                            <Button size="small" variant="danger" className="pull-right"
                                                     onClick={() => this.deleteLesson(lessons[rowIndex].id)}>
-                                                <Glyphicon glyph="remove"/>
+                                                <BsX/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
@@ -129,8 +130,8 @@ class AdminLessons extends React.Component {
 
                 <br/>
                 <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;

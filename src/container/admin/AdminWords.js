@@ -1,11 +1,12 @@
 import React from "react";
 import Client from "../../util/Client";
-import {Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
 import Word from "../../component/admin/AdminWord";
+import {BsPencil, BsX} from "react-icons/bs";
 
 
 class AdminWords extends React.Component {
@@ -69,18 +70,18 @@ class AdminWords extends React.Component {
     render() {
         let words = this.state.words;
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb" style={{width: 1100}}>
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li >Слова</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>Слова</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{overflow: "auto"}}>
                     <Table
                         rowHeight={50}
                         rowsCount={words.length}
-                        width={1100}
+                        width={1068}
                         height={600}
                         headerHeight={30}>
 
@@ -120,13 +121,13 @@ class AdminWords extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button bsSize="small"
+                                            <Button size="small"
                                                     onClick={() => this.showEditWord(words[rowIndex])}>
-                                                <Glyphicon glyph="pencil"/>
+                                                <BsPencil/>
                                             </Button>
-                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                            <Button size="small" variant="danger" className="pull-right"
                                                     onClick={() => this.deleteWord(words[rowIndex].id)}>
-                                                <Glyphicon glyph="remove"/>
+                                                <BsX/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
@@ -144,8 +145,8 @@ class AdminWords extends React.Component {
                       modalTitle={this.state.modalTitle}
                       word={this.state.word}
                       hideModal={this.hideModal}/>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;

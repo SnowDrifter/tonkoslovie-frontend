@@ -1,10 +1,11 @@
 import React from "react";
 import Client from "../../util/Client";
-import {browserHistory, Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
+import {BsPencil, BsX} from "react-icons/bs";
 
 
 class AdminThemes extends React.Component {
@@ -50,28 +51,28 @@ class AdminThemes extends React.Component {
     }
 
     addNewTheme() {
-        browserHistory.push("/admin/theme")
+        this.props.history.push("/admin/theme")
     }
 
     editTheme(theme) {
-        browserHistory.push("/admin/theme/" + theme.id);
+        this.props.history.push("/admin/theme/" + theme.id);
     }
 
     render() {
         let themes = this.state.themes;
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb" style={{width: 1100}}>
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li>Темы упражнений</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>Темы упражнений</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{overflow: "auto"}}>
                     <Table
                         rowHeight={50}
                         rowsCount={themes.length}
-                        width={1100}
+                        width={1068}
                         height={600}
                         headerHeight={30}>
 
@@ -100,13 +101,13 @@ class AdminThemes extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button bsSize="small"
+                                            <Button size="small"
                                                     onClick={() => this.editTheme(themes[rowIndex])}>
-                                                <Glyphicon glyph="pencil"/>
+                                                <BsPencil/>
                                             </Button>
-                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                            <Button size="small" variant="danger" className="pull-right"
                                                     onClick={() => this.deleteTheme(themes[rowIndex].id)}>
-                                                <Glyphicon glyph="remove"/>
+                                                <BsX/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
@@ -119,8 +120,8 @@ class AdminThemes extends React.Component {
 
                 <br/>
                 <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;

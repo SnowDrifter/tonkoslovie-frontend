@@ -1,11 +1,13 @@
 import React from "react";
 import Client from "../../util/Client";
-import {browserHistory, Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
 import RoleUtil from "../../util/RoleUtil";
-import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
+import {BsPencil} from "react-icons/bs";
+
 
 const dateOptions = {
     year: "numeric",
@@ -43,7 +45,7 @@ class AdminUsers extends React.Component {
     }
 
     editUser(user) {
-        browserHistory.push("/admin/user/" + user.id);
+        this.props.history.push("/admin/user/" + user.id);
     }
 
     formatDate(time) {
@@ -58,18 +60,18 @@ class AdminUsers extends React.Component {
     render() {
         let users = this.state.users;
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb" style={{width: 1100}}>
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li>Пользователи</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>Пользователи</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{overflow: "auto"}}>
                     <Table
                         rowHeight={50}
                         rowsCount={users.length}
-                        width={1100}
+                        width={1068}
                         height={600}
                         headerHeight={30}>
 
@@ -151,9 +153,9 @@ class AdminUsers extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button bsSize="small"
+                                            <Button size="small"
                                                     onClick={() => this.editUser(users[rowIndex])}>
-                                                <Glyphicon glyph="pencil"/>
+                                                <BsPencil/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
@@ -163,8 +165,8 @@ class AdminUsers extends React.Component {
                         />
                     </Table>
                 </div>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;

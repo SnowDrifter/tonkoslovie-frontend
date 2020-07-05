@@ -1,9 +1,10 @@
 import React from "react";
 import Client from "../../util/Client";
-import {browserHistory, Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
-import {Button, ButtonGroup, ButtonToolbar, Glyphicon, Panel} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
+import {BsPencil, BsX} from "react-icons/bs";
 
 
 class AdminExercises extends React.Component {
@@ -49,28 +50,28 @@ class AdminExercises extends React.Component {
     }
 
     addNewExercise() {
-        browserHistory.push("/admin/exercise")
+        this.props.history.push("/admin/exercise")
     }
 
     editExercise(exercise) {
-        browserHistory.push("/admin/exercise/" + exercise.id);
+        this.props.history.push("/admin/exercise/" + exercise.id);
     }
 
     render() {
         let exercises = this.state.exercises;
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb" style={{width: 1100}}>
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li>Упражнения</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>Упражнения</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{overflow: "auto"}}>
                     <Table
                         rowHeight={50}
                         rowsCount={exercises.length}
-                        width={900}
+                        width={1068}
                         height={600}
                         headerHeight={30}>
 
@@ -99,13 +100,13 @@ class AdminExercises extends React.Component {
                                 <Cell>
                                     <ButtonToolbar>
                                         <ButtonGroup>
-                                            <Button bsSize="small"
+                                            <Button size="small" variant="secondary"
                                                     onClick={() => this.editExercise(exercises[rowIndex])}>
-                                                <Glyphicon glyph="pencil"/>
+                                                <BsPencil/>
                                             </Button>
-                                            <Button bsSize="small" bsStyle="danger" className="pull-right"
+                                            <Button size="small" variant="danger" className="pull-right"
                                                     onClick={() => this.deleteLExercise(exercises[rowIndex].id)}>
-                                                <Glyphicon glyph="remove"/>
+                                                <BsX/>
                                             </Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
@@ -118,8 +119,8 @@ class AdminExercises extends React.Component {
 
                 <br/>
                 <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
