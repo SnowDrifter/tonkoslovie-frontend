@@ -4,8 +4,8 @@ import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
-import {BsPencil, BsX} from "react-icons/bs";
+import {Breadcrumb, Button, Card} from "react-bootstrap";
+import EditRemoveButtons from "../../component/admin/EditRemoveButtons";
 
 
 class AdminTexts extends React.Component {
@@ -99,18 +99,10 @@ class AdminTexts extends React.Component {
                         <Column
                             cell={({rowIndex}) => (
                                 <Cell>
-                                    <ButtonToolbar>
-                                        <ButtonGroup>
-                                            <Button size="small"
-                                                    onClick={() => this.editText(texts[rowIndex])}>
-                                                <BsPencil/>
-                                            </Button>
-                                            <Button size="small" variant="danger" className="pull-right"
-                                                    onClick={() => this.deleteText(texts[rowIndex].id)}>
-                                                <BsX/>
-                                            </Button>
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
+                                    <EditRemoveButtons
+                                        edit={() => this.editText(texts[rowIndex])}
+                                        remove={() => this.deleteText(texts[rowIndex].id)}
+                                    />
                                 </Cell>
                             )}
                             width={100}

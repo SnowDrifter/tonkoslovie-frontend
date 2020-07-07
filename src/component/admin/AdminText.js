@@ -1,13 +1,5 @@
 import React, {createRef} from "react";
-import {
-    Breadcrumb,
-    Button,
-    ButtonGroup,
-    Card,
-    Form,
-    Jumbotron,
-    ProgressBar
-} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonGroup, Card, Form, Jumbotron, ProgressBar} from "react-bootstrap";
 import Loader from "../../component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
 import Client from "../../util/Client";
@@ -17,7 +9,8 @@ import * as partTypes from "../content/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
 import {toast} from "react-toastify";
-import {BsPencil, BsX} from "react-icons/bs"
+import RemoveButton from "./RemoveButton";
+import EditRemoveButtons from "./EditRemoveButtons";
 
 class Text extends React.Component {
 
@@ -280,14 +273,8 @@ class TextPart extends React.Component {
         return <div className="admin-text-part">
             {this.props.data}
 
-            <ButtonGroup className="button-block">
-                <Button onClick={() => this.props.editPart(this.props.index)} size="xsmall">
-                    <BsPencil/>
-                </Button>
-                <Button onClick={() => this.props.removePart(this.props.index)} size="xsmall" variant="danger">
-                    <BsX/>
-                </Button>
-            </ButtonGroup>
+            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
+                               remove={() => this.props.removePart(this.props.index)}/>
         </div>
     }
 }
@@ -297,16 +284,8 @@ class QuestionPart extends React.Component {
         return <div className="admin-question-part">
             {this.props.data}
 
-            <ButtonGroup className="button-block">
-                <Button size="xsmall"
-                        onClick={() => this.props.editPart(this.props.index)}>
-                    <BsPencil/>
-                </Button>
-                <Button size="xsmall" variant="danger"
-                        onClick={() => this.props.removePart(this.props.index)}>
-                    <BsX/>
-                </Button>
-            </ButtonGroup>
+            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
+                               remove={() => this.props.removePart(this.props.index)}/>
         </div>
     }
 }
@@ -322,16 +301,8 @@ class ChoicePart extends React.Component {
         return <div className="admin-choice-part">
             {words.join(", ")}
 
-            <ButtonGroup className="button-block">
-                <Button size="xsmall"
-                        onClick={() => this.props.editPart(this.props.index)}>
-                    <BsPencil/>
-                </Button>
-                <Button size="xsmall" variant="danger"
-                        onClick={() => this.props.removePart(this.props.index)}>
-                    <BsX/>
-                </Button>
-            </ButtonGroup>
+            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
+                               remove={() => this.props.removePart(this.props.index)}/>
         </div>
     }
 }
@@ -340,12 +311,7 @@ class LineBreakPart extends React.Component {
     render() {
         return <div className="admin-line-break-part ">
             ¶
-            <ButtonGroup className="button-block">
-                <Button size="xsmall" variant="danger"
-                        onClick={() => this.props.removePart(this.props.index)}>
-                    <BsX/>
-                </Button>
-            </ButtonGroup>
+            <RemoveButton remove={() => this.props.removePart()}/>
         </div>
     }
 }
