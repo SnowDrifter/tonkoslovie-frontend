@@ -4,9 +4,9 @@ import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
-import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
+import {Breadcrumb, Button, Card} from "react-bootstrap";
 import Word from "../../component/admin/AdminWord";
-import {BsPencil, BsX} from "react-icons/bs";
+import EditRemoveButtons from "../../component/admin/EditRemoveButtons";
 
 
 class AdminWords extends React.Component {
@@ -119,18 +119,10 @@ class AdminWords extends React.Component {
                         <Column
                             cell={({rowIndex}) => (
                                 <Cell>
-                                    <ButtonToolbar>
-                                        <ButtonGroup>
-                                            <Button size="small"
-                                                    onClick={() => this.showEditWord(words[rowIndex])}>
-                                                <BsPencil/>
-                                            </Button>
-                                            <Button size="small" variant="danger" className="pull-right"
-                                                    onClick={() => this.deleteWord(words[rowIndex].id)}>
-                                                <BsX/>
-                                            </Button>
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
+                                    <EditRemoveButtons
+                                        edit={() => this.showEditWord(words[rowIndex])}
+                                        remove={() => this.deleteWord(words[rowIndex].id)}
+                                    />
                                 </Cell>
                             )}
                             width={100}
