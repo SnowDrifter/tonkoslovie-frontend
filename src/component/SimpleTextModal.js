@@ -9,7 +9,7 @@ class SimpleTextModal extends React.Component {
                 <Modal.Title>{this.props.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.props.text || "Текст отсутствует")}}></div>
+                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.props.text || "Текст отсутствует")}}/>
             </Modal.Body>
         </Modal>
     }

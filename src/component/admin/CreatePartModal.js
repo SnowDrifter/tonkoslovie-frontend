@@ -1,21 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef} from "react";
 import {
-    FormGroup,
-    Row,
-    Col,
-    ControlLabel,
-    FormControl,
     Button,
     ButtonToolbar,
-    Modal,
+    Col,
     Form,
     InputGroup,
-    ToggleButtonGroup,
-    ToggleButton
+    Modal,
+    Row,
+    ToggleButton,
+    ToggleButtonGroup
 } from "react-bootstrap";
-import * as  partTypes from "../content/TextPartTypes";
-import { toast } from "react-toastify";
+import * as partTypes from "../content/TextPartTypes";
+import {toast} from "react-toastify";
 
 class CreatePartModal extends React.Component {
 
@@ -26,6 +22,9 @@ class CreatePartModal extends React.Component {
             type: partTypes.TEXT,
             choicesCount: 1
         };
+
+        this.dataInput = createRef();
+        this.placeholderInput = createRef();
     }
 
     saveTextPart() {
@@ -34,24 +33,24 @@ class CreatePartModal extends React.Component {
         let textPart = {};
         textPart.type = type;
 
-        if (type == partTypes.TEXT) {
-            textPart.data = ReactDOM.findDOMNode(this.data).value;
+        if (type === partTypes.TEXT) {
+            textPart.data = this.dataInput.current.value;
         }
 
-        if (type == partTypes.QUESTION) {
-            textPart.data = ReactDOM.findDOMNode(this.data).value;
-            textPart.placeholder = ReactDOM.findDOMNode(this.placeholder).value;
+        if (type === partTypes.QUESTION) {
+            textPart.data = this.dataInput.current.value;
+            textPart.placeholder = this.placeholderInput.current.value;
         }
 
-        if (type == partTypes.CHOICE) {
+        if (type === partTypes.CHOICE) {
             if (this.checkRightAnswer()) {
                 const choiceVariants = [];
                 const choiceCount = this.state.choicesCount;
 
                 for (let i = 0; i < choiceCount; i++) {
                     let choiceVariant = {};
-                    choiceVariant.title = ReactDOM.findDOMNode(this["form-" + i]).value;
-                    choiceVariant.right = ReactDOM.findDOMNode(this["right-" + i]).checked;
+                    choiceVariant.title = this["form-" + i].current.value;
+                    choiceVariant.right = this["right-" + i].current.checked;
                     choiceVariants.push(choiceVariant);
                 }
 
@@ -88,7 +87,7 @@ class CreatePartModal extends React.Component {
         const choiceCount = this.state.choicesCount;
 
         for (let i = 0; i < choiceCount; i++) {
-            if (ReactDOM.findDOMNode(this["right-" + i]).checked) {
+            if (this["right-" + i].current.checked) {
                 return true;
             }
         }
@@ -100,71 +99,57 @@ class CreatePartModal extends React.Component {
         let body;
         let type = this.state.type;
 
-        if (type == partTypes.TEXT) {
-            body = <FormGroup controlId="textForm">
-                <ControlLabel>Текст</ControlLabel>
-                <FormControl
-                    inputRef={data => {
-                        this.data = data
-                    }}
-                    componentClass="textarea"
-                />
-            </FormGroup>
-        } else if (type == partTypes.QUESTION) {
+        if (type === partTypes.TEXT) {
+            body = <Form.Group controlId="textForm">
+                <Form.Label>Текст</Form.Label>
+                <Form.Control as="textarea" ref={this.dataInput}/>
+            </Form.Group>
+        } else if (type === partTypes.QUESTION) {
             body = <div>
-                <FormGroup>
-                    <ControlLabel>Текст</ControlLabel>
-                    <FormControl
-                        inputRef={data => {
-                            this.data = data
-                        }}
-                        componentClass="textarea"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>Подсказка</ControlLabel>
-                    <FormControl
-                        inputRef={placeholder => {
-                            this.placeholder = placeholder
-                        }}
-                    />
-                </FormGroup>
+                <Form.Group>
+                    <Form.Label>Текст</Form.Label>
+                    <Form.Control as="textarea" ref={this.dataInput}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Подсказка</Form.Label>
+                    <Form.Control ref={this.placeholderInput}/>
+                </Form.Group>
             </div>
-        } else if (type == partTypes.CHOICE) {
+        } else if (type === partTypes.CHOICE) {
             const choiceForms = [];
 
             for (let i = 0; i < this.state.choicesCount; i++) {
-                choiceForms.push(<InputGroup key={i} className="admin-text-choice-part-input">
-                        <InputGroup.Addon>
-                            <input type="radio" name="rightGroup" ref={part => {
-                                this["right-" + i] = part
-                            }}/>
-                        </InputGroup.Addon>
-                        <FormControl ref={part => {
-                            this["form-" + i] = part
-                        }}/>
+                this["right-" + i] = createRef();
+                this["form-" + i] = createRef();
+
+                choiceForms.push(
+                    <InputGroup key={i} className="admin-text-choice-part-input">
+                        <InputGroup.Prepend>
+                            <Form.Check name="right-variant" type="radio" ref={this["right-" + i]}/>
+                        </InputGroup.Prepend>
+                        <Form.Control ref={this["form-" + i]}/>
                     </InputGroup>
                 );
             }
 
             body = <div>
-                <FormGroup>
-                    <ControlLabel>Варианты</ControlLabel>
+                <Form.Group>
+                    <Form.Label>Варианты</Form.Label>
                     {choiceForms}
-                </FormGroup>
+                </Form.Group>
 
                 <Button onClick={this.increaseChoicesCount.bind(this)}>Добавить вариант</Button>
                 <Button onClick={this.decreaseChoicesCount.bind(this)}>Удалить вариант</Button>
             </div>
         }
 
-        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} bsSize="large">
+        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="large">
             <Modal.Header closeButton>
                 <Modal.Title>{this.props.modalTitle}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="admin-text-modal-body">
                 <Form>
-                    <FormGroup>
+                    <Form.Group>
                         <Row>
                             <Col md={12}>
                                 <ButtonToolbar>
@@ -179,11 +164,10 @@ class CreatePartModal extends React.Component {
                                 {body}
                             </Col>
                         </Row>
-                    </FormGroup>
+                    </Form.Group>
 
-                    <Button
-                        onClick={this.saveTextPart.bind(this)}
-                        className="pull-right" bsStyle="success">Сохранить</Button>
+                    <Button onClick={this.saveTextPart.bind(this)}
+                            className="float-right" variant="success">Сохранить</Button>
                 </Form>
             </Modal.Body>
         </Modal>

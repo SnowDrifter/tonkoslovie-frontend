@@ -1,8 +1,5 @@
 import React from "react";
-import {
-    Button,
-    Modal
-} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 
 class SimpleConfirmModal extends React.Component {
     render() {
@@ -14,9 +11,9 @@ class SimpleConfirmModal extends React.Component {
                 <h4 className="text-center">{this.props.modalTitle}</h4>
 
                 <div className="text-center">
-                    <Button onClick={() => this.props.confirmFunction(true)} bsStyle="success" bsSize="large">Да</Button>
+                    <Button onClick={() => this.props.confirmFunction(true)} variant="success" size="large">Да</Button>
                     {" "}
-                    <Button onClick={() => this.props.negativeFunction()} bsSize="large">Нет</Button>
+                    <Button onClick={() => this.props.negativeFunction()} size="large">Нет</Button>
                 </div>
             </Modal.Body>
         </Modal>
