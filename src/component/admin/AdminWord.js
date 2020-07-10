@@ -1,11 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef} from "react";
 import Client from "../../util/Client";
-import {FormGroup, Row, Col, ControlLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
+import {FormGroup, Row, Col, FormLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import "./AdminWord.less"
 
 
-class Word extends React.Component {
+class AdminWord extends React.Component {
 
     constructor(props) {
         super(props);
@@ -13,11 +12,14 @@ class Word extends React.Component {
         this.state = {
             showModal: props.showModal
         };
+
+        this.russianTextInput = createRef();
+        this.polishTextInput = createRef();
     }
 
     saveWord() {
-        let russianText = ReactDOM.findDOMNode(this.russianText).value;
-        let polishText = ReactDOM.findDOMNode(this.polishText).value;
+        const russianText = this.russianTextInput.current.value;
+        const polishText = this.polishTextInput.current.value;
 
         Client.post("/api/content/word", {
             id: this.props.word.id,
@@ -44,11 +46,10 @@ class Word extends React.Component {
                             <Row>
                                 <Col md={12}>
                                     <FormGroup controlId="russianTextForm">
-                                        <ControlLabel>Русский текст</ControlLabel>
+                                        <FormLabel>Русский текст</FormLabel>
                                         <FormControl
-                                            inputRef={russianText => {
-                                                this.russianText = russianText
-                                            }} defaultValue={this.props.word.russianText}
+                                            ref={this.russianTextInput}
+                                            defaultValue={this.props.word.russianText}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -57,16 +58,15 @@ class Word extends React.Component {
                             <Row>
                                 <Col md={12}>
                                     <FormGroup controlId="polishTextForm">
-                                        <ControlLabel>Польский текст</ControlLabel>
-                                        <FormControl ref={polishText => {
-                                            this.polishText = polishText
-                                        }} defaultValue={this.props.word.polishText}/>
+                                        <FormLabel>Польский текст</FormLabel>
+                                        <FormControl ref={this.polishTextInput}
+                                                     defaultValue={this.props.word.polishText}/>
                                     </FormGroup>
                                 </Col>
                             </Row>
                         </FormGroup>
 
-                        <Button onClick={this.saveWord.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
+                        <Button onClick={this.saveWord.bind(this)} className="float-right" variant="success">Сохранить</Button>
                     </Form>
                 </Modal.Body>
             </Modal>
@@ -74,4 +74,4 @@ class Word extends React.Component {
     }
 }
 
-export default Word;
+export default AdminWord;

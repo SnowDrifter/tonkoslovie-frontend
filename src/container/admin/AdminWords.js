@@ -5,7 +5,7 @@ import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
-import Word from "../../component/admin/AdminWord";
+import AdminWord from "../../component/admin/AdminWord";
 import EditRemoveButtons from "../../component/admin/EditRemoveButtons";
 
 
@@ -133,10 +133,10 @@ class AdminWords extends React.Component {
                 <br/>
                 <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
 
-                <Word showModal={this.state.showModal}
-                      modalTitle={this.state.modalTitle}
-                      word={this.state.word}
-                      hideModal={this.hideModal}/>
+                <AdminWord showModal={this.state.showModal}
+                           modalTitle={this.state.modalTitle}
+                           word={this.state.word}
+                           hideModal={this.hideModal}/>
             </Card.Body>
         </Card>;
 
