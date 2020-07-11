@@ -31,7 +31,7 @@ import Text from "../component/content/Text";
 import {Redirect, Route, Switch} from "react-router-dom"
 import {Container} from "react-bootstrap"
 import Navigation from "../component/Navigation";
-import RestrictedContainer from "../container/RestrictedContainer";
+import AdminRoute from "./AdminRoute";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../../static/css/lumen.bootstrap.theme.min.css";
@@ -40,50 +40,54 @@ import "./App.less";
 class App extends React.Component {
     render() {
         return (
-            <div>
-                <Container>
-                    <Navigation/>
+            <Container>
+                <Navigation/>
 
-                    <Login/>
+                <Login/>
 
-                    <ToastContainer autoClose={3000}
-                                    position={toast.POSITION.BOTTOM_LEFT}
-                                    hideProgressBar={true}/>
+                <ToastContainer autoClose={3000}
+                                position={toast.POSITION.BOTTOM_LEFT}
+                                hideProgressBar={true}/>
 
-                    <Switch>
-                        <Route path="/" component={Home} exact/>
-                        <Route path="/registration" component={Registration}/>
-                        <Route path="/registration/success" component={RegistrationSuccess}/>
-                        <Route path="/registration/error" component={RegistrationError}/>
-                        {/*<Route authorize={["ROLE_ADMIN"]} component={RestrictedContainer}>*/}
-                            <Route path="/admin" component={Admin}/>
-                            <Route path="/admin/words" component={AdminWords}/>
-                            <Route path="/admin/text(/:textId)" component={AdminText}/>
-                            <Route path="/admin/texts" component={AdminTexts}/>
-                            <Route path="/admin/lessons" component={AdminLessons}/>
-                            <Route path="/admin/lesson(/:lessonId)" component={AdminLesson}/>
-                            <Route path="/admin/exercises" component={AdminExercises}/>
-                            <Route path="/admin/exercise(/:exerciseId)" component={AdminExercise}/>
-                            <Route path="/admin/themes" component={AdminThemes}/>
-                            <Route path="/admin/theme(/:themeId)" component={AdminTheme}/>
-                            <Route path="/admin/users" component={AdminUsers}/>
-                            <Route path="/admin/user/:userId" component={AdminUser}/>
-                            <Route path="/lessons" component={Lessons}/>
-                            <Route path="/lesson(/:lessonId)" component={Lesson}/>
-                            <Route path="/text(/:textId)" component={Text}/>
-                            <Route path="/themes" component={Themes}/>
-                            <Route path="/theme(/:themeId)" component={Theme}/>
-                            <Route path="/exercise(/:exerciseId)" component={Exercise}/>
-                            <Route path="/contacts" component={Contacts}/>
-                            <Route path="/about" component={About}/>
-                            <Route path="/accessDenied" component={Err403}/>
-                            <Route path="/500" component={Err500}/>
-                            <Route path="/404" component={Err404} status={404}/>
-                            <Redirect to="/404"/>
-                        {/*</Route>*/}
-                    </Switch>
-                </Container>
-            </div>
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/lessons" component={Lessons}/>
+                    <Route path="/lesson/:lessonId" component={Lesson}/>
+                    <Route path="/text/:textId" component={Text}/>
+                    <Route path="/themes" component={Themes}/>
+                    <Route path="/theme/:themeId" component={Theme}/>
+                    <Route path="/exercise/:exerciseId" component={Exercise}/>
+                    <Route path="/contacts" component={Contacts}/>
+                    <Route path="/about" component={About}/>
+
+                    <Route path="/registration" component={Registration}/>
+                    <Route path="/registration/success" component={RegistrationSuccess}/>
+                    <Route path="/registration/error" component={RegistrationError}/>
+
+                    <AdminRoute path="/admin" component={Admin} exact/>
+                    <AdminRoute path="/admin/words" component={AdminWords}/>
+                    <AdminRoute path="/admin/texts" component={AdminTexts}/>
+                    <AdminRoute path="/admin/text/:textId" component={AdminText} exact/>
+                    <AdminRoute path="/admin/text" component={AdminText} exact/>
+                    <AdminRoute path="/admin/lessons" component={AdminLessons}/>
+                    <AdminRoute path="/admin/lesson/:lessonId" component={AdminLesson}/>
+                    <AdminRoute path="/admin/lesson" component={AdminLesson}/>
+                    <AdminRoute path="/admin/exercises" component={AdminExercises}/>
+                    <AdminRoute path="/admin/exercise/:exerciseId" component={AdminExercise}/>
+                    <AdminRoute path="/admin/exercise" component={AdminExercise} exact/>
+                    <AdminRoute path="/admin/themes" component={AdminThemes}/>
+                    <AdminRoute path="/admin/theme/:themeId" component={AdminTheme}/>
+                    <AdminRoute path="/admin/theme" component={AdminTheme}/>
+                    <AdminRoute path="/admin/users" component={AdminUsers}/>
+                    <AdminRoute path="/admin/user/:userId" component={AdminUser}/>
+
+                    <Route path="/accessDenied" component={Err403}/>
+                    <Route path="/500" component={Err500}/>
+                    <Route exact path="/403" component={Err403} status={403}/>
+                    <Route path="/404" component={Err404} status={404}/>
+                    <Redirect to="/404"/>
+                </Switch>
+            </Container>
         )
     }
 }

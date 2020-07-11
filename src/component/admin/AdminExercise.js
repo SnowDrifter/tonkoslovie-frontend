@@ -6,7 +6,6 @@ import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import {browserHistory, Link} from "react-router";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import Loader from "../../component/Loader";
 import "./AdminExercise.less";
@@ -25,13 +24,13 @@ class AdminExercise extends React.Component {
             original: EditorState.createEmpty(),
             dictionary: EditorState.createEmpty(),
             // Fix empty default value in first answer input
-            answersCount: this.props.params.exerciseId ? 0 : 1,
+            answersCount: this.props.computedMatch.params.exerciseId ? 0 : 1,
             answers: [],
-            loaded: !this.props.params.exerciseId
+            loaded: !this.props.computedMatch.params.exerciseId
         };
 
-        if (this.props.params.exerciseId) {
-            this.loadExercise(this.props.params.exerciseId)
+        if (this.props.computedMatch.params.exerciseId) {
+            this.loadExercise(this.props.computedMatch.params.exerciseId)
         }
 
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
@@ -101,8 +100,8 @@ class AdminExercise extends React.Component {
                 id: response.data.id,
             });
 
-            if (!this.props.params.lessonId) {
-                browserHistory.push("/admin/exercise/" + response.data.id)
+            if (!this.props.computedMatch.params.lessonId) {
+                this.props.history.push("/admin/exercise/" + response.data.id)
             }
 
             toast.success("Сохранено");

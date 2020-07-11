@@ -27,7 +27,7 @@ class Text extends React.Component {
             textParts: [],
             progressUploadFile: null,
             soundFileName: null,
-            loaded: !this.props.match.params.textId
+            loaded: !this.props.computedMatch.params.textId
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -38,8 +38,8 @@ class Text extends React.Component {
         this.titleInput = createRef();
         this.soundInput = createRef();
 
-        if (this.props.match.params.textId) {
-            this.loadText(this.props.match.params.textId)
+        if (this.props.computedMatch.params.textId) {
+            this.loadText(this.props.computedMatch.params.textId)
         }
     }
 
@@ -72,7 +72,7 @@ class Text extends React.Component {
                 id: response.data.id,
             });
 
-            if (!this.props.match.params.lessonId) {
+            if (!this.props.computedMatch.params.lessonId) {
                 this.props.history.push("/admin/text/" + response.data.id)
             }
 

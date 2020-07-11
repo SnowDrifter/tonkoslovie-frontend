@@ -10,11 +10,9 @@ import App from "./container/App";
 const store = ConfigureStore();
 
 render((
-    <div>
-        <Provider store={store}>
-            <Router history={history}>
-                <App/>
-            </Router>
-        </Provider>
-    </div>
+    <Provider store={store}>
+        <Router history={history}>
+            <App/>
+        </Router>
+    </Provider>
 ), document.getElementById("main"));

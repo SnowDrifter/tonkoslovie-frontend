@@ -20,7 +20,7 @@ class Lesson extends React.Component {
             failed: false
         };
 
-        this.loadLesson(this.props.params.lessonId);
+        this.loadLesson(this.props.computedMatch.params.lessonId);
     }
 
     loadLesson(lessonId) {

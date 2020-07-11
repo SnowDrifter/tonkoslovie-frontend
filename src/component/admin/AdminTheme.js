@@ -15,8 +15,8 @@ class AdminTheme extends React.Component {
             published: false,
             exercises: [],
             foundExercises: [],
-            loaded: !props.match.params.themeId,
-            themeId: props.match.params.themeId,
+            loaded: !props.computedMatch.params.themeId,
+            themeId: props.computedMatch.params.themeId,
             exerciseTitle: null
         };
 

@@ -6,7 +6,6 @@ import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";
 import SimpleConfirmModal from "../SimpleConfirmModal";
-import {browserHistory} from "react-router";
 
 class Theme extends React.Component {
 
@@ -26,8 +25,8 @@ class Theme extends React.Component {
             failed: false
         };
 
-        if (this.props.params.themeId) {
-            this.loadTheme(this.props.params.themeId)
+        if (this.props.computedMatch.params.themeId) {
+            this.loadTheme(this.props.computedMatch.params.themeId)
         }
 
         this.nextExercise = this.nextExercise.bind(this);
@@ -99,7 +98,7 @@ class Theme extends React.Component {
     }
 
     backToThemesPage() {
-        browserHistory.push("/themes");
+        this.props.history.push("/themes");
     }
 
     hideSuccessModal() {

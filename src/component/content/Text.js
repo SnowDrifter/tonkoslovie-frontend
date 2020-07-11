@@ -24,8 +24,8 @@ class Text extends React.Component {
 
         this.checkAnswers = this.checkAnswers.bind(this);
 
-        if (this.props.params.textId) {
-            this.loadText(this.props.params.textId)
+        if (this.props.computedMatch.params.textId) {
+            this.loadText(this.props.computedMatch.params.textId)
         }
     }
 

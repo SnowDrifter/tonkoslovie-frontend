@@ -1,6 +1,5 @@
 import axios from "axios";
 const apiEndpoint = process.env.API_ENDPOINT || "";
-import {browserHistory} from "react-router"
 
 let client;
 
@@ -21,11 +20,11 @@ let client;
         let response = error.response;
 
         if(error.message == "Network Error" || response.status >= 500) {
-            browserHistory.push("/500");
+            this.props.history.push("/500");
         } else if (response.status === 403) {
             localStorage.removeItem("token");
             window.location.reload();
-            browserHistory.push("/");
+            this.props.history.push("/");
         }
 
         return Promise.reject(error);
