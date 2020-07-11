@@ -1,8 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {Button, FormControl, FormGroup, FormLabel, Modal} from "react-bootstrap";
+import {Button, Form, Modal, Row} from "react-bootstrap";
 import * as UserActions from "../action/Auth";
 import "./Login.less";
 import Oauth from "./Oauth";
@@ -13,21 +12,26 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showLogin: false
+            showLogin: false,
+            errorMessage: undefined
         };
+
+        this.emailInput = createRef();
+        this.passwordInput = createRef();
     }
 
-    static getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps(props) {
         return {
-            showLogin: props.showLogin
+            showLogin: props.showLogin,
+            errorMessage: props.errorMessage
         };
     }
 
     sendLogin(event) {
         event.preventDefault();
 
-        const email = ReactDOM.findDOMNode(this.email).value;
-        const password = ReactDOM.findDOMNode(this.password).value;
+        const email =  this.emailInput.current.value ;
+        const password =  this.passwordInput.current.value ;
 
         this.props.actions.login({email: email, password: password});
     }
@@ -35,47 +39,45 @@ class Login extends React.Component {
     render() {
         let title = "Вход";
 
-        return <div>
+        return (
             <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="login-modal-body">
-                    <form className="login-form">
-                        <FormGroup>
-                            <FormGroup controlId="emailForm">
-                                <FormLabel>Email</FormLabel>
-                                <FormControl ref={email => {
-                                    this.email = email
-                                }} type="text" autoFocus/>
-                            </FormGroup>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <Form.Group controlId="emailForm">
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control ref={this.emailInput} type="text" autoFocus/>
+                            </Form.Group>
 
-                            <FormGroup controlId="passwordForm">
-                                <FormLabel>Пароль</FormLabel>
-                                <FormControl ref={password => {
-                                    this.password = password
-                                }} type="password"/>
-                            </FormGroup>
-                        </FormGroup>
+                            <Form.Group controlId="passwordForm">
+                                <Form.Label>Пароль</Form.Label>
+                                <Form.Control ref={this.passwordInput} type="password"/>
+                            </Form.Group>
+                        </Form.Group>
 
-                        <div className="login-error-message text-center">{this.props.user ? this.props.user.errorMessage : undefined}</div>
+                        <div className="login-error-message text-center">{this.state.errorMessage}</div>
 
-                        <Button type="submit" className="center-block" variant="success"
-                                onClick={this.sendLogin.bind(this)}>Войти</Button>
-                    </form>
+                        <Row className="justify-content-center">
+                            <Button type="submit" variant="success" onClick={this.sendLogin.bind(this)}>Войти</Button>
+                        </Row>
+                    </Form>
 
                     <hr/>
 
                     <Oauth/>
                 </Modal.Body>
             </Modal>
-        </div>
+        )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        showLogin: state.AuthReducer.showLogin
+        showLogin: state.AuthReducer.showLogin,
+        errorMessage: state.AuthReducer.errorMessage,
     }
 }
 
