@@ -1,8 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef, Fragment} from "react";
 import Client from "../../util/Client";
-import {browserHistory} from "react-router"
-import {Button, Col, ControlLabel, FormControl, FormGroup, Modal, Overlay, Panel, Popover, Row} from "react-bootstrap";
+import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
 import "./Registration.less"
 import Oauth from "../Oauth";
 
@@ -11,42 +9,45 @@ class Registration extends React.Component {
         super(props);
 
         this.state = {
+            validated: false,
             disableSubmit: false,
-            showSuccessModal: false,
-            showErrorModal: false,
-            modalErrorText: null,
+            showModal: false,
+            modalText: "",
+            errorModal: false,
 
             password: {
-                validationState: null,
+                valid: false,
                 showPopover: false,
                 message: null
             },
 
             confirmPassword: {
-                validationState: null,
-                showPopover: false,
+                valid: false,
                 message: null
             },
 
             email: {
-                validationState: null,
-                showPopover: false,
+                valid: false,
                 message: null
             }
         };
+
+        this.usernameInput = createRef();
+        this.emailInput = createRef();
+        this.passwordInput = createRef();
+        this.confirmPasswordInput = createRef();
     }
 
     validateForm() {
         let success = true;
 
-        const email = ReactDOM.findDOMNode(this.email).value;
+        const email = this.emailInput.current.value;
         const emailPattern = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
 
-        if (email == "") {
+        if (email === "") {
             this.setState({
                 email: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Поле должно быть заполнено"
                 }
             });
@@ -54,8 +55,7 @@ class Registration extends React.Component {
         } else if (!emailPattern.test(email)) {
             this.setState({
                 email: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Неправильный формат электронной почты"
                 }
             });
@@ -63,29 +63,26 @@ class Registration extends React.Component {
         } else {
             this.setState({
                 email: {
-                    validationState: "success",
-                    showPopover: false
+                    valid: true
                 }
             });
         }
 
-        const password = ReactDOM.findDOMNode(this.password).value;
-        const confirmPassword = ReactDOM.findDOMNode(this.confirmPassword).value;
+        const password = this.passwordInput.current.value;
+        const confirmPassword = this.confirmPasswordInput.current.value;
 
-        if (password == "") {
+        if (password === "") {
             this.setState({
                 password: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Поле должно быть заполнено"
                 }
             });
             success = false;
-        } else if (confirmPassword != "" && password !== confirmPassword) {
+        } else if (confirmPassword !== "" && password !== confirmPassword) {
             this.setState({
                 password: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Пароли должны совпадать"
                 }
             });
@@ -93,26 +90,23 @@ class Registration extends React.Component {
         } else {
             this.setState({
                 password: {
-                    validationState: "success",
-                    showPopover: false
+                    valid: true
                 }
             });
         }
 
-        if (confirmPassword == "") {
+        if (confirmPassword === "") {
             this.setState({
                 confirmPassword: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Поле должно быть заполнено"
                 }
             });
             success = false;
-        } else if (password != "" && password !== confirmPassword) {
+        } else if (password !== "" && password !== confirmPassword) {
             this.setState({
                 confirmPassword: {
-                    validationState: "error",
-                    showPopover: true,
+                    valid: false,
                     message: "Пароли должны совпадать"
                 }
             });
@@ -120,12 +114,12 @@ class Registration extends React.Component {
         } else {
             this.setState({
                 confirmPassword: {
-                    validationState: "success",
-                    showPopover: false
+                    valid: true
                 }
             });
         }
 
+        this.setState({checked: true});
         return success;
     }
 
@@ -135,168 +129,155 @@ class Registration extends React.Component {
         if (this.validateForm()) {
             this.setState({disableSubmit: true});
 
-            const username = ReactDOM.findDOMNode(this.username).value;
-            const password = ReactDOM.findDOMNode(this.password).value;
-            const email = ReactDOM.findDOMNode(this.email).value;
-
             Client.post("/api/user/registration", {
-                username: username,
-                password: password,
-                email: email
+                username: this.usernameInput.current.value,
+                password: this.passwordInput.current.value,
+                email: this.emailInput.current.value
             }).then(() => {
-                this.setState({disableSubmit: false, showSuccessModal: true, modalTitle: "Успех!"});
+                this.setState({
+                    disableSubmit: false,
+                    showModal: true,
+                    errorModal: false,
+                    modalText: "Регистрация прошла успешно!\nДля завершения необходимо подтвердить электронную почту."
+                });
             }).catch((error) => {
                 const response = error.response.data;
                 if (response.validationErrors) {
                     response.validationErrors.forEach(error => {
-                        if (error.field == "email") {
+                        if (error.field === "email") {
                             this.setState({
                                 email: {
-                                    validationState: "error",
+                                    valid: false,
                                     message: error.message,
                                     showPopover: true
                                 }
                             });
                         }
                     });
-                } else if (response.errorMessage) {
+                } else {
                     this.setState({
-                        showErrorModal: true,
-                        modalErrorText: response.errorMessage
+                        showModal: true,
+                        errorModal: true,
+                        modalText: response.message ? response.message : "Неизвестная ошибка \n ¯\\_(ツ)_/¯"
                     });
                 }
 
-                this.setState({
-                    disableSubmit: false
-                });
+                this.setState({disableSubmit: false});
             });
         }
     }
 
-    hideSuccessModal() {
-        this.setState({showSuccessModal: false});
-        browserHistory["replace"]("/");
+    hideModal() {
+        this.setState({showModal: false});
+
+        // Complete successful registration
+        if (!this.state.errorModal) {
+            this.props.history.replace("/");
+        }
     }
 
-    hideErrorModal() {
-        this.setState({showErrorModal: false});
+    splitTextLines(text) {
+        if (text) {
+            return text.split("\n").map((text, index) => (
+                <Fragment key={`${text}-${index}`}>
+                    {text}
+                    <br/>
+                </Fragment>)
+            )
+        }
     }
 
     render() {
-        let title = "Регистрация";
-
         return <div className="registration-body">
-            <Panel>
-                <Panel.Heading>{title}</Panel.Heading>
-                <Panel.Body>
-                    <form>
-                        <FormGroup onSubmit={this.sendRegistration.bind(this)}>
-                            <Row>
-                                <Col md={2}/>
-                                <Col md={8}>
-                                    <FormGroup validationState={this.state.email.validationState}>
-                                        <ControlLabel>Email <span style={{color: "red"}}>*</span></ControlLabel>
-                                        <Overlay show={this.state.email.showPopover} target={this.email} placement="left">
-                                            <Popover id="emailPopover" className="registration-popover">
-                                                {this.state.email.message}
-                                            </Popover>
-                                        </Overlay>
+            <Card>
+                <Card.Header>Регистрация</Card.Header>
+                <Card.Body>
+                    <Form>
+                        <Row>
+                            <Col md={2}/>
+                            <Col md={8}>
+                                <ValidatedForm label="Email"
+                                               inputRef={this.emailInput}
+                                               checked={this.state.checked}
+                                               valid={this.state.email.valid}
+                                               message={this.state.email.message}/>
+                            </Col>
+                        </Row>
 
-                                        <FormControl ref={email => {
-                                            this.email = email
-                                        }} type="email"/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                        <Row>
+                            <Col md={2}/>
+                            <Col md={8}>
+                                <ValidatedForm label="Пароль"
+                                               inputRef={this.passwordInput}
+                                               checked={this.state.checked}
+                                               valid={this.state.password.valid}
+                                               message={this.state.password.message}/>
+                            </Col>
+                        </Row>
 
-                            <Row>
-                                <Col md={2}/>
-                                <Col md={8}>
-                                    <FormGroup validationState={this.state.password.validationState}>
-                                        <ControlLabel>Пароль <span style={{color: "red"}}>*</span></ControlLabel>
-                                        <Overlay show={this.state.password.showPopover} target={this.password} placement="left">
-                                            <Popover id="passwordPopover" className="registration-popover">
-                                                {this.state.password.message}
-                                            </Popover>
-                                        </Overlay>
+                        <Row>
+                            <Col md={2}/>
+                            <Col md={8}>
+                                <ValidatedForm label="Повторите пароль"
+                                               inputRef={this.confirmPasswordInput}
+                                               checked={this.state.checked}
+                                               valid={this.state.confirmPassword.valid}
+                                               message={this.state.confirmPassword.message}/>
+                            </Col>
+                        </Row>
 
-                                        <FormControl ref={password => {
-                                            this.password = password
-                                        }} type="password"/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                        <Row>
+                            <Col md={2}/>
+                            <Col md={8}>
+                                <Form.Group>
+                                    <Form.Label>Никнейм</Form.Label>
+                                    <Form.Control ref={this.usernameInput} type="text"/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
 
-                            <Row>
-                                <Col md={2}/>
-                                <Col md={8}>
-                                    <FormGroup validationState={this.state.confirmPassword.validationState}>
-                                        <ControlLabel>Повторите пароль <span
-                                            style={{color: "red"}}>*</span></ControlLabel>
-                                        <Overlay show={this.state.confirmPassword.showPopover}
-                                                 target={this.confirmPassword} placement="left">
-                                            <Popover id="confirmPasswordPopover" className="registration-popover">
-                                                {this.state.confirmPassword.message}
-                                            </Popover>
-                                        </Overlay>
-
-                                        <FormControl ref={confirmPassword => {
-                                            this.confirmPassword = confirmPassword
-                                        }} type="password"/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={2}/>
-                                <Col md={8}>
-                                    <FormGroup>
-                                        <ControlLabel>Никнейм</ControlLabel>
-                                        <FormControl ref={username => {
-                                            this.username = username
-                                        }} type="text" autoFocus/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                        </FormGroup>
-
-                        <Button className="center-block" disabled={this.state.disableSubmit} type="submit" bsStyle="success"
-                                onClick={this.sendRegistration.bind(this)}>Отправить</Button>
-                    </form>
+                        <Row className="justify-content-center">
+                            <Button disabled={this.state.disableSubmit} type="submit" variant="success"
+                                    onClick={this.sendRegistration.bind(this)}>Отправить</Button>
+                        </Row>
+                    </Form>
 
                     <hr/>
 
                     <Oauth/>
-                </Panel.Body>
-            </Panel>
+                </Card.Body>
+            </Card>
 
-            <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)}>
+            <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{this.state.modalTitle}</Modal.Title>
+                    <Modal.Title>{this.state.errorModal ? "Ошибка!" : "Успех!"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div>
-                        <div className="text-center">Регистрация прошла успешно!</div>
-                        <div className="text-center">Для завершения необходимо подтвердить электронную почту.</div>
-                        <br/>
-                    </div>
-                    <Button type="submit" className="center-block"
-                            onClick={this.hideSuccessModal.bind(this)}>ОК</Button>
-                </Modal.Body>
-            </Modal>
-
-            <Modal show={this.state.showErrorModal} onHide={this.hideErrorModal.bind(this)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Ошибка!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="text-center">{this.state.modalErrorText}</div>
+                    <div className="text-center">{this.splitTextLines(this.state.modalText)}</div>
                     <br/>
-                    <Button type="submit" bsStyle="warning" className="center-block"
-                            onClick={this.hideErrorModal.bind(this)}>ОК</Button>
+                    <Row className="justify-content-center">
+                        <Button variant={this.state.errorModal ? "danger" : "success"}
+                                onClick={this.hideModal.bind(this)}>ОК</Button>
+                    </Row>
                 </Modal.Body>
             </Modal>
         </div>
+    }
+}
+
+class ValidatedForm extends React.Component {
+
+    render() {
+        const {label, inputRef, checked, valid, message} = this.props;
+        const className = checked ? (valid ? "is-valid" : "is-invalid") : undefined;
+
+        return <>
+            <Form.Group>
+                <Form.Label>{label}<span style={{color: "red"}}> *</span></Form.Label>
+                <Form.Control ref={inputRef} className={className}/>
+                <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
+            </Form.Group>
+        </>
     }
 }
 

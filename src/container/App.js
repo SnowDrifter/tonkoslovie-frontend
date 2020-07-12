@@ -82,10 +82,10 @@ class App extends React.Component {
                     <AdminRoute path="/admin/user/:userId" component={AdminUser}/>
 
                     <Route path="/accessDenied" component={Err403}/>
-                    <Route path="/500" component={Err500}/>
                     <Route exact path="/403" component={Err403} status={403}/>
                     <Route path="/404" component={Err404} status={404}/>
                     <Redirect to="/404"/>
+                    <Route path="/not_available" component={Err500}/>
                 </Switch>
             </Container>
         )
