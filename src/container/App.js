@@ -28,7 +28,7 @@ import Registration from "../component/registration/Registration";
 import Home from "./Home";
 import AdminLesson from "../component/admin/AdminLesson";
 import Text from "../component/content/Text";
-import {Redirect, Route, Switch} from "react-router-dom"
+import {Route, Switch} from "react-router-dom"
 import {Container} from "react-bootstrap"
 import Navigation from "../component/Navigation";
 import AdminRoute from "./AdminRoute";
@@ -50,7 +50,7 @@ class App extends React.Component {
                                 hideProgressBar={true}/>
 
                 <Switch>
-                    <Route exact path="/" component={Home}/>
+                    <Route path="/" component={Home} exact/>
                     <Route path="/lessons" component={Lessons}/>
                     <Route path="/lesson/:lessonId" component={Lesson}/>
                     <Route path="/text/:textId" component={Text}/>
@@ -67,25 +67,23 @@ class App extends React.Component {
                     <AdminRoute path="/admin" component={Admin} exact/>
                     <AdminRoute path="/admin/words" component={AdminWords}/>
                     <AdminRoute path="/admin/texts" component={AdminTexts}/>
-                    <AdminRoute path="/admin/text/:textId" component={AdminText} exact/>
-                    <AdminRoute path="/admin/text" component={AdminText} exact/>
+                    <AdminRoute path="/admin/text/:textId" component={AdminText}/>
+                    <AdminRoute path="/admin/text" component={AdminText}/>
                     <AdminRoute path="/admin/lessons" component={AdminLessons}/>
                     <AdminRoute path="/admin/lesson/:lessonId" component={AdminLesson}/>
                     <AdminRoute path="/admin/lesson" component={AdminLesson}/>
                     <AdminRoute path="/admin/exercises" component={AdminExercises}/>
                     <AdminRoute path="/admin/exercise/:exerciseId" component={AdminExercise}/>
-                    <AdminRoute path="/admin/exercise" component={AdminExercise} exact/>
+                    <AdminRoute path="/admin/exercise" component={AdminExercise}/>
                     <AdminRoute path="/admin/themes" component={AdminThemes}/>
                     <AdminRoute path="/admin/theme/:themeId" component={AdminTheme}/>
                     <AdminRoute path="/admin/theme" component={AdminTheme}/>
                     <AdminRoute path="/admin/users" component={AdminUsers}/>
                     <AdminRoute path="/admin/user/:userId" component={AdminUser}/>
 
-                    <Route path="/accessDenied" component={Err403}/>
-                    <Route exact path="/403" component={Err403} status={403}/>
-                    <Route path="/404" component={Err404} status={404}/>
-                    <Redirect to="/404"/>
+                    <Route path="/access_denied" component={Err403} status={403}/>
                     <Route path="/not_available" component={Err500}/>
+                    <Route path="*" component={Err404} status={404}/>
                 </Switch>
             </Container>
         )
