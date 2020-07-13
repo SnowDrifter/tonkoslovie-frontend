@@ -17,7 +17,6 @@ class Registration extends React.Component {
 
             password: {
                 valid: false,
-                showPopover: false,
                 message: null
             },
 
@@ -148,8 +147,7 @@ class Registration extends React.Component {
                             this.setState({
                                 email: {
                                     valid: false,
-                                    message: error.message,
-                                    showPopover: true
+                                    message: error.message
                                 }
                             });
                         }
