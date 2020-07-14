@@ -1,8 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import {Button, Checkbox, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
+import React, {createRef} from "react";
+import {Breadcrumb, Button, Form, Jumbotron, Card} from "react-bootstrap";
 import Loader from "../../component/Loader";
-import {Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import Client from "../../util/Client";
 import {toast} from "react-toastify";
 import RoleUtil from "../../util/RoleUtil";
@@ -13,13 +12,18 @@ class AdminUser extends React.Component {
         super(props);
 
         this.state = {
-            id: this.props.params.userId,
+            id: this.props.computedMatch.params.userId,
             enabled: false,
             admin: false,
             loaded: false
         };
 
-        this.loadUser(this.props.params.userId);
+        this.firstNameInput = createRef();
+        this.lastNameInput = createRef();
+        this.usernameInput = createRef();
+        this.emailInput = createRef();
+
+        this.loadUser(this.props.computedMatch.params.userId);
     }
 
     loadUser(userId) {
@@ -36,20 +40,20 @@ class AdminUser extends React.Component {
                 loaded: true
             });
 
-            ReactDOM.findDOMNode(this.firstName).value = user.firstName || "";
-            ReactDOM.findDOMNode(this.lastName).value = user.lastName || "";
-            ReactDOM.findDOMNode(this.username).value = user.username || "";
-            ReactDOM.findDOMNode(this.email).value = user.email;
+            this.firstNameInput.current.value = user.firstName || "";
+            this.lastNameInput.current.value = user.lastName || "";
+            this.usernameInput.current.value = user.username || "";
+            this.emailInput.current.value = user.email;
         })
     }
 
     saveUser() {
         Client.post("/api/user/update", {
             id: this.state.id,
-            firstName: ReactDOM.findDOMNode(this.firstName).value,
-            lastName: ReactDOM.findDOMNode(this.lastName).value,
-            username: ReactDOM.findDOMNode(this.username).value,
-            email: ReactDOM.findDOMNode(this.email).value,
+            firstName: this.firstNameInput.current.value,
+            lastName: this.lastNameInput.current.value,
+            username: this.usernameInput.current.value,
+            email: this.emailInput.current.value,
             roles: this.createRoles(),
             enabled: this.state.enabled
         }).then(() => {
@@ -76,63 +80,46 @@ class AdminUser extends React.Component {
     }
 
     render() {
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb">
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/users">Пользователи</Link></li>
-                    <li>{"Пользователь № " + (this.state.id)}</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer exact to="/admin/users"><Breadcrumb.Item>Пользователи</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item
+                        active>{"Пользователь № " + (this.state.id)}</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <Jumbotron>
-                    <FormGroup>
-                        <ControlLabel><h4>Имя</h4></ControlLabel>
-                        <FormControl
-                            inputRef={firstName => {
-                                this.firstName = firstName
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h4>Имя</h4></Form.Label>
+                        <Form.Control ref={this.firstNameInput}/>
+                    </Form.Group>
 
-                    <FormGroup>
-                        <ControlLabel><h4>Фамилия</h4></ControlLabel>
-                        <FormControl
-                            inputRef={lastName => {
-                                this.lastName = lastName
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h4>Фамилия</h4></Form.Label>
+                        <Form.Control ref={this.lastNameInput}/>
+                    </Form.Group>
 
-                    <FormGroup>
-                        <ControlLabel><h4>Никнейм</h4></ControlLabel>
-                        <FormControl
-                            inputRef={username => {
-                                this.username = username
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h4>Никнейм</h4></Form.Label>
+                        <Form.Control ref={this.usernameInput}/>
+                    </Form.Group>
 
-                    <FormGroup>
-                        <ControlLabel><h4>Почта</h4></ControlLabel>
-                        <FormControl
-                            inputRef={email => {
-                                this.email = email
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h4>Почта</h4></Form.Label>
+                        <Form.Control ref={this.emailInput}/>
+                    </Form.Group>
 
-                    <Checkbox checked={this.state.admin} onChange={this.toggleAdmin.bind(this)}>
-                        Администратор
-                    </Checkbox>
+                    <Form.Check type="checkbox" checked={this.state.admin}
+                                onChange={this.toggleAdmin.bind(this)} label="Администратор"/>
 
-                    <Checkbox checked={this.state.enabled} onChange={this.toggleEnabled.bind(this)}>
-                        Активный
-                    </Checkbox>
+                    <Form.Check type="checkbox" checked={this.state.enabled}
+                                onChange={this.toggleEnabled.bind(this)} label="Активный"/>
                 </Jumbotron>
 
-                <Button onClick={this.saveUser.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-            </Panel.Body>
-        </Panel>;
+                <Button onClick={this.saveUser.bind(this)} className="float-right" variant="success">Сохранить</Button>
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
@@ -141,6 +128,5 @@ class AdminUser extends React.Component {
         }
     }
 }
-
 
 export default AdminUser;
