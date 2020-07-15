@@ -3,8 +3,8 @@ import Client from "../../util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import Loader from "../../component/Loader";
-import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
-import {BsPencil, BsX} from "react-icons/bs";
+import {Breadcrumb, Button, Card} from "react-bootstrap";
+import EditRemoveButtons from "../../component/admin/EditRemoveButtons";
 
 
 class AdminExercises extends React.Component {
@@ -98,18 +98,9 @@ class AdminExercises extends React.Component {
                         <Column
                             cell={({rowIndex}) => (
                                 <Cell>
-                                    <ButtonToolbar>
-                                        <ButtonGroup>
-                                            <Button size="small" variant="secondary"
-                                                    onClick={() => this.editExercise(exercises[rowIndex])}>
-                                                <BsPencil/>
-                                            </Button>
-                                            <Button size="small" variant="danger" className="pull-right"
-                                                    onClick={() => this.deleteLExercise(exercises[rowIndex].id)}>
-                                                <BsX/>
-                                            </Button>
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
+                                    <EditRemoveButtons
+                                        edit={() => this.editExercise(exercises[rowIndex])}
+                                        remove={() => this.deleteLExercise(exercises[rowIndex].id)}/>
                                 </Cell>
                             )}
                             width={100}

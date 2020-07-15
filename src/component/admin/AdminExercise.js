@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import {Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Jumbotron, Panel} from "react-bootstrap";
+import React, {createRef} from "react";
+import {Breadcrumb, Button, ButtonToolbar, Form, Jumbotron, Card} from "react-bootstrap";
 import Client from "../../util/Client";
+import {LinkContainer} from "react-router-bootstrap";
 import * as  exerciseTypes from "../content/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -32,6 +32,10 @@ class AdminExercise extends React.Component {
         if (this.props.computedMatch.params.exerciseId) {
             this.loadExercise(this.props.computedMatch.params.exerciseId)
         }
+
+        this.typeInput = createRef();
+        this.titleInput = createRef();
+        this.answerRegexInput = createRef();
 
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
         this.handleDictionaryChange = this.handleDictionaryChange.bind(this);
@@ -74,9 +78,9 @@ class AdminExercise extends React.Component {
                 loaded: true
             });
 
-            ReactDOM.findDOMNode(this.type).value = exercise.type;
-            ReactDOM.findDOMNode(this.title).value = exercise.title;
-            ReactDOM.findDOMNode(this.answerRegex).value = exercise.answerRegex;
+            this.typeInput.current.value = exercise.type;
+            this.titleInput.current.value = exercise.title;
+            this.answerRegexInput.current.value = exercise.answerRegex;
         })
     }
 
@@ -84,17 +88,17 @@ class AdminExercise extends React.Component {
         const answers = [];
 
         for (let i = 0; i < this.state.answersCount; i++) {
-            answers.push(ReactDOM.findDOMNode(this["answer-" + i]).value);
+            answers.push(this["answer-" + i].current.value);
         }
 
         Client.post("/api/content/exercise", {
             id: this.state.id,
-            title: ReactDOM.findDOMNode(this.title).value,
+            title: this.titleInput.current.value,
             original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
             dictionary: draftToHtml(convertToRaw(this.state.dictionary.getCurrentContent())),
             answers: answers,
-            type: ReactDOM.findDOMNode(this.type).value,
-            answerRegex: ReactDOM.findDOMNode(this.answerRegex).value
+            type: this.typeInput.current.value,
+            answerRegex: this.answerRegexInput.current.value
         }).then(response => {
             this.setState({
                 id: response.data.id,
@@ -139,75 +143,66 @@ class AdminExercise extends React.Component {
         const answersCount = this.state.answersCount;
 
         for (let i = 0; i < answersCount; i++) {
-            answerForms.push(<FormControl className="admin-exercise-answer-form" key={i} ref={part => {
-                    this["answer-" + i] = part
-                }} defaultValue={this.state.answers[i] || ""}/>
+            this["answer-" + i] = createRef();
+
+            answerForms.push(<Form.Control className="admin-exercise-answer-form" key={i} ref={this["answer-" + i]}
+                                          defaultValue={this.state.answers[i] || ""}/>
             );
         }
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb">
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/exercises">Упражнения</Link></li>
-                    <li>{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer exact to="/admin/exercises"><Breadcrumb.Item>Упражнения</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item
+                        active>{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <Jumbotron>
-                    <FormGroup>
-                        <ControlLabel><h3>Заголовок</h3></ControlLabel>
-                        <FormControl
-                            inputRef={title => {
-                                this.title = title
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h3>Заголовок</h3></Form.Label>
+                        <Form.Control ref={this.titleInput}/>
+                    </Form.Group>
 
                     <h3>Оригинал</h3>
-                    <Panel>
-                        <Panel.Body>
+                    <Card>
+                        <Card.Body>
                             <Editor
                                 editorState={this.state.original}
                                 onEditorStateChange={this.handleOriginalChange}
                             />
-                        </Panel.Body>
-                    </Panel>
+                        </Card.Body>
+                    </Card>
 
                     <h3>Словарь</h3>
-                    <Panel>
-                        <Panel.Body>
+                    <Card>
+                        <Card.Body>
                             <Editor
                                 editorState={this.state.dictionary}
                                 onEditorStateChange={this.handleDictionaryChange}
                             />
-                        </Panel.Body>
-                    </Panel>
+                        </Card.Body>
+                    </Card>
 
-                    <FormGroup>
-                        <FormControl componentClass="select" ref={part => {
-                            this["type"] = part
-                        }}>
-                        <ControlLabel><h3>Вариант перевода</h3></ControlLabel>
+                    <Form.Group>
+                        <Form.Label><h3>Вариант перевода</h3></Form.Label>
+                        <Form.Control as="select" ref={this["typeInput"]}>
                             <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
                             <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
-                        </FormControl>
-                    </FormGroup>
+                        </Form.Control>
+                    </Form.Group>
 
-                    <FormGroup>
-                        <ControlLabel><h3>Регулярное выражение для проверки ответов</h3></ControlLabel>
-                        <FormControl
-                            componentClass="textarea"
-                            inputRef={answerRegex => {
-                                this.answerRegex = answerRegex
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Label><h3>Регулярное выражение для проверки ответов</h3></Form.Label>
+                        <Form.Control as="textarea" ref={this.answerRegexInput}/>
+                    </Form.Group>
 
                     <div className="admin-exercise-answer-panel">
-                        <FormGroup>
-                            <ControlLabel><h3>Ответы</h3></ControlLabel>
+                        <Form.Group>
+                            <Form.Label><h3>Ответы</h3></Form.Label>
                             {answerForms}
-                        </FormGroup>
+                        </Form.Group>
                         <ButtonToolbar>
                             <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
                             <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
@@ -215,10 +210,10 @@ class AdminExercise extends React.Component {
                     </div>
                 </Jumbotron>
 
-                <Button bsStyle="success" className="pull-right"
+                <Button variant="success" className="float-right"
                         onClick={this.saveExercise.bind(this)}>Сохранить</Button>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
