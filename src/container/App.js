@@ -27,7 +27,7 @@ import Themes from "./content/Themes";
 import Registration from "../component/registration/Registration";
 import Home from "./Home";
 import AdminLesson from "../component/admin/AdminLesson";
-import Text from "../component/content/Text";
+import Text from "../component/content/text/Text";
 import {Route, Switch} from "react-router-dom"
 import {Container} from "react-bootstrap"
 import Navigation from "../component/Navigation";

@@ -1,7 +1,6 @@
 import React from "react";
 import {Jumbotron, PageHeader, Panel} from "react-bootstrap";
 import Client from "../../util/Client";
-import "./Text.less"
 import Helmet from "react-helmet";
 import Loader from "../Loader";
 import ExerciseComponent from "./ExerciseComponent";
