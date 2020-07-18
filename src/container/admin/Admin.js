@@ -1,6 +1,7 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {Card} from "react-bootstrap";
+import {LinkContainer} from "react-router-bootstrap";
+import {Card, ListGroup} from "react-bootstrap";
+import "./Admin.less"
 
 class Admin extends React.Component {
 
@@ -8,13 +9,38 @@ class Admin extends React.Component {
         return <Card>
             <Card.Header className="text-center"><h2>Админка</h2></Card.Header>
             <Card.Body>
-                <Link to="/admin/lessons"><h3>Уроки</h3></Link>
-                <Link to="/admin/texts"><h3>Тексты</h3></Link>
-                <Link to="/admin/words"><h3>Слова</h3></Link>
-                <Link to="/admin/exercises"><h3>Упражнения</h3></Link>
-                <Link to="/admin/themes"><h3>Темы упражнений</h3></Link>
-                <hr/>
-                <Link to="/admin/users"><h3>Пользователи</h3></Link>
+                <ListGroup>
+                    <LinkContainer to="/admin/lessons">
+                        <ListGroup.Item className="admin-menu-item">
+                            Уроки
+                        </ListGroup.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/texts">
+                        <ListGroup.Item className="admin-menu-item">
+                            Тексты
+                        </ListGroup.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/words">
+                        <ListGroup.Item className="admin-menu-item">
+                            Слова
+                        </ListGroup.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/exercises">
+                        <ListGroup.Item className="admin-menu-item">
+                            Упражнения
+                        </ListGroup.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/themes">
+                        <ListGroup.Item className="admin-menu-item">
+                            Темы упражнений
+                        </ListGroup.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/users">
+                        <ListGroup.Item className="admin-menu-item">
+                            Пользователи
+                        </ListGroup.Item>
+                    </LinkContainer>
+                </ListGroup>
             </Card.Body>
         </Card>
     }
