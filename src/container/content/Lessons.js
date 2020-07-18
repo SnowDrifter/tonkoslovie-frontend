@@ -1,8 +1,8 @@
 import React from "react";
 import Client from "../../util/Client";
-import {Image, Panel} from "react-bootstrap";
+import {Image, Card} from "react-bootstrap";
 import Helmet from "react-helmet";
-import {Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import Loader from "../../component/Loader";
 import "./Lessons.less";
 
@@ -44,28 +44,28 @@ class Lessons extends React.Component {
                                                          thumbnail/> : null;
 
             lessonPreviews.push(
-                <Link className="lesson" key={index} to={"/lesson/" + lesson.id}>
-                    <li>
+                <LinkContainer to={"/lesson/" + lesson.id} key={index}>
+                    <li className="lesson">
                         {preview}
-
                         <h3 className="lesson-title">{lesson.title}</h3>
                         <p className="lesson-annotation">{lesson.annotation}</p>
+                        <hr/>
                     </li>
-                    <hr/>
-                </Link>)
+                </LinkContainer>
+            )
         });
 
         const body = <div>
             <Helmet title="Уроки | Тонкословие"/>
 
-            <Panel>
-                <Panel.Heading>Уроки</Panel.Heading>
-                <Panel.Body>
+            <Card>
+                <Card.Header>Уроки</Card.Header>
+                <Card.Body>
                     <ul className="lessons-list">
                         {lessonPreviews}
                     </ul>
-                </Panel.Body>
-            </Panel>
+                </Card.Body>
+            </Card>
         </div>;
 
         if (this.state.loaded) {

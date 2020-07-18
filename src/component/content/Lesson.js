@@ -1,10 +1,11 @@
 import React from "react";
 import Client from "../../util/Client";
-import {Jumbotron, ListGroup, PageHeader, Panel} from "react-bootstrap";
+import {Jumbotron, ListGroup, Card} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import {Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import Loader from "../Loader";
+import "./Lesson.less"
 
 class Lesson extends React.Component {
 
@@ -20,7 +21,7 @@ class Lesson extends React.Component {
             failed: false
         };
 
-        this.loadLesson(this.props.computedMatch.params.lessonId);
+        this.loadLesson(props.match.params.lessonId);
     }
 
     loadLesson(lessonId) {
@@ -51,7 +52,11 @@ class Lesson extends React.Component {
 
         let texts = [];
         sortedTexts.map((text, index) => {
-            texts.push(<Link key={index} className="list-group-item" to={"/text/" + text.id}>{text.title}</Link>);
+            texts.push(
+                <LinkContainer key={index} className="list-group-item" to={"/text/" + text.id}>
+                    <span>{text.title}</span>
+                </LinkContainer>
+            );
         });
 
         if (texts.length > 0) {
@@ -68,16 +73,15 @@ class Lesson extends React.Component {
         const title = `${this.state.title} | Тонкословие`;
         const textList = this.createTextList();
 
-        let body = <Panel>
-            <Panel.Body>
-                <Helmet title={title}/>
-                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
+        let body = <Card>
+            <Helmet title={title}/>
+            <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
 
-                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}></div>
-
+            <Card.Body>
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}/>
                 {textList}
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
