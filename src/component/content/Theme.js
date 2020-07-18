@@ -1,5 +1,5 @@
 import React from "react";
-import {Jumbotron, PageHeader, Panel} from "react-bootstrap";
+import {Card, Jumbotron} from "react-bootstrap";
 import Client from "../../util/Client";
 import Helmet from "react-helmet";
 import Loader from "../Loader";
@@ -24,8 +24,8 @@ class Theme extends React.Component {
             failed: false
         };
 
-        if (this.props.computedMatch.params.themeId) {
-            this.loadTheme(this.props.computedMatch.params.themeId)
+        if (props.match.params.themeId) {
+            this.loadTheme(props.match.params.themeId)
         }
 
         this.nextExercise = this.nextExercise.bind(this);
@@ -144,11 +144,12 @@ class Theme extends React.Component {
     render() {
         let title = this.state.title + " | Тонкословие";
 
-        let body = <Panel>
-            <Panel.Body>
-                <span className="pull-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
+        let body = <Card>
+            <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
+
+            <Card.Body>
+                <span className="float-right">{"Выполнено " + this.state.solvedExerciseCount + "/" + this.state.exercises.length}</span>
                 <Helmet title={title}/>
-                <PageHeader style={{textAlign: "center"}}>{this.state.title}</PageHeader>
                 <ExerciseComponent nextExercise={this.nextExercise}
                                    exercise={this.state.currentExercise}
                                    addSolvedExercise={this.addSolvedExercise}/>
@@ -158,8 +159,8 @@ class Theme extends React.Component {
                                     confirmFunction={this.removeProgress}
                                     negativeFunction={this.backToThemesPage}
                                     modalTitle="Новые упражнения закончились, начать заново?"/>
-            </Panel.Body>
-        </Panel>;
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;

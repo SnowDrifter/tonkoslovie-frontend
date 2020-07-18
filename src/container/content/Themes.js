@@ -1,12 +1,12 @@
 import React from "react";
 import Client from "../../util/Client";
-import {Panel} from "react-bootstrap";
+import {Card, ListGroup} from "react-bootstrap";
 import Helmet from "react-helmet";
-import {Link} from "react-router";
+import {LinkContainer} from "react-router-bootstrap";
 import Loader from "../../component/Loader";
 import "./Themes.less"
 
-class ExercisesThemes extends React.Component {
+class Themes extends React.Component {
 
     constructor(props) {
         super(props);
@@ -31,36 +31,34 @@ class ExercisesThemes extends React.Component {
             });
     }
 
+    createThemePreviews() {
+        return this.state.themes
+            .sort(function (a, b) {
+                return a.title.localeCompare(b.title);
+            })
+            .map((theme, index) => {
+                return <LinkContainer exact to={"/theme/" + theme.id}
+                                      className="theme-title"
+                                      key={index}>
+                    <ListGroup.Item>
+                        {theme.title}
+                    </ListGroup.Item>
+                </LinkContainer>
+            });
+    }
+
     render() {
-        let themePreviews = [];
+        const themePreviews = this.createThemePreviews();
 
-        const themes = this.state.themes.sort(function (a, b) {
-            return a.title.localeCompare(b.title);
-        });
-
-        themes.map((theme, index) => {
-
-            themePreviews.push(
-                // TODO: temp url
-                <Link key={index} to={"/theme/" + theme.id}>
-                    <li>
-                        <h3 className="lesson-title">{theme.title}</h3>
-                    </li>
-                </Link>)
-        });
-
-        const body = <div>
+        const body = <Card>
             <Helmet title="Темы упражнений | Тонкословие"/>
-
-            <Panel>
-                <Panel.Heading>Темы упражнений</Panel.Heading>
-                <Panel.Body>
-                    <ul className="exercise-theme-list">
-                        {themePreviews}
-                    </ul>
-                </Panel.Body>
-            </Panel>
-        </div>;
+            <Card.Header>Темы упражнений</Card.Header>
+            <Card.Body>
+                <ListGroup>
+                    {themePreviews}
+                </ListGroup>
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
@@ -70,4 +68,4 @@ class ExercisesThemes extends React.Component {
     }
 }
 
-export default ExercisesThemes;
+export default Themes;
