@@ -5,8 +5,8 @@ import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "../../component/Loader";
 import RoleUtil from "../../util/RoleUtil";
-import {Breadcrumb, Button, ButtonGroup, ButtonToolbar, Card} from "react-bootstrap";
-import {BsPencil} from "react-icons/bs";
+import {Breadcrumb, Card} from "react-bootstrap";
+import EditButton from  "../../component/admin/EditButton"
 
 
 const dateOptions = {
@@ -49,7 +49,7 @@ class AdminUsers extends React.Component {
     }
 
     formatDate(time) {
-        if (time != undefined) {
+        if (time !== undefined) {
             const date = new Date(time);
             return date.toLocaleString("ru", dateOptions);
         } else {
@@ -151,14 +151,7 @@ class AdminUsers extends React.Component {
                         <Column
                             cell={({rowIndex}) => (
                                 <Cell>
-                                    <ButtonToolbar>
-                                        <ButtonGroup>
-                                            <Button size="small"
-                                                    onClick={() => this.editUser(users[rowIndex])}>
-                                                <BsPencil/>
-                                            </Button>
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
+                                    <EditButton action={() => this.editUser(users[rowIndex])}/>
                                 </Cell>
                             )}
                             width={50}

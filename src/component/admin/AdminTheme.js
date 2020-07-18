@@ -1,9 +1,11 @@
 import React, {createRef} from "react";
 import {withRouter} from "react-router-dom";
+import {LinkContainer} from "react-router-bootstrap";
 import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ListGroupItem} from "react-bootstrap";
 import Loader from "../../component/Loader";
 import Client from "../../util/Client";
 import {toast} from "react-toastify";
+import RemoveButton from "./RemoveButton";
 
 class AdminTheme extends React.Component {
 
@@ -25,7 +27,7 @@ class AdminTheme extends React.Component {
         }
 
         this.titleInput = createRef();
-        this.exerciseTitle = createRef();
+        this.exerciseTitleInput = createRef();
 
         this.removeExercise = this.removeExercise.bind(this);
         this.addExercise = this.addExercise.bind(this);
@@ -71,7 +73,7 @@ class AdminTheme extends React.Component {
     }
 
     searchExercise() {
-        let searchTitle = this.exerciseTitle.current.value;
+        let searchTitle = this.exerciseTitleInput.current.value;
 
         Client.get("/api/content/exercises/find", {
             params: {
@@ -128,10 +130,8 @@ class AdminTheme extends React.Component {
         this.state.exercises.map((exercise, index) => {
             exercises.push(<ListGroupItem variant="info" key={index}>
                 {exercise.title}
-                <Button bsSize="xsmall" variant="danger" className="pull-right"
-                        onClick={() => this.removeExercise(index)}>
-                    <Glyphicon glyph="remove"/>
-                </Button>
+                <RemoveButton className="float-right"
+                              action={() => this.removeExercise(index)}/>
             </ListGroupItem>);
         });
 
@@ -152,8 +152,8 @@ class AdminTheme extends React.Component {
         const body = <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <Breadcrumb.Item href="/admin">Главная</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/admin/themes">Темы упражнений</Breadcrumb.Item>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer exact to="/admin/themes"><Breadcrumb.Item>Темы упражнений</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item
                         active>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</Breadcrumb.Item>
                 </Breadcrumb>
@@ -176,7 +176,7 @@ class AdminTheme extends React.Component {
                                     <Form.Label>Поиск упражнения</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        ref={this.exerciseTitle}
+                                        ref={this.exerciseTitleInput}
                                         placeholder="Начните вводить данные для выбора"
                                         onChange={this.searchExercise.bind(this)}
                                     />
@@ -207,6 +207,5 @@ class AdminTheme extends React.Component {
         }
     }
 }
-
 
 export default withRouter(AdminTheme);
