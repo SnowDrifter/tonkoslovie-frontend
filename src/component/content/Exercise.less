@@ -1,14 +1,20 @@
-.exercise-showAnswer-panel {
+.exercise-show-answer-panel {
   border: none !important;
 }
 
-.exercise-showAnswer-component {
+.exercise-show-answer-component {
   min-height: 90px;
   margin-top: 10px;
 }
 
 .exercise-answer-form {
   margin-top: 10px;
+
+  .form-control.is-valid,
+  .form-control.is-invalid {
+    background-image: none;
+    padding-right: inherit;
+  }
 }
 
 @media (min-width: 767px) {

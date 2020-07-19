@@ -1,6 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import {Panel, FormGroup, FormControl, Button} from "react-bootstrap";
+import React, {createRef} from "react";
+import {Button, Card, Form} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleTextModal from "../SimpleTextModal";
@@ -11,11 +10,11 @@ class ExerciseComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        const exercise = this.props.exercise;
+        const exercise = props.exercise;
         const answersCount = exercise.answers ? exercise.answers.length : 1;
 
         let answerVariant;
-        if(exercise.answers) {
+        if (exercise.answers) {
             answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
         }
 
@@ -26,6 +25,7 @@ class ExerciseComponent extends React.Component {
             dictionary: exercise.dictionary,
             answersCount: answersCount,
             answers: exercise.answers,
+            correctUserAnswer: exercise.correctUserAnswer,
             showAnswerPanel: false,
             answerVariant: answerVariant,
             validationState: null,
@@ -33,29 +33,38 @@ class ExerciseComponent extends React.Component {
             showDictionaryModal: false
         };
 
+        this.answerInput = createRef();
+
         this.hideModals = this.hideModals.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.updateExercise(nextProps.exercise);
-        ReactDOM.findDOMNode(this.answer).value = nextProps.exercise.correctUserAnswer || "";
+    componentDidMount() {
+        this.updateExercise();
+        this.answerInput.current.value = this.state.correctUserAnswer || "";
     }
 
-    updateExercise(exercise) {
+    static getDerivedStateFromProps(props) {
+        return {
+            exercise: props.exercise
+        }
+    }
+
+    updateExercise() {
+        const exercise = this.state.exercise;
         const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-        let validationState;
+        let validationClass;
 
-        if(exercise.solved != undefined) {
-            if(exercise.solved == true) {
-                validationState = "success";
+        if (exercise.solved !== undefined) {
+            if (exercise.solved === true) {
+                validationClass = "is-valid";
             } else {
-                validationState = "error";
+                validationClass = "is-invalid";
             }
         }
 
         let answerVariant;
-        if(exercise.answers) {
+        if (exercise.answers) {
             answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
         }
 
@@ -68,22 +77,22 @@ class ExerciseComponent extends React.Component {
             answers: exercise.answers,
             showAnswerPanel: false,
             answerVariant: answerVariant,
-            validationState: validationState,
+            validationClass: validationClass,
             suggestShowAnswer: false,
             showDictionaryModal: false
         });
     }
 
     checkAnswer() {
-        const rawAnswer = ReactDOM.findDOMNode(this.answer).value;
+        const rawAnswer = this.answerInput.current.value;
         const currentAnswer = rawAnswer.trim().toLowerCase();
 
         let answerIsCorrect = false;
 
         // Try check regexp
-        if(this.props.exercise.answerRegex) {
-            if(new RegExp(this.props.exercise.answerRegex , "gi").test(currentAnswer)) {
-                this.setState({validationState: "success"});
+        if (this.props.exercise.answerRegex) {
+            if (new RegExp(this.props.exercise.answerRegex, "gi").test(currentAnswer)) {
+                this.setState({validationClass: "is-valid"});
                 answerIsCorrect = true;
                 this.props.addSolvedExercise(rawAnswer);
             }
@@ -91,15 +100,15 @@ class ExerciseComponent extends React.Component {
 
         // Try check all hardcode answers
         this.state.answers.map((answer) => {
-            if (answer.toLowerCase() == currentAnswer) {
-                this.setState({validationState: "success"});
+            if (answer.toLowerCase() === currentAnswer) {
+                this.setState({validationClass: "is-valid"});
                 answerIsCorrect = true;
                 this.props.addSolvedExercise(rawAnswer);
             }
         });
 
         if (!answerIsCorrect) {
-            this.setState({validationState: "error", suggestShowAnswer: true});
+            this.setState({validationClass: "is-invalid", suggestShowAnswer: true});
         }
     }
 
@@ -116,54 +125,56 @@ class ExerciseComponent extends React.Component {
         if (this.state.type) {
             switch (this.state.type) {
                 case exerciseTypes.RUSSIAN_TO_POLISH: {
-                    taskText = "Переведите на польский фразу: ";
+                    taskText = "Переведите на польский фразу:";
                     break;
                 }
                 case exerciseTypes.POLISH_TO_RUSSIAN: {
-                    taskText = "Переведите на русский фразу: ";
+                    taskText = "Переведите на русский фразу:";
                     break;
                 }
             }
         }
 
+        const collapseClass = this.state.showAnswerPanel ? "collapse.show" : "collapse";
+
         let showAnswerComponent;
         if (this.state.suggestShowAnswer) {
-            showAnswerComponent = <div className="exercise-showAnswer-component">
+            showAnswerComponent = <div className="exercise-show-answer-component">
                 <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>
                     Посмотреть возможный вариант ответа
                 </Button>
-                <Panel className="exercise-showAnswer-panel" collapsible expanded={this.state.showAnswerPanel}>
+                <Card className={"exercise-show-answer-panel " + collapseClass}>
                     {this.state.answerVariant}
-                </Panel>
+                </Card>
             </div>
         }
 
-        return <div>
+        return <>
             <h3>{taskText}</h3>
             <h4>
-                <div className="content"
-                     dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}/>
             </h4>
 
-            <FormGroup validationState={this.state.validationState}>
-                <FormControl
-                    className="exercise-answer-form"
-                    componentClass="textarea"
-                    inputRef={answer => {
-                        this.answer = answer
-                    }}
+            <Form.Group className="exercise-answer-form">
+                <Form.Control
+                    className={this.state.validationClass}
+                    as="textarea"
+                    ref={this.answerInput}
                     placeholder="Введите ответ"
-                    rows={4}
-                />
-            </FormGroup>
+                    rows={4}/>
+            </Form.Group>
 
-            <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)}
-                    bsStyle="success">Проверить</Button>
-            {" "}
-            <Button bsSize="large" type="submit" onClick={this.props.nextExercise.bind(this)} className="pull-right">Следующее
-                упражнение</Button>
+            <Button size="lg" onClick={this.checkAnswer.bind(this)}
+                    variant="success" style={{marginRight: "5px", marginBottom: "5px"}}>
+                Проверить
+            </Button>
+            <Button size="lg" onClick={this.props.nextExercise.bind(this)} className="float-right">
+                Следующее упражнение
+            </Button>
             <br className="exercise-button-separator"/>
-            <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>
+            <Button size="lg" onClick={this.showDictionaryModal.bind(this)}>
+                Показать словарь
+            </Button>
 
             {showAnswerComponent}
 
@@ -171,7 +182,7 @@ class ExerciseComponent extends React.Component {
                              hideModal={this.hideModals}
                              title="Словарь"
                              text={this.state.dictionary}/>
-        </div>;
+        </>;
     }
 }
 
