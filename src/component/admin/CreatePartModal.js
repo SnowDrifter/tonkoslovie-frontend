@@ -143,7 +143,7 @@ class CreatePartModal extends React.Component {
             </div>
         }
 
-        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="large">
+        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="lg">
             <Modal.Header closeButton>
                 <Modal.Title>{this.props.modalTitle}</Modal.Title>
             </Modal.Header>

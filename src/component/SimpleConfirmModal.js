@@ -11,9 +11,9 @@ class SimpleConfirmModal extends React.Component {
                 <h4 className="text-center">{this.props.modalTitle}</h4>
 
                 <div className="text-center">
-                    <Button onClick={() => this.props.confirmFunction(true)} variant="success" size="large">Да</Button>
+                    <Button onClick={() => this.props.confirmFunction(true)} variant="success" size="lg">Да</Button>
                     {" "}
-                    <Button onClick={() => this.props.negativeFunction()} size="large">Нет</Button>
+                    <Button onClick={() => this.props.negativeFunction()} size="lg">Нет</Button>
                 </div>
             </Modal.Body>
         </Modal>
