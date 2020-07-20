@@ -12,7 +12,7 @@ import {toast} from "react-toastify";
 import RemoveButton from "./RemoveButton";
 import EditRemoveButtons from "./EditRemoveButtons";
 
-class Text extends React.Component {
+class AdminText extends React.Component {
 
     constructor(props) {
         super(props);
@@ -68,9 +68,7 @@ class Text extends React.Component {
             parts: this.state.textParts ? this.state.textParts : [],
             soundFileName: this.state.soundFileName
         }).then((response) => {
-            this.setState({
-                id: response.data.id,
-            });
+            this.setState({id: response.data.id});
 
             if (!this.props.computedMatch.params.lessonId) {
                 this.props.history.push("/admin/text/" + response.data.id)
@@ -153,7 +151,7 @@ class Text extends React.Component {
         data.append("file", sound);
         data.append("textId", this.state.id);
 
-        let config = {
+        const config = {
             onUploadProgress: (progressEvent) => {
                 this.setState({progressUploadFile: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
             }
@@ -171,22 +169,21 @@ class Text extends React.Component {
     }
 
     render() {
-        let elements = [];
-
-        this.state.textParts.map((part, index) => {
-            if (part.type === partTypes.TEXT) {
-                elements.push(<TextPart key={index} index={index} data={part.data} removePart={this.removeTextPart}
-                                        editPart={this.editTextPart}/>);
-            } else if (part.type === partTypes.QUESTION) {
-                elements.push(<QuestionPart key={index} index={index} data={part.data}
-                                            removePart={this.removeTextPart} editPart={this.editTextPart}/>);
-            } else if (part.type === partTypes.CHOICE) {
-                elements.push(<ChoicePart choiceVariants={part.choiceVariants} key={index} index={index}
-                                          removePart={this.removeTextPart} editPart={this.editTextPart}/>);
-            } else if (part.type === partTypes.LINE_BREAK) {
-                elements.push(<LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>);
-            }
-        });
+        const elements = this.state.textParts
+            .map((part, index) => {
+                if (part.type === partTypes.TEXT) {
+                    return <TextPart key={index} index={index} data={part.data}
+                                     removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                } else if (part.type === partTypes.QUESTION) {
+                    return <QuestionPart key={index} index={index} data={part.data}
+                                         removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                } else if (part.type === partTypes.CHOICE) {
+                    return <ChoicePart choiceVariants={part.choiceVariants} key={index} index={index}
+                                       removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                } else if (part.type === partTypes.LINE_BREAK) {
+                    return <LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>;
+                }
+            });
 
         let soundComponent;
 
@@ -206,7 +203,7 @@ class Text extends React.Component {
                     <Form.Label><h4>Звуковая дорожка</h4></Form.Label>
                     <Form.File ref={this.soundInput}/>
                 </Form.Group>
-                <Button size="small" onClick={this.uploadSound.bind(this)}>Загрузить файл</Button>
+                <Button size="sm" onClick={this.uploadSound.bind(this)}>Загрузить файл</Button>
                 <ProgressBar striped
                              className="admin-text-progressbar"
                              style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
@@ -228,9 +225,7 @@ class Text extends React.Component {
                 <Jumbotron>
                     <Form.Group>
                         <Form.Label><h3>Заголовок</h3></Form.Label>
-                        <Form.Control
-                            ref={this.titleInput}
-                        />
+                        <Form.Control ref={this.titleInput}/>
                     </Form.Group>
 
                     {soundComponent}
@@ -309,11 +304,11 @@ class ChoicePart extends React.Component {
 
 class LineBreakPart extends React.Component {
     render() {
-        return <div className="admin-line-break-part ">
+        return <div className="admin-line-break-part">
             ¶
-            <RemoveButton remove={() => this.props.removePart()}/>
+            <RemoveButton action={() => this.props.removePart()}/>
         </div>
     }
 }
 
-export default Text;
+export default AdminText;
