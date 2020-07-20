@@ -1,31 +1,26 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef} from "react";
 import Client from "../../util/Client";
+import {LinkContainer} from "react-router-bootstrap";
 import {
+    Breadcrumb,
     Button,
-    Checkbox,
-    ControlLabel,
-    FormControl,
-    FormGroup,
-    Glyphicon,
+    Card,
+    Form,
     Jumbotron,
     ListGroup,
-    ListGroupItem,
-    Panel,
     ProgressBar
 } from "react-bootstrap";
 import Loader from "../../component/Loader";
-import {Link} from "react-router";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import {toast} from "react-toastify";
-import {browserHistory} from "react-router"
 import TagUtil from "../../util/TagUtil";
+import RemoveButton from "./RemoveButton";
 
 
-class Lesson extends React.Component {
+class AdminLesson extends React.Component {
 
     constructor(props) {
         super(props);
@@ -38,12 +33,18 @@ class Lesson extends React.Component {
             published: false,
             previewFileName: null,
             progressUploadFile: null,
-            loaded: !this.props.params.lessonId
+            loaded: !props.computedMatch.params.lessonId,
+            lessonId: props.computedMatch.params.lessonId
         };
 
-        if (this.props.params.lessonId) {
-            this.loadLesson(this.props.params.lessonId)
+        if (this.state.lessonId) {
+            this.loadLesson(this.state.lessonId)
         }
+
+        this.previewInput = createRef();
+        this.titleInput = createRef();
+        this.annotationInput = createRef();
+        this.textTitleInput = createRef();
 
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
@@ -77,16 +78,16 @@ class Lesson extends React.Component {
                 loaded: true
             });
 
-            ReactDOM.findDOMNode(this.title).value = lesson.title;
-            ReactDOM.findDOMNode(this.annotation).value = lesson.annotation || "";
+            this.titleInput.current.value = lesson.title;
+            this.annotationInput.current.value = lesson.annotation || "";
         })
     }
 
     saveLesson() {
         Client.post("/api/content/lesson", {
             id: this.state.id,
-            title: ReactDOM.findDOMNode(this.title).value,
-            annotation: ReactDOM.findDOMNode(this.annotation).value,
+            title: this.titleInput.current.value,
+            annotation: this.annotationInput.current.value,
             content: draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
             published: this.state.published,
             texts: this.state.texts || [],
@@ -96,8 +97,8 @@ class Lesson extends React.Component {
                 id: response.data.id,
             });
 
-            if (!this.props.params.lessonId) {
-                browserHistory.push("/admin/lesson/" + response.data.id)
+            if (!this.state.lessonId) {
+                this.props.history.push("/admin/lesson/" + response.data.id)
             }
 
             toast.success("Сохранено");
@@ -105,7 +106,7 @@ class Lesson extends React.Component {
     }
 
     searchText() {
-        let searchTitle = ReactDOM.findDOMNode(this.textTitle).value;
+        let searchTitle = this.textTitleInput.current.value;
 
         Client.get("/api/content/texts/find", {
             params: {
@@ -122,7 +123,7 @@ class Lesson extends React.Component {
     checkTextAlreadyAdded(text) {
         let alreadyAdded = false;
         this.state.texts.forEach(function (oldText) {
-            if (oldText.id == text.id) {
+            if (oldText.id === text.id) {
                 alreadyAdded = true;
             }
         });
@@ -131,7 +132,7 @@ class Lesson extends React.Component {
     }
 
     addText(index) {
-        let text = this.state.foundTexts[index];
+        const text = this.state.foundTexts[index];
 
         let foundTexts = this.state.foundTexts;
         foundTexts.splice(index, 1);
@@ -154,7 +155,7 @@ class Lesson extends React.Component {
 
     uploadPreviewImage() {
         const preview = this.preview.files[0];
-        if (preview == undefined) {
+        if (preview === undefined) {
             toast.error("Выберите файл");
             return;
         }
@@ -200,16 +201,13 @@ class Lesson extends React.Component {
     }
 
     render() {
-        let texts = [];
-
-        this.state.texts.map((text, index) => {
-            texts.push(<ListGroupItem bsStyle="info" key={index}>
+        let texts = this.state.texts.map((text, index) => {
+            return <ListGroup.Item key={index}
+                                   variant="info"
+                                   className="admin-lesson-text-preview">
                 {text.title}
-                <Button bsSize="xsmall" bsStyle="danger" className="pull-right"
-                        onClick={() => this.removeText(index)}>
-                    <Glyphicon glyph="remove"/>
-                </Button>
-            </ListGroupItem>);
+                <RemoveButton action={() => this.removeText(index)}/>
+            </ListGroup.Item>
         });
 
         let foundTexts = [];
@@ -217,9 +215,9 @@ class Lesson extends React.Component {
         if (this.state.foundTexts.length > 0) {
             this.state.foundTexts.map((text, index) => {
                 if (!this.checkTextAlreadyAdded(text)) {
-                    foundTexts.push(<ListGroupItem onClick={() => this.addText(index)} key={index}>
+                    foundTexts.push(<ListGroup.Item onClick={() => this.addText(index)} key={index}>
                         {text.title}
-                    </ListGroupItem>);
+                    </ListGroup.Item>);
                 }
             });
         } else {
@@ -237,102 +235,87 @@ class Lesson extends React.Component {
             </div>
         } else {
             previewComponent = <div>
-                <FormGroup>
-                    <ControlLabel><h4>Превью</h4></ControlLabel>
-                    <FormControl
-                        type="file"
-                        inputRef={preview => {
-                            this.preview = preview
-                        }}
-                    />
-                </FormGroup>
-                <Button bsSize="small" onClick={this.uploadPreviewImage.bind(this)}>Загрузить файл</Button>
+                <Form.Group>
+                    <Form.Label><h4>Превью</h4></Form.Label>
+                    <Form.Control type="file" ref={this.previewInput}/>
+                </Form.Group>
+                <Button size="sm" onClick={this.uploadPreviewImage.bind(this)}>Загрузить файл</Button>
                 <ProgressBar striped
                              className="admin-text-progressbar"
-                             active={this.state.progressUploadFile && this.state.progressUploadFile != 100}
+                             active={this.state.progressUploadFile && this.state.progressUploadFile !== 100}
                              style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
-                             bsStyle="success"
+                             variant="success"
                              now={this.state.progressUploadFile}
                              label={(this.state.progressUploadFile) + "%"}/>
             </div>
         }
 
-        const body = <Panel>
-            <Panel.Body>
-                <ul className="breadcrumb">
-                    <li><Link to="/admin">Главная</Link></li>
-                    <li><Link to="/admin/lessons">Уроки</Link></li>
-                    <li>{(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}</li>
-                </ul>
+        const body = <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer exact to="/admin/lessons"><Breadcrumb.Item>Уроки</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>
+                        {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}
+                    </Breadcrumb.Item>
+                </Breadcrumb>
 
                 <Jumbotron>
                     <h3>Заголовок</h3>
-                    <FormGroup>
-                        <FormControl
-                            inputRef={title => {
-                                this.title = title
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Control ref={this.titleInput}/>
+                    </Form.Group>
 
                     {previewComponent}
 
                     <h3>Аннотация</h3>
-                    <FormGroup>
-                        <FormControl
-                            componentClass="textarea"
-                            inputRef={annotation => {
-                                this.annotation = annotation
-                            }}
-                        />
-                    </FormGroup>
+                    <Form.Group>
+                        <Form.Control as="textarea" ref={this.annotationInput}/>
+                    </Form.Group>
 
                     <h3>Текст урока</h3>
-                    <Panel>
-                        <Panel.Body>
-                            <Editor
-                                editorState={this.state.content}
-                                toolbarClassName="toolbarClassName"
-                                wrapperClassName="wrapperClassName"
-                                editorClassName="editorClassName"
-                                onEditorStateChange={this.handTextChange}
+                    <Card>
+                        <Card.Body>
+                            <Editor editorState={this.state.content}
+                                    toolbarClassName="toolbarClassName"
+                                    wrapperClassName="wrapperClassName"
+                                    editorClassName="editorClassName"
+                                    onEditorStateChange={this.handTextChange}
                             />
-                        </Panel.Body>
-                    </Panel>
+                        </Card.Body>
+                    </Card>
 
                     <h3>Добавленные тексты</h3>
-                    <ListGroup>
+                    <ListGroup horizontal>
                         {texts}
                     </ListGroup>
 
-                    <Panel>
-                        <Panel.Body>
-                            <FormGroup>
-                                <ControlLabel>Поиск текста</ControlLabel>
-                                <FormControl
+                    <Card>
+                        <Card.Body>
+                            <Form.Group>
+                                <Form.Label>Поиск текста</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    inputRef={textTitle => {
-                                        this.textTitle = textTitle
-                                    }}
+                                    ref={this.textTitleInput}
                                     placeholder="Начните вводить данные для выбора"
                                     onChange={this.searchText.bind(this)}
                                 />
-                            </FormGroup>
+                            </Form.Group>
 
                             Варианты:
                             <ListGroup>
                                 {foundTexts}
                             </ListGroup>
-                        </Panel.Body>
-                    </Panel>
+                        </Card.Body>
+                    </Card>
 
-                    <Checkbox checked={this.state.published} onChange={this.togglePublished.bind(this)}>
-                        Опубликовать урок
-                    </Checkbox>
+                    <Form.Check type="checkbox" checked={this.state.published}
+                                onChange={this.togglePublished.bind(this)} label="Опубликовать урок"/>
                 </Jumbotron>
-                <Button onClick={this.saveLesson.bind(this)} className="pull-right" bsStyle="success">Сохранить</Button>
-            </Panel.Body>
-        </Panel>;
+                <Button onClick={this.saveLesson.bind(this)} className="float-right"
+                        variant="success">Сохранить</Button>
+            </Card.Body>
+        </Card>;
 
         if (this.state.loaded) {
             return body;
@@ -342,4 +325,4 @@ class Lesson extends React.Component {
     }
 }
 
-export default Lesson;
+export default AdminLesson;
