@@ -1,10 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {createRef} from "react";
 import Client from "../../util/Client";
-import {Panel, PageHeader, Jumbotron, FormGroup, FormControl, Button} from "react-bootstrap";
+import {Card, Jumbotron, Form, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import {browserHistory} from "react-router";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleConfirmModal from "../SimpleConfirmModal";
 import SimpleTextModal from "../SimpleTextModal";
@@ -26,13 +24,15 @@ class Exercise extends React.Component {
             loaded: false,
             failed: false,
             showAnswer: false,
-            validationState: null,
+            validationClass: null,
             suggestShowAnswer: false,
             showConfirmModal: false,
             showDictionaryModal: false
         };
 
-        this.loadExercise(this.props.params.exerciseId);
+        this.answerInput = createRef();
+
+        this.loadExercise(props.match.params.exerciseId);
 
         this.loadNextExercise = this.loadNextExercise.bind(this);
         this.hideModals = this.hideModals.bind(this);
@@ -54,7 +54,7 @@ class Exercise extends React.Component {
                 original: exercise.original,
                 dictionary: exercise.dictionary,
                 answersCount: answersCount,
-                answers:  exercise.answers || [],
+                answers: exercise.answers || [],
                 loaded: true
             });
 
@@ -66,26 +66,26 @@ class Exercise extends React.Component {
     }
 
     checkAnswer() {
-        const currentAnswer = ReactDOM.findDOMNode(this.answer).value.trim().toLowerCase();
+        const currentAnswer = this.answerInput.current.value.trim().toLowerCase();
         let answerIsCorrect = false;
         this.state.answers.map((answer) => {
-            if(answer.toLowerCase() == currentAnswer) {
-                this.setState({validationState: "success", suggestShowAnswer: true});
+            if (answer.toLowerCase() === currentAnswer) {
+                this.setState({validationClass: "is-valid", suggestShowAnswer: true});
                 answerIsCorrect = true;
             }
         });
 
-        if(!answerIsCorrect) {
-            this.setState({validationState: "error", suggestShowAnswer: true});
+        if (!answerIsCorrect) {
+            this.setState({validationClass: "is-invalid", suggestShowAnswer: true});
         }
     }
 
     loadNextExercise(newCycle) {
         let excludeExercises = [];
 
-        if(!newCycle) {
-            excludeExercises = [this.props.params.exerciseId];
-            if(window.sessionStorage.getItem("loadedExercises")) {
+        if (!newCycle) {
+            excludeExercises = [this.props.match.params.exerciseId];
+            if (window.sessionStorage.getItem("loadedExercises")) {
                 let oldExercises = JSON.parse(window.sessionStorage.getItem("loadedExercises"));
                 excludeExercises = excludeExercises.concat(oldExercises);
             }
@@ -101,10 +101,10 @@ class Exercise extends React.Component {
         }).then(response => {
             const nextExerciseId = response.data.id;
 
-            if(nextExerciseId) {
-                browserHistory.push("/exercise/" + nextExerciseId);
+            if (nextExerciseId) {
+                this.props.history.push("/exercise/" + nextExerciseId);
                 window.location.reload();
-            } else{
+            } else {
                 this.setState({showConfirmModal: true});
             }
         })
@@ -116,6 +116,21 @@ class Exercise extends React.Component {
 
     showDictionaryModal() {
         this.setState({showDictionaryModal: true});
+    }
+
+    createShowAnswerComponent() {
+        if (this.state.suggestShowAnswer) {
+            const collapseClass = this.state.showAnswer ? "collapse.show" : "collapse";
+
+            return <div className="exercise-show-answer-component">
+                <Button onClick={() => this.setState({showAnswer: !this.state.showAnswer})}>
+                    Посмотреть возможный вариант ответа
+                </Button>
+                <Card className={"exercise-show-answer-panel " + collapseClass}>
+                    {this.state.answers[0]}
+                </Card>
+            </div>
+        }
     }
 
     render() {
@@ -136,40 +151,40 @@ class Exercise extends React.Component {
             }
         }
 
-        let showAnswerComponent;
-        if(this.state.suggestShowAnswer) {
-            showAnswerComponent = <div className="exercise-showAnswer-component">
-                <Button onClick={()=> this.setState({showAnswer: !this.state.showAnswer})}>Посмотреть возможный вариант ответа</Button>
-                <Panel className="exercise-showAnswer-panel" collapsible expanded={this.state.showAnswer}>{this.state.answers[0]}</Panel>
-            </div>
-        }
+        const showAnswerComponent = this.createShowAnswerComponent();
 
-        const body = <Panel>
+        const body = <Card>
             <Helmet title={title}/>
-            <PageHeader style={{textAlign: "center"}}>{pageHeader}</PageHeader>
-            <h3>{taskText}</h3>
-            <h4><div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}></div></h4>
+            <Card.Header style={{textAlign: "center"}}>{pageHeader}</Card.Header>
+            <Card.Body>
+                <h3>{taskText}</h3>
+                <h4>
+                    <div className="content"
+                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.original)}}/>
+                </h4>
 
-            <FormGroup
-                validationState={this.state.validationState}>
-                <FormControl
-                    className="exercise-answer-form"
-                    componentClass="textarea"
-                    inputRef={answer => {
-                        this.answer = answer
-                    }}
-                    placeholder="Введите ответ"
-                    rows={4}
-                />
-            </FormGroup>
+                <Form.Group>
+                    <Form.Control className={"exercise-answer-form " + this.state.validationClass}
+                                  as="textarea"
+                                  ref={this.answerInput}
+                                  placeholder="Введите ответ"
+                                  rows={4}/>
+                </Form.Group>
 
-            <Button bsSize="large" type="submit" onClick={this.checkAnswer.bind(this)} bsStyle="success">Проверить</Button>
-            {" "}
-            <Button bsSize="large" type="submit" onClick={() => this.loadNextExercise(false)} className="pull-right">Следующее упражнение</Button>
-            <br className="exercise-button-separator"/>
-            <Button bsSize="large" type="submit" onClick={this.showDictionaryModal.bind(this)}>Показать словарь</Button>
+                <Button size="lg" onClick={this.checkAnswer.bind(this)}
+                        variant="success" style={{marginRight: "5px", marginBottom: "5px"}}>
+                    Проверить
+                </Button>
+                <Button size="lg" onClick={() => this.loadNextExercise(false)} className="float-right">
+                    Следующее упражнение
+                </Button>
+                <br className="exercise-button-separator"/>
+                <Button size="lg" onClick={this.showDictionaryModal.bind(this)}>
+                    Показать словарь
+                </Button>
 
-            {showAnswerComponent}
+                {showAnswerComponent}
+            </Card.Body>
 
             <SimpleConfirmModal showModal={this.state.showConfirmModal}
                                 hideModal={this.hideModals}
@@ -180,7 +195,7 @@ class Exercise extends React.Component {
                              hideModal={this.hideModals}
                              title="Словарь"
                              text={this.state.dictionary}/>
-        </Panel>;
+        </Card>;
 
         if (this.state.loaded) {
             return body;
