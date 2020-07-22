@@ -31,29 +31,29 @@ class Lessons extends React.Component {
             });
     }
 
-    render() {
-        let lessonPreviews = [];
+    createLessonPreviews() {
+        return this.state.lessons
+            .sort(function (a, b) {
+                return a.title.localeCompare(b.title);
+            })
+            .map((lesson, index) => {
+                const imagePreview = lesson.previewImage ? <Image className="lesson-preview"
+                                                             src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + lesson.previewImage}
+                                                             thumbnail/> : null;
 
-        const lessons = this.state.lessons.sort(function (a, b) {
-            return a.title.localeCompare(b.title);
-        });
-
-        lessons.map((lesson, index) => {
-            const preview = lesson.previewImage ? <Image className="lesson-preview"
-                                                         src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + lesson.previewImage}
-                                                         thumbnail/> : null;
-
-            lessonPreviews.push(
-                <LinkContainer to={"/lesson/" + lesson.id} key={index}>
+                return <LinkContainer to={"/lesson/" + lesson.id} key={index}>
                     <li className="lesson">
-                        {preview}
+                        {imagePreview}
                         <h3 className="lesson-title">{lesson.title}</h3>
                         <p className="lesson-annotation">{lesson.annotation}</p>
                         <hr/>
                     </li>
-                </LinkContainer>
-            )
-        });
+                </LinkContainer>;
+            });
+    }
+
+    render() {
+        const lessonPreviews = this.createLessonPreviews();
 
         const body = <div>
             <Helmet title="Уроки | Тонкословие"/>
