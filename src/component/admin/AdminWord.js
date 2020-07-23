@@ -30,8 +30,14 @@ class AdminWord extends React.Component {
         })
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({showModal: props.showModal});
+    static getDerivedStateFromProps(props, state) {
+        if (props.showModal !== state.showModal) {
+            return {
+                showModal: props.showModal
+            };
+        }
+
+        return null;
     }
 
     render() {
