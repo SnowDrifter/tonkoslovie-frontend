@@ -5,7 +5,7 @@ import {Router} from "react-router-dom"
 import ConfigureStore from "./store/ConfigureStore"
 
 import history from "./util/History";
-import App from "./container/App";
+import App from "./page/App";
 
 const store = ConfigureStore();
 
