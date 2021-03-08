@@ -154,7 +154,7 @@ class AdminLesson extends React.Component {
     }
 
     uploadPreviewImage() {
-        const preview = this.preview.files[0];
+        const preview = this.previewInput.current.files[0];
         if (preview === undefined) {
             toast.error("Выберите файл");
             return;
