@@ -71,7 +71,7 @@ class AdminText extends React.Component {
             this.setState({id: response.data.id});
 
             if (!this.props.computedMatch.params.lessonId) {
-                this.props.history.push("/admin/text/" + response.data.id)
+                this.props.history.push(`/admin/text/${response.data.id}`)
             }
 
             toast.success("Сохранено");
@@ -194,7 +194,7 @@ class AdminText extends React.Component {
                     width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.MEDIA_ENDPOINT + "/tonkoslovie/sounds/" + this.state.soundFileName}/>
+                    url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.state.soundFileName}`}/>
                 <Button variant="warning" onClick={this.deleteSoundFile.bind(this)}>Удалить дорожку</Button>
             </div>
         } else {
@@ -209,7 +209,7 @@ class AdminText extends React.Component {
                              style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              variant="success"
                              now={this.state.progressUploadFile}
-                             label={(this.state.progressUploadFile) + "%"}/>
+                             label={`${this.state.progressUploadFile}%`}/>
             </div>
         }
 
@@ -219,7 +219,7 @@ class AdminText extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/texts"><Breadcrumb.Item>Тексты</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item
-                        active>{(this.state.id) ? "Текст № " + (this.state.id) : "Новый текст"}</Breadcrumb.Item>
+                        active>{(this.state.id) ? `Текст №${this.state.id}` : "Новый текст"}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

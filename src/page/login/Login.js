@@ -37,12 +37,10 @@ class Login extends React.Component {
     }
 
     render() {
-        let title = "Вход";
-
         return (
             <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal" centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>{title}</Modal.Title>
+                    <Modal.Title>Вход</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

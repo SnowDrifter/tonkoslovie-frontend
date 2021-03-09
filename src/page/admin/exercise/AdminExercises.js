@@ -38,7 +38,7 @@ class AdminExercises extends React.Component {
     }
 
     deleteLExercise(exerciseId) {
-        if (confirm("Удалить упражнение №" + exerciseId + "?")) {
+        if (confirm(`Удалить упражнение №${exerciseId}?`)) {
             Client.delete("/api/content/exercise", {
                 params: {
                     id: exerciseId
@@ -54,7 +54,7 @@ class AdminExercises extends React.Component {
     }
 
     editExercise(exercise) {
-        this.props.history.push("/admin/exercise/" + exercise.id);
+        this.props.history.push(`/admin/exercise/${exercise.id}`);
     }
 
     render() {

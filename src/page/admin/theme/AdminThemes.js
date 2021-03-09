@@ -39,7 +39,7 @@ class AdminThemes extends React.Component {
     }
 
     deleteTheme(themeId) {
-        if (confirm("Удалить тему №" + themeId + "?")) {
+        if (confirm(`Удалить тему №${themeId}?`)) {
             Client.delete("/api/content/theme", {
                 params: {
                     id: themeId
@@ -55,7 +55,7 @@ class AdminThemes extends React.Component {
     }
 
     editTheme(theme) {
-        this.props.history.push("/admin/theme/" + theme.id);
+        this.props.history.push(`/admin/theme/${theme.id}`);
     }
 
     render() {

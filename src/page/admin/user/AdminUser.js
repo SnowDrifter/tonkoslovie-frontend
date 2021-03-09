@@ -86,7 +86,7 @@ class AdminUser extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/users"><Breadcrumb.Item>Пользователи</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item
-                        active>{"Пользователь № " + (this.state.id)}</Breadcrumb.Item>
+                        active>{`Пользователь №${this.state.id}`}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

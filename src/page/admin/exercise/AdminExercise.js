@@ -88,7 +88,7 @@ class AdminExercise extends React.Component {
         const answers = [];
 
         for (let i = 0; i < this.state.answersCount; i++) {
-            answers.push(this["answer-" + i].current.value);
+            answers.push(this[`answer-${i}`].current.value);
         }
 
         Client.post("/api/content/exercise", {
@@ -105,7 +105,7 @@ class AdminExercise extends React.Component {
             });
 
             if (!this.props.computedMatch.params.lessonId) {
-                this.props.history.push("/admin/exercise/" + response.data.id)
+                this.props.history.push(`/admin/exercise/${response.data.id}`)
             }
 
             toast.success("Сохранено");
@@ -143,9 +143,9 @@ class AdminExercise extends React.Component {
         const answersCount = this.state.answersCount;
 
         for (let i = 0; i < answersCount; i++) {
-            this["answer-" + i] = createRef();
+            this[`answer-${i}`] = createRef();
 
-            answerForms.push(<Form.Control className="admin-exercise-answer-form" key={i} ref={this["answer-" + i]}
+            answerForms.push(<Form.Control className="admin-exercise-answer-form" key={i} ref={this[`answer-${i}`]}
                                           defaultValue={this.state.answers[i] || ""}/>
             );
         }
@@ -156,7 +156,7 @@ class AdminExercise extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/exercises"><Breadcrumb.Item>Упражнения</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item
-                        active>{(this.state.id) ? "Уражнение № " + (this.state.id) : "Новое упражнение"}</Breadcrumb.Item>
+                        active>{(this.state.id) ? `Уражнение №${this.state.id}` : "Новое упражнение"}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

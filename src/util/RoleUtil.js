@@ -4,7 +4,7 @@ export default class RoleUtil {
         let isAdmin = false;
 
         roles.forEach(function (role) {
-            if (role == "ROLE_ADMIN") {
+            if (role === "ROLE_ADMIN") {
                 isAdmin = true;
             }
         });

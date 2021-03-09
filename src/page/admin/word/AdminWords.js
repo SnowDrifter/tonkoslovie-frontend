@@ -52,7 +52,7 @@ class AdminWords extends React.Component {
     }
 
     deleteWord(wordId) {
-        if (confirm("Удалить слово №" + wordId + "?")) {
+        if (confirm(`Удалить слово №${wordId}?`)) {
             Client.delete("/api/content/word", {
                 params: {
                     id: wordId

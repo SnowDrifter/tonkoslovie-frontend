@@ -49,8 +49,8 @@ class CreatePartModal extends React.Component {
 
                 for (let i = 0; i < choiceCount; i++) {
                     let choiceVariant = {};
-                    choiceVariant.title = this["form-" + i].current.value;
-                    choiceVariant.right = this["right-" + i].current.checked;
+                    choiceVariant.title = this[`form-${i}`].current.value;
+                    choiceVariant.right = this[`right-${i}`].current.checked;
                     choiceVariants.push(choiceVariant);
                 }
 
@@ -87,7 +87,7 @@ class CreatePartModal extends React.Component {
         const choiceCount = this.state.choicesCount;
 
         for (let i = 0; i < choiceCount; i++) {
-            if (this["right-" + i].current.checked) {
+            if (this[`right-${i}`].current.checked) {
                 return true;
             }
         }
@@ -119,15 +119,15 @@ class CreatePartModal extends React.Component {
             const choiceForms = [];
 
             for (let i = 0; i < this.state.choicesCount; i++) {
-                this["right-" + i] = createRef();
-                this["form-" + i] = createRef();
+                this[`right-${i}`] = createRef();
+                this[`form-${i}`] = createRef();
 
                 choiceForms.push(
                     <InputGroup key={i} className="admin-text-choice-part-input">
                         <InputGroup.Prepend>
-                            <Form.Check name="right-variant" type="radio" ref={this["right-" + i]}/>
+                            <Form.Check name="right-variant" type="radio" ref={this[`right-${i}`]}/>
                         </InputGroup.Prepend>
-                        <Form.Control ref={this["form-" + i]}/>
+                        <Form.Control ref={this[`form-${i}`]}/>
                     </InputGroup>
                 );
             }

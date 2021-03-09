@@ -57,7 +57,7 @@ class Text extends React.Component {
 
         textParts.map((part, index) => {
             if (part.type === partTypes.QUESTION || part.type === partTypes.CHOICE) {
-                this["element-" + index].current.checkAnswer();
+                this[`element-${index}`].current.checkAnswer();
             }
         });
 
@@ -66,7 +66,7 @@ class Text extends React.Component {
 
     render() {
         let elements = [];
-        let title = this.state.title + " | Тонкословие";
+        const title = `${this.state.title} | Тонкословие`;
 
         this.state.textParts.map((part, index) => {
             switch (part.type) {
@@ -79,14 +79,14 @@ class Text extends React.Component {
                     break;
                 }
                 case partTypes.QUESTION: {
-                    this["element-" + index] = createRef();
-                    elements.push(<QuestionElement ref={this["element-" + index]}
+                    this[`element-${index}`] = createRef();
+                    elements.push(<QuestionElement ref={this[`element-${index}`]}
                                                      part={part} key={index} index={index}/>);
                     break;
                 }
                 case partTypes.CHOICE: {
-                    this["element-" + index] = createRef();
-                    elements.push(<ChoiceElement ref={this["element-" + index]}
+                    this[`element-${index}`] = createRef();
+                    elements.push(<ChoiceElement ref={this[`element-${index}`]}
                                                    part={part} key={index} index={index}/>);
                     break;
                 }
@@ -101,7 +101,7 @@ class Text extends React.Component {
                     width="100%"
                     height={40}
                     controls={true}
-                    url={process.env.MEDIA_ENDPOINT + "/tonkoslovie/sounds/" + this.state.soundFileName}/>
+                    url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.state.soundFileName}`}/>
             </div>
         }
 

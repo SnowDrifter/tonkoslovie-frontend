@@ -37,7 +37,7 @@ class Themes extends React.Component {
                 return a.title.localeCompare(b.title);
             })
             .map((theme, index) => {
-                return <LinkContainer exact to={"/theme/" + theme.id}
+                return <LinkContainer exact to={`/theme/${theme.id}`}
                                       className="theme-title"
                                       key={index}>
                     <ListGroup.Item>

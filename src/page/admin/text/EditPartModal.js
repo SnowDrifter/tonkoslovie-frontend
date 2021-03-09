@@ -30,8 +30,8 @@ class EditPartModal extends React.Component {
 
     increaseChoicesCount() {
         let choiceVariants = this.state.choiceVariants;
-        this["right-" + choiceVariants.length] = createRef();
-        this["form-" + choiceVariants.length] = createRef();
+        this[`right-${choiceVariants.length}`] = createRef();
+        this[`form-${choiceVariants.length}`] = createRef();
         choiceVariants.push("");
         this.setState({choiceVariants: choiceVariants})
     }
@@ -79,7 +79,6 @@ class EditPartModal extends React.Component {
 
     saveTextPart() {
         let type = this.state.type;
-        console.log("type " + type)
 
         let textPart = this.props.currentPart;
         textPart.type = type;
@@ -99,8 +98,8 @@ class EditPartModal extends React.Component {
 
             for (let i = 0; i < choiceCount; i++) {
                 let choiceVariant = {};
-                choiceVariant.title = this["form-" + i].current.value;
-                choiceVariant.right = this["right-" + i].current.checked;
+                choiceVariant.title = this[`form-${i}`].current.value;
+                choiceVariant.right = this[`right-${i}`].current.checked;
                 choiceVariants.push(choiceVariant);
             }
 
@@ -146,17 +145,17 @@ class EditPartModal extends React.Component {
             const choiceForms = [];
 
             this.state.choiceVariants.map((value, index) => {
-                this["right-" + index] = createRef();
-                this["form-" + index] = createRef();
+                this[`right-${index}`] = createRef();
+                this[`form-${index}`] = createRef();
 
                 choiceForms.push(
                     <InputGroup key={index} className="admin-text-choice-part-input">
                         <InputGroup.Prepend>
                             <Form.Check name="right-variant" type="radio"
-                                        ref={this["right-" + index]}
+                                        ref={this[`right-${index}`]}
                                         defaultChecked={value.right}/>
                         </InputGroup.Prepend>
-                        <Form.Control ref={this["form-" + index]}
+                        <Form.Control ref={this[`form-${index}`]}
                                       defaultValue={value.title}/>
                     </InputGroup>
                 );

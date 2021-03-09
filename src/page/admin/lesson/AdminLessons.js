@@ -39,7 +39,7 @@ class AdminLessons extends React.Component {
     }
 
     deleteLesson(lessonId) {
-        if (confirm("Удалить урок №" + lessonId + "?")) {
+        if (confirm(`Удалить урок №${lessonId}?`)) {
             Client.delete("/api/content/lesson", {
                 params: {
                     id: lessonId
@@ -55,7 +55,7 @@ class AdminLessons extends React.Component {
     }
 
     editLesson(lesson) {
-        this.props.history.push("/admin/lesson/" + lesson.id);
+        this.props.history.push(`/admin/lesson/${lesson.id}`);
     }
 
     render() {

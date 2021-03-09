@@ -53,7 +53,7 @@ class Lesson extends React.Component {
         let texts = [];
         sortedTexts.map((text, index) => {
             texts.push(
-                <LinkContainer key={index} className="list-group-item" to={"/text/" + text.id}>
+                <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
                     <span>{text.title}</span>
                 </LinkContainer>
             );

@@ -65,7 +65,7 @@ class AdminTheme extends React.Component {
             });
 
             if (!this.state.themeId) {
-                this.props.history.push("/admin/theme/" + response.data.id);
+                this.props.history.push(`/admin/theme/${response.data.id}`);
             }
 
             toast.success("Сохранено");
@@ -155,7 +155,7 @@ class AdminTheme extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/themes"><Breadcrumb.Item>Темы упражнений</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item
-                        active>{(this.state.id) ? "Тема № " + (this.state.id) : "Новая тема"}</Breadcrumb.Item>
+                        active>{(this.state.id) ? `Тема №${this.state.id}` : "Новая тема"}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

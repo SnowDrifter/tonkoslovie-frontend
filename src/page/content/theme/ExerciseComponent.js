@@ -143,7 +143,7 @@ class ExerciseComponent extends React.Component {
                 <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>
                     Посмотреть возможный вариант ответа
                 </Button>
-                <Card className={"exercise-show-answer-panel " + collapseClass}>
+                <Card className={`exercise-show-answer-panel ${collapseClass}`}>
                     {this.state.answerVariant}
                 </Card>
             </div>

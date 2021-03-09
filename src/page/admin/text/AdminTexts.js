@@ -39,7 +39,7 @@ class AdminTexts extends React.Component {
     }
 
     deleteText(textId) {
-        if (confirm("Удалить текст №" + textId + "?")) {
+        if (confirm(`Удалить текст №${textId}?`)) {
             Client.delete("/api/content/text", {
                 params: {
                     id: textId
@@ -55,7 +55,7 @@ class AdminTexts extends React.Component {
     }
 
     editText(text) {
-        this.props.history.push("/admin/text/" + text.id);
+        this.props.history.push(`/admin/text/${text.id}`);
     }
 
     render() {

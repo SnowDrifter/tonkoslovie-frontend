@@ -6,12 +6,12 @@ class ChoiceElement extends React.Component {
 
     constructor(props) {
         super(props);
-        this["form-" + this.props.index] = createRef();
+        this[`form-${this.props.index}`] = createRef();
     }
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = this["form-" + this.props.index].current.value;
+        let answer = this[`form-${this.props.index}`].current.value;
 
         if (this.checkChoiceVariant(answer, part.choiceVariants)) {
             part.success = true;
@@ -54,7 +54,7 @@ class ChoiceElement extends React.Component {
                           className={validationClass}
                           size="sm"
                           disabled={disabled}
-                          ref={this["form-" + this.props.index]}>
+                          ref={this[`form-${this.props.index}`]}>
                 {variants}
             </Form.Control>
         </Form.Group>

@@ -45,13 +45,12 @@ class AdminUsers extends React.Component {
     }
 
     editUser(user) {
-        this.props.history.push("/admin/user/" + user.id);
+        this.props.history.push(`/admin/user/${user.id}`);
     }
 
     formatDate(time) {
         if (time !== undefined) {
-            const date = new Date(time);
-            return date.toLocaleString("ru", dateOptions);
+            return new Date(time).toLocaleString("ru", dateOptions);
         } else {
             return "-"
         }

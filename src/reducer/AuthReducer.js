@@ -9,8 +9,8 @@ import {
 import decode from "jwt-decode";
 
 const initialState = ({
-    user: localStorage.getItem("token") != undefined ? decode(localStorage.getItem("token")) : {},
-    isAuthenticated: localStorage.getItem("token") != undefined,
+    user: localStorage.getItem("token") !== undefined ? decode(localStorage.getItem("token")) : {},
+    isAuthenticated: localStorage.getItem("token") !== undefined,
     showLogin: false,
     errorMessage: null
 });

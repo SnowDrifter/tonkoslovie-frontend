@@ -98,7 +98,7 @@ class AdminLesson extends React.Component {
             });
 
             if (!this.state.lessonId) {
-                this.props.history.push("/admin/lesson/" + response.data.id)
+                this.props.history.push(`/admin/lesson/${response.data.id}`)
             }
 
             toast.success("Сохранено");
@@ -229,7 +229,7 @@ class AdminLesson extends React.Component {
         if (this.state.previewFileName) {
             previewComponent = <div>
                 <h3>Превью</h3>
-                <img src={process.env.MEDIA_ENDPOINT + "/tonkoslovie/images/200_200-" + this.state.previewFileName} alt="preview"/>
+                <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.state.previewFileName}`} alt="preview"/>
                 <br/>
                 <Button style={{marginTop: "5px"}} onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>
@@ -246,7 +246,7 @@ class AdminLesson extends React.Component {
                              style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
                              variant="success"
                              now={this.state.progressUploadFile}
-                             label={(this.state.progressUploadFile) + "%"}/>
+                             label={`${this.state.progressUploadFile}%`}/>
             </div>
         }
 
@@ -256,7 +256,7 @@ class AdminLesson extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/lessons"><Breadcrumb.Item>Уроки</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>
-                        {(this.state.id) ? "Урок № " + (this.state.id) : "Новый урок"}
+                        {(this.state.id) ? `Урок №${this.state.id}` : "Новый урок"}
                     </Breadcrumb.Item>
                 </Breadcrumb>
 

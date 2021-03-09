@@ -6,12 +6,12 @@ class QuestionElement extends React.Component {
 
     constructor(props) {
         super(props);
-        this["form-" + this.props.index] = createRef();
+        this[`form-${this.props.index}`] = createRef();
     }
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = this["form-" + this.props.index].current.value;
+        let answer = this[`form-${this.props.index}`].current.value;
         answer = answer.trim().toLowerCase();
 
         if (answer === part.data.toLowerCase()) {
@@ -51,7 +51,7 @@ class QuestionElement extends React.Component {
 
         return <Form.Group className="text-element">
             <Form.Control
-                ref={this["form-" + this.props.index]}
+                ref={this[`form-${this.props.index}`]}
                 style={{width: this.calculateInputLength(part)}}
                 className={validationClass}
                 type="text"

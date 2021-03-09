@@ -102,7 +102,7 @@ class Exercise extends React.Component {
             const nextExerciseId = response.data.id;
 
             if (nextExerciseId) {
-                this.props.history.push("/exercise/" + nextExerciseId);
+                this.props.history.push(`/exercise/${nextExerciseId}`);
                 window.location.reload();
             } else {
                 this.setState({showConfirmModal: true});
@@ -126,7 +126,7 @@ class Exercise extends React.Component {
                 <Button onClick={() => this.setState({showAnswer: !this.state.showAnswer})}>
                     Посмотреть возможный вариант ответа
                 </Button>
-                <Card className={"exercise-show-answer-panel " + collapseClass}>
+                <Card className={`exercise-show-answer-panel ${collapseClass}`}>
                     {this.state.answers[0]}
                 </Card>
             </div>
@@ -134,7 +134,7 @@ class Exercise extends React.Component {
     }
 
     render() {
-        let title = "Упражнение | Тонкословие";
+        const title = "Упражнение | Тонкословие";
 
         let pageHeader;
         let taskText;
@@ -164,7 +164,7 @@ class Exercise extends React.Component {
                 </h4>
 
                 <Form.Group>
-                    <Form.Control className={"exercise-answer-form " + this.state.validationClass}
+                    <Form.Control className={`exercise-answer-form ${this.state.validationClass}`}
                                   as="textarea"
                                   ref={this.answerInput}
                                   placeholder="Введите ответ"

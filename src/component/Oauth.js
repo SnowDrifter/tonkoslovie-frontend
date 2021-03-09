@@ -11,13 +11,13 @@ class Oauth extends React.Component {
 
             <div className="oauth-social-links-wrapper">
                 <div className="oauth-social-links">
-                    <a href={apiEndpoint + "/api/oauth/login/vk"}>
+                    <a href={`${apiEndpoint}/api/oauth/login/vk`}>
                         <img className="oauth-social-icon-image" src="/static/social/vk.svg" alt="vk"/>
                     </a>
-                    <a href={apiEndpoint + "/api/oauth/login/google"}>
+                    <a href={`${apiEndpoint}/api/oauth/login/google`}>
                         <img className="oauth-social-icon-image" src="/static/social/google.svg" alt="google"/>
                     </a>
-                    <a href={apiEndpoint + "/api/oauth/login/facebook"}>
+                    <a href={`${apiEndpoint}/api/oauth/login/facebook`}>
                         <img className="oauth-social-icon-image" src="/static/social/facebook.svg" alt="facebook"/>
                     </a>
                 </div>
