@@ -1,10 +1,10 @@
 import React, {createRef} from "react";
 import {Breadcrumb, Button, Form, Jumbotron, Card} from "react-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {toast} from "react-toastify";
-import RoleUtil from "../../../util/RoleUtil";
+import RoleUtil from "/util/RoleUtil";
 
 class AdminUser extends React.Component {
 

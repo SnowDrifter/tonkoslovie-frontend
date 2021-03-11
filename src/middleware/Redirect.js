@@ -1,5 +1,5 @@
-import history from "../util/History"
-import {ROUTING} from "../constant/Routing"
+import history from "/util/History"
+import {ROUTING} from "/constant/Routing"
 
 /* eslint-disable no-unused-vars */
 export const Redirect = store => next => action => {

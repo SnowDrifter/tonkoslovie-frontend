@@ -1,9 +1,9 @@
 import React from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {Card, ListGroup} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import "./Themes.less"
 
 class Themes extends React.Component {

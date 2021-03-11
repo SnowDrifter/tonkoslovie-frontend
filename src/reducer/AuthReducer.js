@@ -5,7 +5,7 @@ import {
     LOGIN_FAILURE,
     LOGIN_SUCCESS,
     LOGOUT
-} from "../constant/User"
+} from "/constant/User"
 import decode from "jwt-decode";
 
 const initialState = ({

@@ -1,12 +1,12 @@
 import React from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
 import "fixed-data-table-2/dist/fixed-data-table.css";
-import Loader from "../../../component/Loader";
-import RoleUtil from "../../../util/RoleUtil";
+import Loader from "/component/Loader";
+import RoleUtil from "/util/RoleUtil";
 import {Breadcrumb, Card} from "react-bootstrap";
-import EditButton from "../../../component/button/EditButton"
+import EditButton from "/component/button/EditButton"
 
 
 const dateOptions = {

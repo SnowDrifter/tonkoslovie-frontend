@@ -4,7 +4,7 @@ import * as QueryString from "query-string"
 import {connect} from "react-redux";
 import {Nav, Navbar} from "react-bootstrap";
 import {bindActionCreators} from "redux";
-import * as UserActions from "../action/Auth";
+import * as UserActions from "/action/Auth";
 import "./Navigation.less";
 import RoutedLinkContainer from "./RoutedLinkContainer";
 

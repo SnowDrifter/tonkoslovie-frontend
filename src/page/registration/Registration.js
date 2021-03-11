@@ -1,8 +1,8 @@
 import React, {createRef, Fragment} from "react";
-import Client from "../../util/Client";
+import Client from "/util/Client";
 import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
 import "./Registration.less"
-import Oauth from "../../component/Oauth";
+import Oauth from "/component/Oauth";
 
 class Registration extends React.Component {
     constructor(props) {

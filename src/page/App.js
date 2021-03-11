@@ -30,7 +30,7 @@ import AdminLesson from "./admin/lesson/AdminLesson";
 import Text from "./content/text/Text";
 import {Route, Switch} from "react-router-dom"
 import {Container} from "react-bootstrap"
-import Navigation from "../component/Navigation";
+import Navigation from "/component/Navigation";
 import AdminRoute from "./AdminRoute";
 
 import "react-toastify/dist/ReactToastify.css";

@@ -1,9 +1,9 @@
 import React from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {Image, Card} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import "./Lessons.less";
 
 class Lessons extends React.Component {

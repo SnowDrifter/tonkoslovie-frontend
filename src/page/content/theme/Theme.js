@@ -1,10 +1,10 @@
 import React from "react";
 import {Card, Jumbotron} from "react-bootstrap";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import Helmet from "react-helmet";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import ExerciseComponent from "./ExerciseComponent";
-import SimpleConfirmModal from "../../../component/SimpleConfirmModal";
+import SimpleConfirmModal from "/component/SimpleConfirmModal";
 
 class Theme extends React.Component {
 

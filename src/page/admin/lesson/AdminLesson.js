@@ -1,5 +1,5 @@
 import React, {createRef} from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import {
     Breadcrumb,
@@ -10,14 +10,14 @@ import {
     ListGroup,
     ProgressBar
 } from "react-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
 import {toast} from "react-toastify";
-import TagUtil from "../../../util/TagUtil";
-import RemoveButton from "../../../component/button/RemoveButton";
+import TagUtil from "/util/TagUtil";
+import RemoveButton from "/component/button/RemoveButton";
 
 
 class AdminLesson extends React.Component {

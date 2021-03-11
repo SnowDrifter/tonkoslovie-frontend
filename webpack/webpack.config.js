@@ -14,6 +14,11 @@ module.exports = {
         publicPath: "/",
         filename: "bundle.[hash].js",
     },
+    resolve: {
+        roots:  [
+            path.resolve("./src"),
+        ],
+    },
     module: {
         rules: [
             {

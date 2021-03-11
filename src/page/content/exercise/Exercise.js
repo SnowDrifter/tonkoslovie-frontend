@@ -1,12 +1,12 @@
 import React, {createRef} from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {Card, Jumbotron, Form, Button} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
-import * as  exerciseTypes from "../theme/ExerciseTypes";
-import SimpleConfirmModal from "../../../component/SimpleConfirmModal";
-import SimpleTextModal from "../../../component/SimpleTextModal";
-import Loader from "../../../component/Loader";
+import * as  exerciseTypes from "/page/content/theme/ExerciseTypes";
+import SimpleConfirmModal from "/component/SimpleConfirmModal";
+import SimpleTextModal from "/component/SimpleTextModal";
+import Loader from "/component/Loader";
 import "./Exercise.less"
 
 class Exercise extends React.Component {

@@ -2,10 +2,10 @@ import React, {createRef} from "react";
 import {withRouter} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
 import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ListGroupItem} from "react-bootstrap";
-import Loader from "../../../component/Loader";
-import Client from "../../../util/Client";
+import Loader from "/component/Loader";
+import Client from "/util/Client";
 import {toast} from "react-toastify";
-import RemoveButton from "../../../component/button/RemoveButton";
+import RemoveButton from "/component/button/RemoveButton";
 
 class AdminTheme extends React.Component {
 

@@ -1,10 +1,10 @@
 import React from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import {Cell, Column, Table} from "fixed-data-table-2";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
-import EditRemoveButtons from "../../../component/button/EditRemoveButtons";
+import EditRemoveButtons from "/component/button/EditRemoveButtons";
 
 
 class AdminExercises extends React.Component {

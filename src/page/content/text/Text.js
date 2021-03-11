@@ -1,10 +1,10 @@
 import React, {createRef} from "react";
 import {Button, Card, Form, Jumbotron} from "react-bootstrap";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import QuestionElement from "./elements/QuestionElement";
 import ChoiceElement from "./elements/ChoiceElement";
 import "./Text.less"

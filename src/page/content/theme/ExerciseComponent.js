@@ -2,7 +2,7 @@ import React, {createRef} from "react";
 import {Button, Card, Form} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
-import SimpleTextModal from "../../../component/SimpleTextModal";
+import SimpleTextModal from "/component/SimpleTextModal";
 import "../exercise/Exercise.less"
 
 class ExerciseComponent extends React.Component {

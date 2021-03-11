@@ -1,10 +1,10 @@
 import React from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {Jumbotron, ListGroup, Card} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import "./Lesson.less"
 
 class Lesson extends React.Component {

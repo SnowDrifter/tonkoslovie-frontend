@@ -1,5 +1,5 @@
 import React, {createRef} from "react";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {FormGroup, Row, Col, FormLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import "./AdminWord.less"
 

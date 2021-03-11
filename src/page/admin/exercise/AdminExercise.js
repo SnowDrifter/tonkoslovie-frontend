@@ -1,16 +1,16 @@
 import React, {createRef} from "react";
 import {Breadcrumb, Button, ButtonToolbar, Form, Jumbotron, Card} from "react-bootstrap";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
-import * as  exerciseTypes from "../../content/theme/ExerciseTypes";
+import * as  exerciseTypes from "/page/content/theme/ExerciseTypes";
 import {Editor} from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import "./AdminExercise.less";
 import {toast} from "react-toastify";
-import TagUtil from "../../../util/TagUtil"
+import TagUtil from "/util/TagUtil"
 
 
 class AdminExercise extends React.Component {

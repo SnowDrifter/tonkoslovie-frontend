@@ -1,16 +1,16 @@
 import React, {createRef} from "react";
 import {Breadcrumb, Button, ButtonGroup, Card, Form, Jumbotron, ProgressBar} from "react-bootstrap";
-import Loader from "../../../component/Loader";
+import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
-import Client from "../../../util/Client";
+import Client from "/util/Client";
 import EditPartModal from "./EditPartModal";
 import CreatePartModal from "./CreatePartModal";
-import * as partTypes from "../../content/text/TextPartTypes";
+import * as partTypes from "/page/content/text/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
 import {toast} from "react-toastify";
-import RemoveButton from "../../../component/button/RemoveButton";
-import EditRemoveButtons from "../../../component/button/RemoveButton";
+import RemoveButton from "/component/button/RemoveButton";
+import EditRemoveButtons from "/component/button/RemoveButton";
 
 class AdminText extends React.Component {
 

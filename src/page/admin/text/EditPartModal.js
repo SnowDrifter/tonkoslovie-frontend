@@ -10,7 +10,7 @@ import {
     ToggleButton,
     ToggleButtonGroup
 } from "react-bootstrap";
-import * as partTypes from "../../content/text/TextPartTypes";
+import * as partTypes from "/page/content/text/TextPartTypes";
 
 class EditPartModal extends React.Component {
     constructor(props) {

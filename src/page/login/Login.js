@@ -2,9 +2,9 @@ import React, {createRef} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Button, Form, Modal, Row} from "react-bootstrap";
-import * as UserActions from "../../action/Auth";
+import * as UserActions from "/action/Auth";
 import "./Login.less";
-import Oauth from "../../component/Oauth";
+import Oauth from "/component/Oauth";
 
 
 class Login extends React.Component {
