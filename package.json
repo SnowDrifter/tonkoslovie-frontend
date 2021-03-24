@@ -3,15 +3,19 @@
   "version": "0.0.1",
   "description": "",
   "repository": "ignored",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.js",
+    "build-dev": "webpack --config webpack/webpack.config.dev.js",
+    "build-prod": "webpack --config webpack/webpack.config.prod.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack/webpack.config.dev.js",
     "prod": "cross-env NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "Ivan Romanov",
   "license": "ISC",
+  "browserslist": [
+    "defaults"
+  ],
   "dependencies": {
     "axios": "^0.21.1",
     "dompurify": "^2.2.6",
@@ -51,6 +55,7 @@
     "@babel/preset-react": "^7.10.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^1.1.11",
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^7.0.2",
