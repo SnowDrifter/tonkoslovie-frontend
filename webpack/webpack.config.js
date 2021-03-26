@@ -6,7 +6,7 @@ const webpack = require("webpack");
 const properties = require("./properties.js").load(process.env.NODE_ENV);
 
 module.exports = {
-    entry: ["./src/index.js"],
+    entry: "./src/index.js",
     output: {
         path: path.resolve(__dirname, "../dist"),
         publicPath: "/",
@@ -37,7 +37,7 @@ module.exports = {
                 loader: "file-loader?name=img/img-[hash:6].[ext]"
             },
             {
-                test: /\.(ico|eot|otf|webp|ttf|woff|woff2)$/,
+                test: /\.(eot|otf|webp|ttf|woff|woff2)$/,
                 use: "file-loader?limit=100000"
             }
         ]
