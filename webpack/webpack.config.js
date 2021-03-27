@@ -34,11 +34,14 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|gif|ico|svg)$/,
-                loader: "file-loader?name=img/img-[hash:6].[ext]"
+                loader: "file-loader",
+                options: {
+                    name: "img/img-[hash:6].[ext]"
+                }
             },
             {
                 test: /\.(eot|otf|webp|ttf|woff|woff2)$/,
-                use: "file-loader?limit=100000"
+                use: "file-loader"
             }
         ]
     },
