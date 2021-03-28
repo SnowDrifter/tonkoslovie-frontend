@@ -10,12 +10,13 @@ module.exports = merge(common, {
         contentBase: path.join(__dirname, "../dist"),
         port: 3000,
         stats: {
+            assets: false,
             children: false,
             chunks: false,
             chunkModules: false,
             modules: false,
             reasons: false,
-            useExports: false,
+            useExports: false
         }
     }
 });

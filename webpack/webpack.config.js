@@ -26,7 +26,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: ["style-loader", "css-loader","less-loader"]
+                use: ["style-loader", "css-loader", "less-loader"]
             },
             {
                 test: /\.css$/,
@@ -49,12 +49,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./src/index.ejs"
         }),
-        new CopyWebpackPlugin([
-            {
-                from: "static",
-                to: "static"
-            }
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: "static", to: "static" }
+            ],
+        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
