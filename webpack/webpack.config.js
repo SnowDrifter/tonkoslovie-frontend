@@ -1,6 +1,7 @@
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const properties = require("./properties.js").load(process.env.NODE_ENV);
@@ -22,7 +23,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: ["babel-loader", "eslint-loader"]
+                use: ["babel-loader"]
             },
             {
                 test: /\.less$/,
@@ -65,6 +66,7 @@ module.exports = {
                 "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
             }
         }),
+        new ESLintPlugin(),
         new CleanWebpackPlugin()
     ],
     optimization: {
