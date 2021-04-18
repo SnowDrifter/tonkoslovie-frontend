@@ -60,18 +60,26 @@ class Theme extends React.Component {
 
     removeProgress() {
         const exercises = this.state.exercises;
+        this.shuffleExercises(exercises);
         exercises.forEach(exercise => {
-            exercise.solved = null;
+            exercise.solved = undefined;
             exercise.correctUserAnswer = null;
         });
 
         this.setState({
             exercises: exercises,
-            currentExercise: this.state.exercises[0],
+            currentExercise: exercises[0],
             currentExerciseNumber: 0,
             solvedExerciseCount: 0,
             showSuccessModal: false
         })
+    }
+
+    shuffleExercises(exercises) {
+        for (let i = exercises.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+        }
     }
 
     addSolvedExercise(correctUserAnswer) {
@@ -84,15 +92,13 @@ class Theme extends React.Component {
 
             exercises[this.state.currentExerciseNumber] = solvedExercise;
 
+            const newSolvedExerciseCount = this.state.solvedExerciseCount + 1;
+
             this.setState({
                 exercises: exercises,
-                solvedExerciseCount: ++this.state.solvedExerciseCount
+                solvedExerciseCount: newSolvedExerciseCount,
+                showSuccessModal: newSolvedExerciseCount === this.state.exercises.length
             });
-
-            // All exercises is over
-            if (this.state.solvedExerciseCount >= this.state.exercises.length) {
-                this.setState({showSuccessModal: true});
-            }
         }
     }
 
@@ -106,31 +112,8 @@ class Theme extends React.Component {
 
     nextExercise() {
         if (this.state.solvedExerciseCount < this.state.exercises.length) {
-            let newExercise;
-            let newExerciseNumber;
-
-            for (let i = ++this.state.currentExerciseNumber; i < this.state.exercises.length; i++) {
-                let nextExercise = this.state.exercises[i];
-
-                if (!nextExercise.solved) {
-                    newExercise = nextExercise;
-                    newExerciseNumber = i;
-                    break;
-                }
-            }
-
-            // Start new cycle
-            if (!newExercise) {
-                this.state.exercises.every((exercise, index) => {
-                    if (!exercise.solved) {
-                        newExercise = exercise;
-                        newExerciseNumber = index;
-                        return false;
-                    } else {
-                        return true;
-                    }
-                })
-            }
+            let newExerciseNumber = this.state.currentExerciseNumber + 1;
+            let newExercise = this.state.exercises[newExerciseNumber];
 
             this.setState({
                 currentExercise: newExercise,
@@ -142,14 +125,12 @@ class Theme extends React.Component {
     }
 
     render() {
-        const title = `${this.state.title} | Тонкословие`;
-
-        let body = <Card>
+        const body = <Card key={this.state.currentExerciseNumber}>
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
 
             <Card.Body>
                 <span className="float-right">{`Выполнено ${this.state.solvedExerciseCount}/${this.state.exercises.length}`}</span>
-                <Helmet title={title}/>
+                <Helmet title={`${this.state.title} | Тонкословие`}/>
                 <ExerciseComponent nextExercise={this.nextExercise}
                                    exercise={this.state.currentExercise}
                                    addSolvedExercise={this.addSolvedExercise}/>

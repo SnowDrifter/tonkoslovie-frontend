@@ -164,8 +164,8 @@ class ExerciseComponent extends React.Component {
                     rows={4}/>
             </Form.Group>
 
-            <Button size="lg" onClick={this.checkAnswer.bind(this)}
-                    variant="success" style={{marginRight: "5px", marginBottom: "5px"}}>
+            <Button size="lg" onClick={this.checkAnswer.bind(this)} className="exercise-check-answer-button"
+                    variant="success">
                 Проверить
             </Button>
             <Button size="lg" onClick={this.props.nextExercise.bind(this)} className="float-right">
