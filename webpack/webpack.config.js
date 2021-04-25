@@ -1,6 +1,7 @@
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin")
 const ESLintPlugin = require("eslint-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const webpack = require("webpack");
@@ -50,9 +51,19 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./src/index.ejs"
         }),
+        new FaviconsWebpackPlugin({
+            mode: "webapp",
+            devMode: "light",
+            logo: "./static/icon/favicon.png",
+            favicons: {
+                icons: {
+                    appleStartup: false
+                }
+            }
+        }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: "static", to: "static" }
+                {from: "static", to: "static"}
             ],
         }),
         new webpack.ProvidePlugin({
