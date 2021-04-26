@@ -83,10 +83,15 @@ class AdminUser extends React.Component {
         const body = <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
-                    <LinkContainer exact to="/admin/users"><Breadcrumb.Item>Пользователи</Breadcrumb.Item></LinkContainer>
-                    <Breadcrumb.Item
-                        active>{`Пользователь №${this.state.id}`}</Breadcrumb.Item>
+                    <LinkContainer exact to="/admin">
+                        <Breadcrumb.Item>Главная</Breadcrumb.Item>
+                    </LinkContainer>
+                    <LinkContainer exactm to="/admin/users">
+                        <Breadcrumb.Item>Пользователи</Breadcrumb.Item>
+                    </LinkContainer>
+                    <Breadcrumb.Item active>
+                        {`Пользователь №${this.state.id}`}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

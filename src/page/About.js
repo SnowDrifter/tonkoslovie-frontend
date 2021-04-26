@@ -10,7 +10,8 @@ class About extends React.Component {
             <Jumbotron>
                 <h2 style={{textAlign: "center"}}>Страница находится в разработке</h2>
                 <h4 style={{textAlign: "center"}}>
-                    <span style={{textDecoration: "line-through"}}>Скоро</span>&nbsp;Когда-нибудь здесь будут описаны детали проекта
+                    <span style={{textDecoration: "line-through"}}>Скоро</span>&nbsp;Когда-нибудь
+                    здесь будут описаны детали проекта
                 </h4>
             </Jumbotron>
         </div>

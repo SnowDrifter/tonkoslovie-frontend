@@ -152,10 +152,15 @@ class AdminTheme extends React.Component {
         const body = <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
-                    <LinkContainer exact to="/admin/themes"><Breadcrumb.Item>Темы упражнений</Breadcrumb.Item></LinkContainer>
-                    <Breadcrumb.Item
-                        active>{(this.state.id) ? `Тема №${this.state.id}` : "Новая тема"}</Breadcrumb.Item>
+                    <LinkContainer exact to="/admin">
+                        <Breadcrumb.Item>Главная</Breadcrumb.Item>
+                    </LinkContainer>
+                    <LinkContainer exact to="/admin/themes">
+                        <Breadcrumb.Item>Темы упражнений</Breadcrumb.Item>
+                    </LinkContainer>
+                    <Breadcrumb.Item active>
+                        {(this.state.id) ? `Тема №${this.state.id}` : "Новая тема"}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>

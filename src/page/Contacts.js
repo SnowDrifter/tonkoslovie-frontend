@@ -8,8 +8,8 @@ class Contacts extends React.Component {
             <Helmet title="Контакты | Тонкословие"/>
 
             <Jumbotron>
-            <h2 style={{textAlign: "center"}}>Страница находится в разработке</h2>
-        </Jumbotron>
+                <h2 style={{textAlign: "center"}}>Страница находится в разработке</h2>
+            </Jumbotron>
         </div>
     }
 }

@@ -38,8 +38,8 @@ class Lessons extends React.Component {
             })
             .map((lesson, index) => {
                 const imagePreview = lesson.previewImage ? <Image className="lesson-preview"
-                                                             src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${lesson.previewImage}`}
-                                                             thumbnail/> : null;
+                                                                  src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${lesson.previewImage}`}
+                                                                  thumbnail/> : null;
 
                 return <LinkContainer to={`/lesson/${lesson.id}`} key={index}>
                     <li className="lesson">

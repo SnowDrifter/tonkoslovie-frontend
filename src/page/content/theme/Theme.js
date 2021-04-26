@@ -129,7 +129,9 @@ class Theme extends React.Component {
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
 
             <Card.Body>
-                <span className="float-right">{`Выполнено ${this.state.solvedExerciseCount}/${this.state.exercises.length}`}</span>
+                <span className="float-right">
+                    {`Выполнено ${this.state.solvedExerciseCount}/${this.state.exercises.length}`}
+                </span>
                 <Helmet title={`${this.state.title} | Тонкословие`}/>
                 <ExerciseComponent nextExercise={this.nextExercise}
                                    exercise={this.state.currentExercise}

@@ -30,15 +30,16 @@ class Login extends React.Component {
     sendLogin(event) {
         event.preventDefault();
 
-        const email =  this.emailInput.current.value ;
-        const password =  this.passwordInput.current.value ;
+        const email = this.emailInput.current.value;
+        const password = this.passwordInput.current.value;
 
         this.props.actions.login({email: email, password: password});
     }
 
     render() {
         return (
-            <Modal show={this.state.showLogin} onHide={this.props.actions.hideLogin} dialogClassName="login-modal" centered>
+            <Modal centered show={this.state.showLogin}
+                   onHide={this.props.actions.hideLogin} dialogClassName="login-modal">
                 <Modal.Header closeButton>
                     <Modal.Title>Вход</Modal.Title>
                 </Modal.Header>

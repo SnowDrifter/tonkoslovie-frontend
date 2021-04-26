@@ -72,7 +72,8 @@ class AdminWord extends React.Component {
                             </Row>
                         </FormGroup>
 
-                        <Button onClick={this.saveWord.bind(this)} className="float-right" variant="success">Сохранить</Button>
+                        <Button onClick={this.saveWord.bind(this)} className="float-right"
+                                variant="success">Сохранить</Button>
                     </Form>
                 </Modal.Body>
             </Modal>

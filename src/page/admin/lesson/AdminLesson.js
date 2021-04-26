@@ -229,7 +229,8 @@ class AdminLesson extends React.Component {
         if (this.state.previewFileName) {
             previewComponent = <div>
                 <h3>Превью</h3>
-                <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.state.previewFileName}`} alt="preview"/>
+                <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.state.previewFileName}`}
+                     alt="preview"/>
                 <br/>
                 <Button style={{marginTop: "5px"}} onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
             </div>

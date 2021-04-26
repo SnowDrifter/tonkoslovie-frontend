@@ -81,13 +81,13 @@ class Text extends React.Component {
                 case partTypes.QUESTION: {
                     this[`element-${index}`] = createRef();
                     elements.push(<QuestionElement ref={this[`element-${index}`]}
-                                                     part={part} key={index} index={index}/>);
+                                                   part={part} key={index} index={index}/>);
                     break;
                 }
                 case partTypes.CHOICE: {
                     this[`element-${index}`] = createRef();
                     elements.push(<ChoiceElement ref={this[`element-${index}`]}
-                                                   part={part} key={index} index={index}/>);
+                                                 part={part} key={index} index={index}/>);
                     break;
                 }
             }

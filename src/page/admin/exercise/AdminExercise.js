@@ -146,17 +146,22 @@ class AdminExercise extends React.Component {
             this[`answer-${i}`] = createRef();
 
             answerForms.push(<Form.Control className="admin-exercise-answer-form" key={i} ref={this[`answer-${i}`]}
-                                          defaultValue={this.state.answers[i] || ""}/>
+                                           defaultValue={this.state.answers[i] || ""}/>
             );
         }
 
         const body = <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
-                    <LinkContainer exact to="/admin/exercises"><Breadcrumb.Item>Упражнения</Breadcrumb.Item></LinkContainer>
-                    <Breadcrumb.Item
-                        active>{(this.state.id) ? `Уражнение №${this.state.id}` : "Новое упражнение"}</Breadcrumb.Item>
+                    <LinkContainer exact to="/admin">
+                        <Breadcrumb.Item>Главная</Breadcrumb.Item>
+                    </LinkContainer>
+                    <LinkContainer exact to="/admin/exercises">
+                        <Breadcrumb.Item>Упражнения</Breadcrumb.Item>
+                    </LinkContainer>
+                    <Breadcrumb.Item active>
+                        {(this.state.id) ? `Уражнение №${this.state.id}` : "Новое упражнение"}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>
