@@ -44,7 +44,7 @@
     "react": "16.4",
     "react-bootstrap": "^0.32.1",
     "react-dom": "16.4",
-    "react-draft-wysiwyg": "^1.12.13",
+    "react-draft-wysiwyg": "^1.14.6",
     "react-helmet": "^5.2.0",
     "react-player": "^1.6.4",
     "react-redux": "^5.0.7",
