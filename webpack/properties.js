@@ -14,7 +14,7 @@ const environments = {
 module.exports.load = function load(environment) {
     const properties = environments[environment || "development"];
 
-    console.log(`Load properties for environment '${environment}'. \n\nValues: `);
-    console.log(properties);
+    console.log(`Load properties for environment '${environment}'`);
+    console.table(properties);
     return properties;
 };
