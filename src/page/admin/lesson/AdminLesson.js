@@ -1,22 +1,10 @@
 import React, {createRef} from "react";
 import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
-import {
-    Breadcrumb,
-    Button,
-    Card,
-    Form,
-    Jumbotron,
-    ListGroup,
-    ProgressBar
-} from "react-bootstrap";
+import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ProgressBar} from "react-bootstrap";
 import Loader from "/component/Loader";
-import {Editor} from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from "draftjs-to-html";
-import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
+import JoditEditor from "jodit-react";
 import {toast} from "react-toastify";
-import TagUtil from "/util/TagUtil";
 import RemoveButton from "/component/button/RemoveButton";
 
 
@@ -29,7 +17,7 @@ class AdminLesson extends React.Component {
             id: null,
             texts: [],
             foundTexts: [],
-            content: EditorState.createEmpty(),
+            content: "",
             published: false,
             previewFileName: null,
             progressUploadFile: null,
@@ -48,7 +36,7 @@ class AdminLesson extends React.Component {
 
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
-        this.handTextChange = this.handTextChange.bind(this);
+        this.handleContentChange = this.handleContentChange.bind(this);
     }
 
     loadLesson(lessonId) {
@@ -59,19 +47,10 @@ class AdminLesson extends React.Component {
         }).then(response => {
             const lesson = response.data;
 
-            if (TagUtil.isNotEmptyTag(lesson.content)) {
-                const blocksFromHTML = convertFromHTML(lesson.content);
-                const contentState = ContentState.createFromBlockArray(
-                    blocksFromHTML.contentBlocks,
-                    blocksFromHTML.entityMap
-                );
-
-                this.setState({content: EditorState.createWithContent(contentState)});
-            }
-
             this.setState({
                 id: lesson.id,
                 texts: lesson.texts,
+                content: lesson.content,
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
                 progressUploadFile: null,
@@ -88,7 +67,7 @@ class AdminLesson extends React.Component {
             id: this.state.id,
             title: this.titleInput.current.value,
             annotation: this.annotationInput.current.value,
-            content: draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
+            content: this.state.content,
             published: this.state.published,
             texts: this.state.texts || [],
             previewImage: this.state.previewFileName
@@ -147,7 +126,7 @@ class AdminLesson extends React.Component {
         this.setState({texts: texts});
     }
 
-    handTextChange(content) {
+    handleContentChange(content) {
         this.setState({
             content: content
         });
@@ -276,14 +255,7 @@ class AdminLesson extends React.Component {
 
                     <h3>Текст урока</h3>
                     <Card>
-                        <Card.Body>
-                            <Editor editorState={this.state.content}
-                                    toolbarClassName="toolbarClassName"
-                                    wrapperClassName="wrapperClassName"
-                                    editorClassName="editorClassName"
-                                    onEditorStateChange={this.handTextChange}
-                            />
-                        </Card.Body>
+                        <JoditEditor value={this.state.content} onBlur={this.handleContentChange.bind(this)}/>
                     </Card>
 
                     <h3>Добавленные тексты</h3>

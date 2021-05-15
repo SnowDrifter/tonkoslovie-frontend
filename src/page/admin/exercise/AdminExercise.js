@@ -1,16 +1,12 @@
 import React, {createRef} from "react";
-import {Breadcrumb, Button, ButtonToolbar, Form, Jumbotron, Card} from "react-bootstrap";
+import {Breadcrumb, Button, ButtonToolbar, Card, Form, Jumbotron} from "react-bootstrap";
 import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import * as  exerciseTypes from "/page/content/theme/ExerciseTypes";
-import {Editor} from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from "draftjs-to-html";
-import {ContentState, convertFromHTML, convertToRaw, EditorState} from "draft-js";
+import JoditEditor from "jodit-react";
 import Loader from "/component/Loader";
 import "./AdminExercise.less";
 import {toast} from "react-toastify";
-import TagUtil from "/util/TagUtil"
 
 
 class AdminExercise extends React.Component {
@@ -21,8 +17,8 @@ class AdminExercise extends React.Component {
         this.state = {
             id: null,
             type: null,
-            original: EditorState.createEmpty(),
-            dictionary: EditorState.createEmpty(),
+            original: "",
+            dictionary: "",
             // Fix empty default value in first answer input
             answersCount: this.props.computedMatch.params.exerciseId ? 0 : 1,
             answers: [],
@@ -51,30 +47,12 @@ class AdminExercise extends React.Component {
 
             const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-            if (TagUtil.isNotEmptyTag(exercise.original)) {
-                const originalBlocksFromHTML = convertFromHTML(exercise.original);
-                const originalState = ContentState.createFromBlockArray(
-                    originalBlocksFromHTML.contentBlocks,
-                    originalBlocksFromHTML.entityMap
-                );
-
-                this.setState({original: EditorState.createWithContent(originalState)});
-            }
-
-            if (TagUtil.isNotEmptyTag(exercise.dictionary)) {
-                const dictionaryBlocksFromHTML = convertFromHTML(exercise.dictionary);
-                const dictionaryState = ContentState.createFromBlockArray(
-                    dictionaryBlocksFromHTML.contentBlocks,
-                    dictionaryBlocksFromHTML.entityMap
-                );
-
-                this.setState({dictionary: EditorState.createWithContent(dictionaryState)});
-            }
-
             this.setState({
                 id: exercise.id,
                 answersCount: answersCount,
                 answers: exercise.answers || [],
+                original: exercise.original,
+                dictionary: exercise.dictionary,
                 loaded: true
             });
 
@@ -94,8 +72,8 @@ class AdminExercise extends React.Component {
         Client.post("/api/content/exercise", {
             id: this.state.id,
             title: this.titleInput.current.value,
-            original: draftToHtml(convertToRaw(this.state.original.getCurrentContent())),
-            dictionary: draftToHtml(convertToRaw(this.state.dictionary.getCurrentContent())),
+            original: this.state.original,
+            dictionary: this.state.dictionary,
             answers: answers,
             type: this.typeInput.current.value,
             answerRegex: this.answerRegexInput.current.value
@@ -172,22 +150,12 @@ class AdminExercise extends React.Component {
 
                     <h3>Оригинал</h3>
                     <Card>
-                        <Card.Body>
-                            <Editor
-                                editorState={this.state.original}
-                                onEditorStateChange={this.handleOriginalChange}
-                            />
-                        </Card.Body>
+                        <JoditEditor value={this.state.original} onBlur={this.handleOriginalChange.bind(this)}/>
                     </Card>
 
                     <h3>Словарь</h3>
                     <Card>
-                        <Card.Body>
-                            <Editor
-                                editorState={this.state.dictionary}
-                                onEditorStateChange={this.handleDictionaryChange}
-                            />
-                        </Card.Body>
+                        <JoditEditor value={this.state.dictionary} onBlur={this.handleDictionaryChange.bind(this)}/>
                     </Card>
 
                     <Form.Group>
