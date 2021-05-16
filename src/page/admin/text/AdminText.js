@@ -10,7 +10,7 @@ import ReactPlayer from "react-player";
 import "./AdminText.less";
 import {toast} from "react-toastify";
 import RemoveButton from "/component/button/RemoveButton";
-import EditRemoveButtons from "/component/button/RemoveButton";
+import EditRemoveButtons from "/component/button/EditRemoveButtons";
 
 class AdminText extends React.Component {
 
