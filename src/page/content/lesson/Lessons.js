@@ -33,9 +33,6 @@ class Lessons extends React.Component {
 
     createLessonPreviews() {
         return this.state.lessons
-            .sort(function (a, b) {
-                return a.title.localeCompare(b.title);
-            })
             .map((lesson, index) => {
                 const imagePreview = lesson.previewImage ? <Image className="lesson-preview"
                                                                   src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${lesson.previewImage}`}

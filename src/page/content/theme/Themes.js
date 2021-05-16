@@ -33,9 +33,6 @@ class Themes extends React.Component {
 
     createThemePreviews() {
         return this.state.themes
-            .sort(function (a, b) {
-                return a.title.localeCompare(b.title);
-            })
             .map((theme, index) => {
                 return <LinkContainer exact to={`/theme/${theme.id}`}
                                       className="theme-title"

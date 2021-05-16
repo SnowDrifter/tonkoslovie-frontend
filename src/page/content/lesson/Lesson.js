@@ -47,17 +47,10 @@ class Lesson extends React.Component {
     }
 
     createTextList() {
-        const sortedTexts = this.state.texts.sort(function (a, b) {
-            return a.title.localeCompare(b.title);
-        });
-
-        let texts = [];
-        sortedTexts.map((text, index) => {
-            texts.push(
-                <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
+        let texts = this.state.texts.map((text, index) => {
+            return <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
                     <span>{text.title}</span>
-                </LinkContainer>
-            );
+                </LinkContainer>;
         });
 
         if (texts.length > 0) {
