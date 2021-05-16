@@ -1,7 +1,8 @@
 import React from "react";
-import {Card, Jumbotron} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import Client from "/util/Client";
 import Helmet from "react-helmet";
+import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import ExerciseComponent from "./ExerciseComponent";
 import SimpleConfirmModal from "/component/SimpleConfirmModal";
@@ -148,7 +149,7 @@ class Theme extends React.Component {
         if (this.state.loaded) {
             return body;
         } else if (this.state.failed) {
-            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Тема не найдена</h2></Jumbotron>;
+            return <ErrorPanel text="Тема не найдена"/>;
         } else {
             return <Loader/>;
         }

@@ -4,6 +4,7 @@ import Client from "/util/Client";
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
 import ReactPlayer from "react-player";
+import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import QuestionElement from "./elements/QuestionElement";
 import ChoiceElement from "./elements/ChoiceElement";
@@ -125,7 +126,7 @@ class Text extends React.Component {
         if (this.state.loaded) {
             return body;
         } else if (this.state.failed) {
-            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Текст не найден</h2></Jumbotron>;
+            return <ErrorPanel text="Текст не найден"/>;
         } else {
             return <Loader/>;
         }

@@ -1,11 +1,12 @@
 import React, {createRef} from "react";
 import Client from "/util/Client";
-import {Card, Jumbotron, Form, Button} from "react-bootstrap";
+import {Button, Card, Form} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import * as  exerciseTypes from "/page/content/theme/ExerciseTypes";
 import SimpleConfirmModal from "/component/SimpleConfirmModal";
 import SimpleTextModal from "/component/SimpleTextModal";
+import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import "./Exercise.less"
 
@@ -200,7 +201,7 @@ class Exercise extends React.Component {
         if (this.state.loaded) {
             return body;
         } else if (this.state.failed) {
-            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Упражнение не найдено</h2></Jumbotron>;
+            return <ErrorPanel text="Упражнение не найдено"/>
         } else {
             return <Loader/>;
         }

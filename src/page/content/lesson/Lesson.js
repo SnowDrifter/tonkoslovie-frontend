@@ -1,9 +1,10 @@
 import React from "react";
 import Client from "/util/Client";
-import {Jumbotron, ListGroup, Card} from "react-bootstrap";
+import {ListGroup, Card} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
+import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import "./Lesson.less"
 
@@ -86,7 +87,7 @@ class Lesson extends React.Component {
         if (this.state.loaded) {
             return body;
         } else if (this.state.failed) {
-            return <Jumbotron><h2 style={{color: "red", textAlign: "center"}}>Урок не найден</h2></Jumbotron>;
+            return <ErrorPanel text="Урок не найден"/>
         } else {
             return <Loader/>;
         }
