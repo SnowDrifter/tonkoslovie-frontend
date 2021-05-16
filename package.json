@@ -7,7 +7,8 @@
     "build-dev": "cross-env NODE_ENV=development webpack --config webpack/webpack.config.dev.js",
     "build-prod": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.prod.js --stats-error-details true",
     "dev": "cross-env NODE_ENV=development webpack serve --config webpack/webpack.config.dev.js",
-    "prod": "cross-env NODE_ENV=production node server.js"
+    "prod": "cross-env NODE_ENV=production node server.js",
+    "sonar": "sonar-scanner"
   },
   "keywords": [],
   "author": "Ivan Romanov",
@@ -64,6 +65,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
     "less-loader": "^9.0.0",
+    "sonarqube-scanner": "^2.8.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
     "webpack": "^5.33.2",
