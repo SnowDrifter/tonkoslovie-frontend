@@ -1,16 +1,9 @@
-import {
-    SHOW_LOGIN,
-    HIDE_LOGIN,
-    LOGIN_REQUEST,
-    LOGIN_FAILURE,
-    LOGIN_SUCCESS,
-    LOGOUT
-} from "/constant/User"
+import {HIDE_LOGIN, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, SHOW_LOGIN} from "/constant/User"
 import decode from "jwt-decode";
 
 const initialState = ({
-    user: localStorage.getItem("token") !== undefined ? decode(localStorage.getItem("token")) : {},
-    isAuthenticated: localStorage.getItem("token") !== undefined,
+    user: localStorage.getItem("token")  !== null ? decode(localStorage.getItem("token")) : {},
+    isAuthenticated: localStorage.getItem("token") !== null,
     showLogin: false,
     errorMessage: null
 });
