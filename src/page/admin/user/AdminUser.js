@@ -58,6 +58,8 @@ class AdminUser extends React.Component {
             enabled: this.state.enabled
         }).then(() => {
             toast.success("Сохранено");
+        }).catch((e) => {
+            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
         })
     }
 

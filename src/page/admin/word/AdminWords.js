@@ -7,6 +7,7 @@ import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
 import AdminWord from "./AdminWord";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
+import {toast} from "react-toastify";
 
 
 class AdminWords extends React.Component {
@@ -59,6 +60,8 @@ class AdminWords extends React.Component {
                 }
             }).then(() => {
                 this.updateWords();
+            }).catch((e) => {
+                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
             });
         }
     }

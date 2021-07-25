@@ -2,6 +2,7 @@ import React, {createRef} from "react";
 import Client from "/util/Client";
 import {FormGroup, Row, Col, FormLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import "./AdminWord.less"
+import {toast} from "react-toastify";
 
 
 class AdminWord extends React.Component {
@@ -27,6 +28,8 @@ class AdminWord extends React.Component {
             polishText: polishText
         }).then(() => {
             this.props.hideModal();
+        }).catch((e) => {
+            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
         })
     }
 

@@ -75,6 +75,8 @@ class AdminText extends React.Component {
             }
 
             toast.success("Сохранено");
+        }).catch((e) => {
+            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
         })
     }
 
@@ -136,6 +138,9 @@ class AdminText extends React.Component {
                 .then(() => {
                     this.setState({soundFileName: null});
                     this.saveText();
+                })
+                .catch((e) => {
+                    toast.error(`Ошибка удаления! Код: ${e.response.status}`);
                 });
         }
     }

@@ -87,6 +87,8 @@ class AdminExercise extends React.Component {
             }
 
             toast.success("Сохранено");
+        }).catch((e) => {
+            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
         })
     }
 

@@ -6,6 +6,7 @@ import "fixed-data-table-2/dist/fixed-data-table.css";
 import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
+import {toast} from "react-toastify";
 
 
 class AdminThemes extends React.Component {
@@ -46,6 +47,8 @@ class AdminThemes extends React.Component {
                 }
             }).then(() => {
                 this.updateThemes();
+            }).catch((e) => {
+                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
             });
         }
     }

@@ -81,6 +81,8 @@ class AdminLesson extends React.Component {
             }
 
             toast.success("Сохранено");
+        }).catch((e) => {
+            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
         })
     }
 
@@ -96,6 +98,8 @@ class AdminLesson extends React.Component {
             this.setState({
                 foundTexts: texts
             });
+        }).catch((e) => {
+            toast.error(`Ошибка поиска! Код: ${e.response.status}`);
         })
     }
 

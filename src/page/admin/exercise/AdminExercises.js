@@ -5,6 +5,7 @@ import {Cell, Column, Table} from "fixed-data-table-2";
 import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
+import {toast} from "react-toastify";
 
 
 class AdminExercises extends React.Component {
@@ -45,6 +46,8 @@ class AdminExercises extends React.Component {
                 }
             }).then(() => {
                 this.updateExercises();
+            }).catch((e) => {
+                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
             });
         }
     }
