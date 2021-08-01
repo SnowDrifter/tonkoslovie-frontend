@@ -4,7 +4,6 @@ import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
 import Client from "/util/Client";
 import EditPartModal from "./EditPartModal";
-import CreatePartModal from "./CreatePartModal";
 import * as partTypes from "/page/content/text/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
@@ -20,7 +19,6 @@ class AdminText extends React.Component {
         this.state = {
             id: null,
             showEditPartModal: false,
-            showCreatePartModal: false,
             modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
@@ -31,9 +29,10 @@ class AdminText extends React.Component {
         };
 
         this.hideModal = this.hideModal.bind(this);
-        this.saveTextPart = this.saveTextPart.bind(this);
         this.editTextPart = this.editTextPart.bind(this);
         this.removeTextPart = this.removeTextPart.bind(this);
+        this.changeTextPart = this.changeTextPart.bind(this);
+        this.saveTextPartChanges = this.saveTextPartChanges.bind(this);
 
         this.titleInput = createRef();
         this.soundInput = createRef();
@@ -81,19 +80,11 @@ class AdminText extends React.Component {
     }
 
     hideModal() {
-        this.setState({showEditPartModal: false, showCreatePartModal: false});
-    }
-
-    saveTextPart(index, textPart) {
-        if (index || index === 0) {
-            let textParts = this.state.textParts;
-            textParts[index] = textPart;
-            this.setState({textParts: textParts, currentPart: null, currentPartIndex: null});
-        } else {
-            this.setState({textParts: this.state.textParts.concat(textPart)});
-        }
-
-        this.hideModal();
+        this.setState({
+            showEditPartModal: false,
+            currentPart: null,
+            currentPartIndex: null
+        });
     }
 
     addLineBreak() {
@@ -122,9 +113,10 @@ class AdminText extends React.Component {
 
     showCreatePartModal() {
         this.setState({
-            showCreatePartModal: true, modalTitle: "Добавление текста", currentPart: {
-                type: partTypes.TEXT
-            }
+            showEditPartModal: true,
+            modalTitle: "Добавление текста",
+            currentPartIndex: null,
+            currentPart: {type: partTypes.TEXT}
         });
     }
 
@@ -142,6 +134,24 @@ class AdminText extends React.Component {
                 .catch((e) => {
                     toast.error(`Ошибка удаления! Код: ${e.response.status}`);
                 });
+        }
+    }
+
+    changeTextPart(textPart) {
+        this.setState({currentPart: textPart})
+    }
+
+    saveTextPartChanges(textPart) {
+        if (this.state.currentPartIndex) {
+            this.setState(prevState => ({
+                textParts: prevState.textParts.map(
+                    (part, index) => {
+                        return index === this.state.currentPartIndex ? textPart : part
+                    }
+                )
+            }))
+        } else {
+            this.setState({textParts: this.state.textParts.concat(textPart)});
         }
     }
 
@@ -241,14 +251,10 @@ class AdminText extends React.Component {
 
                 <EditPartModal showModal={this.state.showEditPartModal}
                                modalTitle={this.state.modalTitle}
-                               currentPart={this.state.currentPart}
+                               textPart={this.state.currentPart}
                                hideModal={this.hideModal}
-                               saveTextPart={this.saveTextPart}/>
-
-                <CreatePartModal showModal={this.state.showCreatePartModal}
-                                 modalTitle={this.state.modalTitle}
-                                 hideModal={this.hideModal}
-                                 saveTextPart={this.saveTextPart}/>
+                               changeTextPart={this.changeTextPart}
+                               saveTextPartChanges={this.saveTextPartChanges}/>
 
                 <ButtonGroup>
                     <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>

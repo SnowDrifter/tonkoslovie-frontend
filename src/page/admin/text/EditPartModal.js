@@ -4,21 +4,24 @@ import {
     ButtonToolbar,
     Col,
     Form,
-    InputGroup,
     Modal,
     Row,
     ToggleButton,
     ToggleButtonGroup
 } from "react-bootstrap";
 import * as partTypes from "/page/content/text/TextPartTypes";
+import {toast} from "react-toastify";
+import TextPartBody from "./part/TextPartBody";
+import QuestionPartBody from "./part/QuestionPartBody";
+import ChoicePartBody from "./part/ChoicePartBody";
 
 class EditPartModal extends React.Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
-            type: undefined,
-            choiceVariants: []
+            textPart: props.textPart,
         };
 
         this.dataInput = createRef();
@@ -26,62 +29,33 @@ class EditPartModal extends React.Component {
 
         this.increaseChoicesCount = this.increaseChoicesCount.bind(this);
         this.decreaseChoicesCount = this.decreaseChoicesCount.bind(this);
+        this.changeType = this.changeType.bind(this);
     }
 
     increaseChoicesCount() {
-        let choiceVariants = this.state.choiceVariants;
-        this[`right-${choiceVariants.length}`] = createRef();
-        this[`form-${choiceVariants.length}`] = createRef();
+        const choiceVariants = this.state.textPart.choiceVariants || [];
         choiceVariants.push("");
-        this.setState({choiceVariants: choiceVariants})
+
+        const textPart = {...this.state.textPart, choiceVariants: choiceVariants}
+        this.props.changeTextPart(textPart)
     }
 
     decreaseChoicesCount() {
-        if (this.state.choiceVariants.length > 1) {
-            let choiceVariants = this.state.choiceVariants;
+        const choiceVariants = this.state.textPart.choiceVariants || [];
+        if (choiceVariants.length > 1) {
             choiceVariants.pop();
-            this.setState({choiceVariants: choiceVariants})
+            const textPart = {...this.state.textPart, choiceVariants: choiceVariants}
+            this.props.changeTextPart(textPart)
         }
     }
 
-
-    // componentWillReceiveProps(props) {
-    //     const currentPart = props.currentPart;
-    //
-    //     if (currentPart != null) {
-    //         this.setState({type: currentPart.type});
-    //
-    //         if (currentPart.type === partTypes.CHOICE) {
-    //             this.setState({
-    //                 choiceVariants: currentPart.choiceVariants,
-    //                 choicesCount: currentPart.choiceVariants.length
-    //             });
-    //         }
-    //     }
-    // }
-
-    static getDerivedStateFromProps(props, state) {
-        console.log("getDerivedStateFromProps")
-        const currentPart = props.currentPart;
-        console.log(props);
-        console.log(state);
-
-        if (currentPart) {
-            console.log(currentPart.type)
-            return {
-                type: currentPart.type,
-                choiceVariants: currentPart.choiceVariants
-            }
-        }
-
-        return null;
+    static getDerivedStateFromProps(props) {
+        return {textPart: props.textPart}
     }
 
     saveTextPart() {
-        let type = this.state.type;
-
-        let textPart = this.props.currentPart;
-        textPart.type = type;
+        const textPart = this.state.textPart;
+        const type = textPart.type;
 
         if (type === partTypes.TEXT) {
             textPart.data = this.dataInput.current.value;
@@ -93,84 +67,74 @@ class EditPartModal extends React.Component {
         }
 
         if (type === partTypes.CHOICE) {
-            const choiceVariants = [];
-            const choiceCount = this.state.choiceVariants.length;
-
-            for (let i = 0; i < choiceCount; i++) {
-                let choiceVariant = {};
-                choiceVariant.title = this[`form-${i}`].current.value;
-                choiceVariant.right = this[`right-${i}`].current.checked;
-                choiceVariants.push(choiceVariant);
+            if (this.checkRightAnswer()) {
+                const choiceCount = this.state.textPart.choiceVariants.length;
+                textPart.choiceVariants = Array(choiceCount).map(i => {
+                    return {
+                        title: this[`form-${i}`].current.value,
+                        right: this[`right-${i}`].current.checked
+                    }
+                });
+            } else {
+                toast.error("Необходим хотя бы один правильный ответ");
+                return;
             }
-
-            textPart.choiceVariants = choiceVariants;
         }
 
-        this.props.saveTextPart(this.props.currentPartIndex, textPart)
+        this.props.saveTextPartChanges(textPart)
+        this.props.hideModal()
     }
 
-    changeType(type) {
-        this.setState({type: type});
+    changeType(newType) {
+        const textPart = {...this.state.textPart, type: newType}
+        this.props.changeTextPart(textPart)
+    }
+
+    checkRightAnswer() {
+        const choiceCount = this.state.textPart.choiceVariants.length;
+        for (let i = 0; i < choiceCount; i++) {
+            if (this[`right-${i}`].current.checked) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    createBody(textPart) {
+        switch (textPart.type) {
+            case partTypes.TEXT:
+                return <TextPartBody dataInput={this.dataInput} data={textPart.data}/>
+            case partTypes.QUESTION:
+                return <QuestionPartBody dataInput={this.dataInput} data={textPart.data}
+                                         placeholderInput={this.placeholderInput} placeholder={textPart.placeholder}/>
+            case partTypes.CHOICE: {
+                const choiceVariants = textPart.choiceVariants || [{}];
+                const choiceFormsData = choiceVariants.map((value, index) => {
+                    this[`right-${index}`] = createRef();
+                    this[`form-${index}`] = createRef();
+                    return {
+                        title: value.title,
+                        titleRef: this[`form-${index}`],
+                        right: value.right,
+                        rightRef: this[`right-${index}`]
+                    }
+                });
+
+                return <ChoicePartBody choiceFormsData={choiceFormsData}
+                                       increaseChoicesCount={this.increaseChoicesCount}
+                                       decreaseChoicesCount={this.decreaseChoicesCount}/>
+            }
+        }
     }
 
     render() {
-        let type = this.state.type;
-        const currentPart = this.props.currentPart;
-
-        let body;
-
-        if (type === partTypes.TEXT) {
-            body = <Form.Group>
-                <Form.Label>Текст</Form.Label>
-                <Form.Control as="textarea" ref={this.dataInput}
-                              defaultValue={currentPart ? currentPart.data : ""}
-                />
-            </Form.Group>
-        } else if (type === partTypes.QUESTION) {
-            body = <div>
-                <Form.Group>
-                    <Form.Label>Текст</Form.Label>
-                    <Form.Control as="textarea" ref={this.dataInput}
-                                  defaultValue={currentPart ? currentPart.data : ""}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Подсказка</Form.Label>
-                    <Form.Control ref={this.placeholderInput}
-                                  defaultValue={currentPart ? currentPart.placeholder : ""}
-                    />
-                </Form.Group>
-            </div>
-        } else if (type === partTypes.CHOICE) {
-            const choiceForms = [];
-
-            this.state.choiceVariants.map((value, index) => {
-                this[`right-${index}`] = createRef();
-                this[`form-${index}`] = createRef();
-
-                choiceForms.push(
-                    <InputGroup key={index} className="admin-text-choice-part-input">
-                        <InputGroup.Prepend>
-                            <Form.Check name="right-variant" type="radio"
-                                        ref={this[`right-${index}`]}
-                                        defaultChecked={value.right}/>
-                        </InputGroup.Prepend>
-                        <Form.Control ref={this[`form-${index}`]}
-                                      defaultValue={value.title}/>
-                    </InputGroup>
-                );
-            });
-
-            body = <div>
-                <Form.Group>
-                    <Form.Label>Варианты</Form.Label>
-                    {choiceForms}
-                </Form.Group>
-
-                <Button onClick={this.increaseChoicesCount.bind(this)}>Добавить вариант</Button>
-                <Button onClick={this.decreaseChoicesCount.bind(this)}>Удалить вариант</Button>
-            </div>
+        const textPart = this.state.textPart;
+        if (!textPart) {
+            return null;
         }
+
+        const body = this.createBody(textPart)
 
         return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="lg">
             <Modal.Header closeButton>
@@ -183,7 +147,7 @@ class EditPartModal extends React.Component {
                             <Col md={12}>
                                 <ButtonToolbar>
                                     <ToggleButtonGroup type="radio" name="options" onChange={this.changeType.bind(this)}
-                                                       defaultValue={type}>
+                                                       defaultValue={textPart.type}>
                                         <ToggleButton value={partTypes.TEXT}>Текст</ToggleButton>
                                         <ToggleButton value={partTypes.QUESTION}>Вопрос</ToggleButton>
                                         <ToggleButton value={partTypes.CHOICE}>Выбор</ToggleButton>
@@ -196,7 +160,7 @@ class EditPartModal extends React.Component {
                     </Form.Group>
 
                     <Button onClick={this.saveTextPart.bind(this)}
-                            className="fliat" variant="success">Сохранить</Button>
+                            className="float-right" variant="success">Сохранить</Button>
                 </Form>
             </Modal.Body>
         </Modal>
