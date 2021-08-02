@@ -96,7 +96,7 @@ class AdminText extends React.Component {
     }
 
     editTextPart(key) {
-        let textPart = this.state.textParts[key];
+        const textPart = this.state.textParts[key];
         this.setState({
             showEditPartModal: true,
             modalTitle: "Редактирование",
@@ -142,7 +142,7 @@ class AdminText extends React.Component {
     }
 
     saveTextPartChanges(textPart) {
-        if (this.state.currentPartIndex) {
+        if (this.state.currentPartIndex !== null) {
             this.setState(prevState => ({
                 textParts: prevState.textParts.map(
                     (part, index) => {
@@ -316,7 +316,7 @@ class LineBreakPart extends React.Component {
     render() {
         return <div className="admin-line-break-part">
             ¶
-            <RemoveButton action={() => this.props.removePart()}/>
+            <RemoveButton action={() => this.props.removePart(this.props.index)}/>
         </div>
     }
 }

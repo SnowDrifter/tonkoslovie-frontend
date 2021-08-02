@@ -11,9 +11,9 @@ import {
 } from "react-bootstrap";
 import * as partTypes from "/page/content/text/TextPartTypes";
 import {toast} from "react-toastify";
-import TextPartBody from "./part/TextPartBody";
-import QuestionPartBody from "./part/QuestionPartBody";
-import ChoicePartBody from "./part/ChoicePartBody";
+import TextPartBody from "/page/admin/text/part/TextPartBody";
+import QuestionPartBody from "/page/admin/text/part/QuestionPartBody";
+import ChoicePartBody from "/page/admin/text/part/ChoicePartBody";
 
 class EditPartModal extends React.Component {
 
@@ -68,13 +68,13 @@ class EditPartModal extends React.Component {
 
         if (type === partTypes.CHOICE) {
             if (this.checkRightAnswer()) {
-                const choiceCount = this.state.textPart.choiceVariants.length;
-                textPart.choiceVariants = Array(choiceCount).map(i => {
-                    return {
-                        title: this[`form-${i}`].current.value,
-                        right: this[`right-${i}`].current.checked
-                    }
-                });
+                textPart.choiceVariants = this.state.textPart.choiceVariants
+                    .map((value, index) => {
+                        return {
+                            title: this[`form-${index}`].current.value,
+                            right: this[`right-${index}`].current.checked
+                        }
+                    });
             } else {
                 toast.error("Необходим хотя бы один правильный ответ");
                 return;
@@ -87,6 +87,9 @@ class EditPartModal extends React.Component {
 
     changeType(newType) {
         const textPart = {...this.state.textPart, type: newType}
+        if (newType === partTypes.CHOICE && !textPart.choiceVariants) {
+            textPart.choiceVariants = [{title: "", right: true}]
+        }
         this.props.changeTextPart(textPart)
     }
 
