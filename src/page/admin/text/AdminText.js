@@ -10,6 +10,8 @@ import "./AdminText.less";
 import {toast} from "react-toastify";
 import RemoveButton from "/component/button/RemoveButton";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
+import {arrayMove} from "react-sortable-hoc";
+import DraggableHorizontalList from "/component/DraggableHorizontalList";
 
 class AdminText extends React.Component {
 
@@ -33,6 +35,7 @@ class AdminText extends React.Component {
         this.removeTextPart = this.removeTextPart.bind(this);
         this.changeTextPart = this.changeTextPart.bind(this);
         this.saveTextPartChanges = this.saveTextPartChanges.bind(this);
+        this.onSortEnd = this.onSortEnd.bind(this);
 
         this.titleInput = createRef();
         this.soundInput = createRef();
@@ -183,6 +186,12 @@ class AdminText extends React.Component {
             });
     }
 
+    onSortEnd(args) {
+        this.setState({
+            textParts: arrayMove(this.state.textParts, args.oldIndex, args.newIndex)
+        });
+    }
+
     render() {
         const elements = this.state.textParts
             .map((part, index) => {
@@ -246,7 +255,7 @@ class AdminText extends React.Component {
                     {soundComponent}
 
                     <h3>Элементы текста</h3>
-                    {elements}
+                    <DraggableHorizontalList elements={elements} onSortEnd={this.onSortEnd}/>
                 </Jumbotron>
 
                 <EditPartModal showModal={this.state.showEditPartModal}
