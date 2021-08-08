@@ -3,13 +3,12 @@ import {Breadcrumb, Button, ButtonGroup, Card, Form, Jumbotron, ProgressBar} fro
 import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
 import Client from "/util/Client";
-import EditPartModal from "./EditPartModal";
+import EditPartModal from "/page/admin/text/edit/EditPartModal";
+import TextPart from "/page/admin/text/TextPart";
 import * as partTypes from "/page/content/text/TextPartTypes";
 import ReactPlayer from "react-player";
 import "./AdminText.less";
 import {toast} from "react-toastify";
-import RemoveButton from "/component/button/RemoveButton";
-import EditRemoveButtons from "/component/button/EditRemoveButtons";
 import {arrayMove} from "react-sortable-hoc";
 import DraggableHorizontalList from "/component/DraggableHorizontalList";
 
@@ -21,6 +20,7 @@ class AdminText extends React.Component {
         this.state = {
             id: null,
             showEditPartModal: false,
+            showConfirmModal: false,
             modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
@@ -36,6 +36,7 @@ class AdminText extends React.Component {
         this.changeTextPart = this.changeTextPart.bind(this);
         this.saveTextPartChanges = this.saveTextPartChanges.bind(this);
         this.onSortEnd = this.onSortEnd.bind(this);
+        this.createElements = this.createElements.bind(this);
 
         this.titleInput = createRef();
         this.soundInput = createRef();
@@ -109,9 +110,7 @@ class AdminText extends React.Component {
     }
 
     removeTextPart(key) {
-        if (confirm("Удалить фрагмент?")) {
-            this.setState({textParts: this.state.textParts.filter((value, index) => index !== key)});
-        }
+        this.setState({textParts: this.state.textParts.filter((value, index) => index !== key)});
     }
 
     showCreatePartModal() {
@@ -192,22 +191,47 @@ class AdminText extends React.Component {
         });
     }
 
-    render() {
-        const elements = this.state.textParts
+    createElements() {
+        return this.state.textParts
             .map((part, index) => {
+                let className;
+                let data;
+                let enableEditing = true;
+
                 if (part.type === partTypes.TEXT) {
-                    return <TextPart key={index} index={index} data={part.data}
-                                     removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                    className = "admin-text-part";
+                    data = part.data;
                 } else if (part.type === partTypes.QUESTION) {
-                    return <QuestionPart key={index} index={index} data={part.data}
-                                         removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                    className = "admin-question-part";
+                    data = part.data;
                 } else if (part.type === partTypes.CHOICE) {
-                    return <ChoicePart choiceVariants={part.choiceVariants} key={index} index={index}
-                                       removePart={this.removeTextPart} editPart={this.editTextPart}/>;
+                    const words = part.choiceVariants.map(variant => {
+                        return variant.title;
+                    });
+
+                    className = "admin-choice-part";
+                    data = words.join(", ");
                 } else if (part.type === partTypes.LINE_BREAK) {
-                    return <LineBreakPart key={index} index={index} removePart={this.removeTextPart}/>;
+                    className = "admin-line-break-part";
+                    data = "¶";
+                    enableEditing = false;
                 }
+
+                return <TextPart key={index}
+                                 index={index}
+                                 data={data}
+                                 className={className}
+                                 removePart={this.removeTextPart}
+                                 editPart={enableEditing ? this.editTextPart : null}/>
             });
+    }
+
+    render() {
+        if (!this.state.loaded) {
+            return <Loader/>;
+        }
+
+        const elements = this.createElements();
 
         let soundComponent;
 
@@ -237,7 +261,7 @@ class AdminText extends React.Component {
             </div>
         }
 
-        const body = <Card>
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
@@ -273,60 +297,6 @@ class AdminText extends React.Component {
                         variant="success">Сохранить</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
-    }
-}
-
-class TextPart extends React.Component {
-    render() {
-        return <div className="admin-text-part">
-            {this.props.data}
-
-            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
-                               remove={() => this.props.removePart(this.props.index)}/>
-        </div>
-    }
-}
-
-class QuestionPart extends React.Component {
-    render() {
-        return <div className="admin-question-part">
-            {this.props.data}
-
-            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
-                               remove={() => this.props.removePart(this.props.index)}/>
-        </div>
-    }
-}
-
-class ChoicePart extends React.Component {
-    render() {
-        const words = [];
-
-        this.props.choiceVariants.map(variant => {
-            words.push(variant.title);
-        });
-
-        return <div className="admin-choice-part">
-            {words.join(", ")}
-
-            <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
-                               remove={() => this.props.removePart(this.props.index)}/>
-        </div>
-    }
-}
-
-class LineBreakPart extends React.Component {
-    render() {
-        return <div className="admin-line-break-part">
-            ¶
-            <RemoveButton action={() => this.props.removePart(this.props.index)}/>
-        </div>
     }
 }
 

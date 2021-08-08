@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, InputGroup} from "react-bootstrap";
 
-class ChoicePartBody extends React.Component {
+class ChoicePartModalBody extends React.Component {
 
     render() {
         const choiceForms = this.props.choiceFormsData.map((value, index) => {
@@ -26,4 +26,4 @@ class ChoicePartBody extends React.Component {
     }
 }
 
-export default ChoicePartBody;
+export default ChoicePartModalBody;

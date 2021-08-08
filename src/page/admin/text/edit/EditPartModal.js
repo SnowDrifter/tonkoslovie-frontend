@@ -11,9 +11,9 @@ import {
 } from "react-bootstrap";
 import * as partTypes from "/page/content/text/TextPartTypes";
 import {toast} from "react-toastify";
-import TextPartBody from "/page/admin/text/part/TextPartBody";
-import QuestionPartBody from "/page/admin/text/part/QuestionPartBody";
-import ChoicePartBody from "/page/admin/text/part/ChoicePartBody";
+import TextPartModalBody from "/page/admin/text/edit/TextPartModalBody";
+import QuestionPartModalBody from "/page/admin/text/edit/QuestionPartModalBody";
+import ChoicePartModalBody from "/page/admin/text/edit/ChoicePartModalBody";
 
 class EditPartModal extends React.Component {
 
@@ -107,9 +107,9 @@ class EditPartModal extends React.Component {
     createBody(textPart) {
         switch (textPart.type) {
             case partTypes.TEXT:
-                return <TextPartBody dataInput={this.dataInput} data={textPart.data}/>
+                return <TextPartModalBody dataInput={this.dataInput} data={textPart.data}/>
             case partTypes.QUESTION:
-                return <QuestionPartBody dataInput={this.dataInput} data={textPart.data}
+                return <QuestionPartModalBody dataInput={this.dataInput} data={textPart.data}
                                          placeholderInput={this.placeholderInput} placeholder={textPart.placeholder}/>
             case partTypes.CHOICE: {
                 const choiceVariants = textPart.choiceVariants || [{}];
@@ -124,7 +124,7 @@ class EditPartModal extends React.Component {
                     }
                 });
 
-                return <ChoicePartBody choiceFormsData={choiceFormsData}
+                return <ChoicePartModalBody choiceFormsData={choiceFormsData}
                                        increaseChoicesCount={this.increaseChoicesCount}
                                        decreaseChoicesCount={this.decreaseChoicesCount}/>
             }
@@ -139,7 +139,7 @@ class EditPartModal extends React.Component {
 
         const body = this.createBody(textPart)
 
-        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="lg">
+        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} size="lg" centered>
             <Modal.Header closeButton>
                 <Modal.Title>{this.props.modalTitle}</Modal.Title>
             </Modal.Header>

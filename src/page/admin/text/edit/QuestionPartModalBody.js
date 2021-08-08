@@ -1,7 +1,7 @@
 import React from "react";
 import {Form} from "react-bootstrap";
 
-class QuestionPartBody extends React.Component {
+class QuestionPartModalBody extends React.Component {
 
     render() {
         return <>
@@ -17,4 +17,4 @@ class QuestionPartBody extends React.Component {
     }
 }
 
-export default QuestionPartBody;
+export default QuestionPartModalBody;

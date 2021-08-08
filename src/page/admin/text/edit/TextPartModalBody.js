@@ -1,7 +1,7 @@
 import React from "react";
 import {Form} from "react-bootstrap";
 
-class TextPartBody extends React.Component {
+class TextPartModalBody extends React.Component {
 
     render() {
         return <Form.Group>
@@ -11,4 +11,4 @@ class TextPartBody extends React.Component {
     }
 }
 
-export default TextPartBody;
+export default TextPartModalBody;
