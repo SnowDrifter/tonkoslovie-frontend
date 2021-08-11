@@ -3,12 +3,12 @@ import {Button, Card, Form, Jumbotron} from "react-bootstrap";
 import Client from "/util/Client";
 import * as partTypes from "./TextPartTypes";
 import Helmet from "react-helmet";
-import ReactPlayer from "react-player";
 import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import QuestionElement from "./elements/QuestionElement";
 import ChoiceElement from "./elements/ChoiceElement";
 import "./Text.less"
+import SoundPlayer from "/component/sound/SoundPlayer";
 
 class Text extends React.Component {
 
@@ -94,18 +94,6 @@ class Text extends React.Component {
             }
         });
 
-        let soundComponent;
-        if (this.state.soundFileName) {
-            soundComponent = <div className="center-block">
-                <h4>Прослушать текст</h4>
-                <ReactPlayer
-                    width="100%"
-                    height={40}
-                    controls={true}
-                    url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.state.soundFileName}`}/>
-            </div>
-        }
-
         let body = <Card>
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
             <Helmet title={title}/>
@@ -119,7 +107,7 @@ class Text extends React.Component {
                             className="float-right text-check-button" variant="success">Проверить</Button>
                 </Jumbotron>
 
-                {soundComponent}
+                <SoundPlayer soundFileName={this.state.soundFileName}/>
             </Card.Body>
         </Card>;
 
