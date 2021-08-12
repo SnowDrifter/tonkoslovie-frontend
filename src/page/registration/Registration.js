@@ -206,6 +206,7 @@ class Registration extends React.Component {
                             <Col md={2}/>
                             <Col md={8}>
                                 <ValidatedForm label="Пароль"
+                                               type="password"
                                                inputRef={this.passwordInput}
                                                checked={this.state.checked}
                                                valid={this.state.password.valid}
@@ -217,6 +218,7 @@ class Registration extends React.Component {
                             <Col md={2}/>
                             <Col md={8}>
                                 <ValidatedForm label="Повторите пароль"
+                                               type="password"
                                                inputRef={this.confirmPasswordInput}
                                                checked={this.state.checked}
                                                valid={this.state.confirmPassword.valid}
@@ -266,13 +268,13 @@ class Registration extends React.Component {
 class ValidatedForm extends React.Component {
 
     render() {
-        const {label, inputRef, checked, valid, message} = this.props;
+        const {label, inputRef, checked, valid, message, type} = this.props;
         const className = checked ? (valid ? "is-valid" : "is-invalid") : undefined;
 
         return <>
             <Form.Group>
                 <Form.Label>{label}<span style={{color: "red"}}> *</span></Form.Label>
-                <Form.Control ref={inputRef} className={className}/>
+                <Form.Control ref={inputRef} className={className} type={type}/>
                 <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
             </Form.Group>
         </>
