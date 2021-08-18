@@ -4,12 +4,14 @@ import DOMPurify from "dompurify";
 
 class SimpleTextModal extends React.Component {
     render() {
-        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)}>
+        const {showModal, hideModal, title, text} = this.props;
+
+        return <Modal show={showModal} onHide={hideModal}>
             <Modal.Header closeButton>
-                <Modal.Title>{this.props.title}</Modal.Title>
+                <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.props.text || "Текст отсутствует")}}/>
+                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}}/>
             </Modal.Body>
         </Modal>
     }
