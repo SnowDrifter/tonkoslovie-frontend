@@ -26,7 +26,7 @@ class AdminText extends React.Component {
             currentPartIndex: null,
             textParts: [],
             soundFileName: null,
-            loaded: !this.props.computedMatch.params.textId
+            loading: props.computedMatch.params.textId !== undefined
         };
 
         this.hideModal = this.hideModal.bind(this);
@@ -40,7 +40,7 @@ class AdminText extends React.Component {
 
         this.titleInput = createRef();
 
-        if (this.props.computedMatch.params.textId) {
+        if (props.computedMatch.params.textId) {
             this.loadText(this.props.computedMatch.params.textId)
         }
     }
@@ -56,10 +56,13 @@ class AdminText extends React.Component {
                 id: text.id,
                 textParts: text.parts,
                 soundFileName: text.soundFileName,
-                loaded: true
+                loading: false
             });
 
             this.titleInput.current.value = text.title;
+        }).catch((e) => {
+            this.setState({loading: false});
+            toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
         })
     }
 
@@ -67,12 +70,12 @@ class AdminText extends React.Component {
         Client.post("/api/content/text", {
             id: this.state.id,
             title: this.titleInput.current.value,
-            parts: this.state.textParts ? this.state.textParts : [],
+            parts: this.state.textParts || [],
             soundFileName: this.state.soundFileName
         }).then((response) => {
             this.setState({id: response.data.id});
 
-            if (!this.props.computedMatch.params.lessonId) {
+            if (!this.props.computedMatch.params.textId) {
                 this.props.history.push(`/admin/text/${response.data.id}`)
             }
 
@@ -152,17 +155,17 @@ class AdminText extends React.Component {
 
     createElements() {
         return this.state.textParts
-            .map((part, index) => {
-                return <TextPart key={index}
-                                 index={index}
-                                 part={part}
-                                 removePart={this.removeTextPart}
-                                 editPart={this.editTextPart}/>
-            });
+            .map((part, index) =>
+                <TextPart key={index}
+                          index={index}
+                          part={part}
+                          removePart={this.removeTextPart}
+                          editPart={this.editTextPart}/>
+            );
     }
 
     render() {
-        if (!this.state.loaded) {
+        if (this.state.loading) {
             return <Loader/>;
         }
 
@@ -173,8 +176,9 @@ class AdminText extends React.Component {
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <LinkContainer exact to="/admin/texts"><Breadcrumb.Item>Тексты</Breadcrumb.Item></LinkContainer>
-                    <Breadcrumb.Item
-                        active>{(this.state.id) ? `Текст №${this.state.id}` : "Новый текст"}</Breadcrumb.Item>
+                    <Breadcrumb.Item active>
+                        {(this.state.id) ? `Текст №${this.state.id}` : "Новый текст"}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Jumbotron>
@@ -201,8 +205,7 @@ class AdminText extends React.Component {
                     <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
                     <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
                 </ButtonGroup>
-                <Button onClick={this.saveText.bind(this)} className="float-right"
-                        variant="success">Сохранить</Button>
+                <Button onClick={this.saveText.bind(this)} className="float-right" variant="success">Сохранить</Button>
             </Card.Body>
         </Card>;
     }
