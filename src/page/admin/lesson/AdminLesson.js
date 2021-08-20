@@ -1,11 +1,12 @@
 import React, {createRef} from "react";
 import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
-import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ProgressBar} from "react-bootstrap";
+import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup} from "react-bootstrap";
 import Loader from "/component/Loader";
 import JoditEditor from "jodit-react";
 import {toast} from "react-toastify";
 import RemoveButton from "/component/button/RemoveButton";
+import ImageUploader from "/component/image/ImageUploader";
 
 
 class AdminLesson extends React.Component {
@@ -17,11 +18,11 @@ class AdminLesson extends React.Component {
             id: null,
             texts: [],
             foundTexts: [],
-            content: "",
+            content: null,
             published: false,
             previewFileName: null,
             progressUploadFile: null,
-            loaded: !props.computedMatch.params.lessonId,
+            loading: props.computedMatch.params.lessonId !== undefined,
             lessonId: props.computedMatch.params.lessonId
         };
 
@@ -29,7 +30,6 @@ class AdminLesson extends React.Component {
             this.loadLesson(this.state.lessonId)
         }
 
-        this.previewInput = createRef();
         this.titleInput = createRef();
         this.annotationInput = createRef();
         this.textTitleInput = createRef();
@@ -37,6 +37,7 @@ class AdminLesson extends React.Component {
         this.removeText = this.removeText.bind(this);
         this.addText = this.addText.bind(this);
         this.handleContentChange = this.handleContentChange.bind(this);
+        this.savePreviewFileName = this.savePreviewFileName.bind(this);
     }
 
     loadLesson(lessonId) {
@@ -54,7 +55,7 @@ class AdminLesson extends React.Component {
                 published: lesson.published,
                 previewFileName: lesson.previewImage,
                 progressUploadFile: null,
-                loaded: true
+                loading: false
             });
 
             this.titleInput.current.value = lesson.title;
@@ -136,47 +137,9 @@ class AdminLesson extends React.Component {
         });
     }
 
-    uploadPreviewImage() {
-        const preview = this.previewInput.current.files[0];
-        if (preview === undefined) {
-            toast.error("Выберите файл");
-            return;
-        }
-
-        const data = new FormData();
-        data.append("file", preview);
-        data.append("lessonId", this.state.id);
-
-        let config = {
-            onUploadProgress: (progressEvent) => {
-                this.setState({progressUploadFile: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
-            }
-        };
-
-        Client.post("/api/media/image", data, config)
-            .then((response) => {
-                this.setState({previewFileName: response.data.fileName, progressUploadFile: null});
-                this.saveLesson();
-            })
-            .catch(() => {
-                this.setState({progressUploadFile: null});
-                toast.error("Произошла ошибка во время загрузки");
-            });
-    }
-
-    deletePreview() {
-        if (confirm("Удалить превью?")) {
-            Client.delete("/api/media/image", {
-                params: {
-                    fileName: this.state.previewFileName
-                }
-            }).then(() => {
-                this.setState({previewFileName: null});
-                this.saveLesson();
-            }).catch(() => {
-                toast.error("Произошла ошибка во время удаления");
-            });
-        }
+    savePreviewFileName(previewFileName) {
+        this.setState({previewFileName});
+        this.saveLesson()
     }
 
     togglePublished() {
@@ -184,57 +147,31 @@ class AdminLesson extends React.Component {
     }
 
     render() {
-        let texts = this.state.texts.map((text, index) => {
-            return <ListGroup.Item key={index}
-                                   variant="info"
-                                   className="admin-lesson-text-preview">
+        if (this.state.loading) {
+            return <Loader/>;
+        }
+
+        const texts = this.state.texts.map((text, index) =>
+            <ListGroup.Item key={index}
+                            variant="info"
+                            className="admin-lesson-text-preview">
                 {text.title}
                 <RemoveButton action={() => this.removeText(index)}/>
             </ListGroup.Item>
+        );
+
+        const foundTexts = this.state.foundTexts.map((text, index) => {
+            if (!this.checkTextAlreadyAdded(text)) {
+                return <ListGroup.Item onClick={() => this.addText(index)} key={index}>
+                    {text.title}
+                </ListGroup.Item>;
+            }
         });
 
-        let foundTexts = [];
+        const imageUploader = <ImageUploader imageFileName={this.state.previewFileName}
+                                             saveImageFileName={this.savePreviewFileName}/>
 
-        if (this.state.foundTexts.length > 0) {
-            this.state.foundTexts.map((text, index) => {
-                if (!this.checkTextAlreadyAdded(text)) {
-                    foundTexts.push(<ListGroup.Item onClick={() => this.addText(index)} key={index}>
-                        {text.title}
-                    </ListGroup.Item>);
-                }
-            });
-        } else {
-            foundTexts.push(<span key={0}>Ничего не найдено</span>);
-        }
-
-        let previewComponent;
-
-        if (this.state.previewFileName) {
-            previewComponent = <div>
-                <h3>Превью</h3>
-                <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.state.previewFileName}`}
-                     alt="preview"/>
-                <br/>
-                <Button style={{marginTop: "5px"}} onClick={this.deletePreview.bind(this)}>Удалить превью</Button>
-            </div>
-        } else {
-            previewComponent = <div>
-                <Form.Group>
-                    <Form.Label><h4>Превью</h4></Form.Label>
-                    <Form.Control type="file" ref={this.previewInput}/>
-                </Form.Group>
-                <Button size="sm" onClick={this.uploadPreviewImage.bind(this)}>Загрузить файл</Button>
-                <ProgressBar striped
-                             className="admin-text-progressbar"
-                             active={this.state.progressUploadFile && this.state.progressUploadFile !== 100}
-                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
-                             variant="success"
-                             now={this.state.progressUploadFile}
-                             label={`${this.state.progressUploadFile}%`}/>
-            </div>
-        }
-
-        const body = <Card>
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
@@ -250,7 +187,7 @@ class AdminLesson extends React.Component {
                         <Form.Control ref={this.titleInput}/>
                     </Form.Group>
 
-                    {previewComponent}
+                    {imageUploader}
 
                     <h3>Аннотация</h3>
                     <Form.Group>
@@ -281,7 +218,7 @@ class AdminLesson extends React.Component {
 
                             Варианты:
                             <ListGroup>
-                                {foundTexts}
+                                {foundTexts || <span key={0}>Ничего не найдено</span>}
                             </ListGroup>
                         </Card.Body>
                     </Card>
@@ -293,12 +230,6 @@ class AdminLesson extends React.Component {
                         variant="success">Сохранить</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

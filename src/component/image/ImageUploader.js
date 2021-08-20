@@ -1,10 +1,9 @@
 import React, {createRef} from "react";
 import {Button, Form, ProgressBar} from "react-bootstrap";
-import SoundPlayer from "./SoundPlayer";
 import {toast} from "react-toastify";
 import Client from "/util/Client";
 
-class SoundUploader extends React.Component {
+class ImageUploader extends React.Component {
 
     constructor(props) {
         super(props);
@@ -13,21 +12,21 @@ class SoundUploader extends React.Component {
             progressUploadFile: null
         };
 
-        this.uploadSound = this.uploadSound.bind(this);
-        this.deleteSoundFile = this.deleteSoundFile.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
+        this.deleteImage = this.deleteImage.bind(this);
 
-        this.soundInput = createRef();
+        this.imageInput = createRef();
     }
 
-    uploadSound() {
-        const sound = this.soundInput.current.files[0];
-        if (!sound) {
+    uploadImage() {
+        const image = this.imageInput.current.files[0];
+        if (!image) {
             toast.error("Выберите файл");
             return;
         }
 
         const data = new FormData();
-        data.append("file", sound);
+        data.append("file", image);
 
         const config = {
             onUploadProgress: (progressEvent) => {
@@ -35,26 +34,26 @@ class SoundUploader extends React.Component {
             }
         };
 
-        Client.post("/api/media/sound", data, config)
+        Client.post("/api/media/image", data, config)
             .then((response) => {
                 this.setState({progressUploadFile: null});
-                this.props.saveSoundFileName(response.data.fileName);
+                this.props.saveImageFileName(response.data.fileName);
             })
-            .catch(() => {
+            .catch((e) => {
                 this.setState({progressUploadFile: null});
-                toast.error("Произошла ошибка во время загрузки");
+                toast.error(`Произошла ошибка во время загрузки! Код: ${e.response.status}`);
             });
     }
 
-    deleteSoundFile() {
-        if (confirm("Удалить звуковую дорожку?")) {
-            Client.delete("/api/media/sound", {
+    deleteImage() {
+        if (confirm("Удалить изображение?")) {
+            Client.delete("/api/media/image", {
                 params: {
-                    fileName: this.props.soundFileName
+                    fileName: this.props.imageFileName
                 }
             })
                 .then(() => {
-                    this.props.saveSoundFileName(null);
+                    this.props.saveImageFileName(null);
                 })
                 .catch((e) => {
                     toast.error(`Ошибка удаления! Код: ${e.response.status}`);
@@ -63,17 +62,21 @@ class SoundUploader extends React.Component {
     }
 
     render() {
-        if (this.props.soundFileName) {
+        if (this.props.imageFileName) {
             return <>
-                <h3>Звуковая дорожка</h3>
-                <SoundPlayer soundFileName={this.props.soundFileName}/>
-                <Button variant="warning" onClick={this.deleteSoundFile}>Удалить дорожку</Button>
+                    <h4>Изображение</h4>
+                <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.props.imageFileName}`}
+                     alt="image"/>
+                <br/>
+                <Button variant="warning" style={{marginTop: "5px"}} onClick={this.deleteImage.bind(this)}>
+                    Удалить изоражение
+                </Button>
             </>
         } else {
             return <>
                 <Form.Group>
-                    <Form.Label><h4>Звуковая дорожка</h4></Form.Label>
-                    <Form.File ref={this.soundInput} onChange={this.uploadSound}/>
+                    <Form.Label><h4>Изображение</h4></Form.Label>
+                    <Form.File ref={this.imageInput} onChange={this.uploadImage}/>
                 </Form.Group>
                 <ProgressBar striped
                              className="admin-text-progressbar"
@@ -87,4 +90,4 @@ class SoundUploader extends React.Component {
 }
 
 
-export default SoundUploader;
+export default ImageUploader;
