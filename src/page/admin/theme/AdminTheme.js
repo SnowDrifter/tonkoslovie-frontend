@@ -1,7 +1,7 @@
 import React, {createRef} from "react";
 import {withRouter} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
-import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup, ListGroupItem} from "react-bootstrap";
+import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup} from "react-bootstrap";
 import Loader from "/component/Loader";
 import Client from "/util/Client";
 import {toast} from "react-toastify";
@@ -16,8 +16,8 @@ class AdminTheme extends React.Component {
             id: null,
             published: false,
             exercises: [],
-            foundExercises: [],
-            loaded: !props.computedMatch.params.themeId,
+            exerciseVariants: [],
+            loading: props.computedMatch.params.themeId !== undefined,
             themeId: props.computedMatch.params.themeId,
             exerciseTitle: null
         };
@@ -32,6 +32,8 @@ class AdminTheme extends React.Component {
         this.removeExercise = this.removeExercise.bind(this);
         this.addExercise = this.addExercise.bind(this);
         this.handExerciseChange = this.handExerciseChange.bind(this);
+        this.getExercises = this.getExercises.bind(this);
+        this.getExerciseVariants = this.getExerciseVariants.bind(this);
     }
 
     loadTheme(themeId) {
@@ -46,7 +48,7 @@ class AdminTheme extends React.Component {
                 id: theme.id,
                 exercises: theme.exercises,
                 published: theme.published,
-                loaded: true
+                loading: false
             });
 
             this.titleInput.current.value = theme.title;
@@ -75,45 +77,39 @@ class AdminTheme extends React.Component {
     }
 
     searchExercise() {
-        let searchTitle = this.exerciseTitleInput.current.value;
+        const searchTitle = this.exerciseTitleInput.current.value;
 
         Client.get("/api/content/exercises/find", {
             params: {
                 title: searchTitle
             }
         }).then(response => {
-            const exercises = response.data;
+            const exerciseVariants = response.data;
             this.setState({
-                foundExercises: exercises
+                exerciseVariants: exerciseVariants
             });
         }).catch((e) => {
             toast.error(`Ошибка поиска! Код: ${e.response.status}`);
         })
     }
 
-    checkExerciseAlreadyAdded(exercise) {
-        let alreadyAdded = false;
-        this.state.exercises.forEach(function (oldExercise) {
-            if (oldExercise.id === exercise.id) {
-                alreadyAdded = true;
-            }
-        });
-
-        return alreadyAdded;
+    isExerciseAlreadyAdded(exerciseVariant) {
+        return this.state.exercises.some(e => e.id === exerciseVariant.id)
     }
 
     addExercise(index) {
-        let exercise = this.state.foundExercises[index];
+        const exercise = this.state.exerciseVariants[index];
+        const exerciseVariants = this.state.exerciseVariants;
+        exerciseVariants.splice(index, 1);
 
-        let foundExercises = this.state.foundExercises;
-        foundExercises.splice(index, 1);
-        this.setState({foundExercises: foundExercises});
-
-        this.setState({exercises: this.state.exercises.concat(exercise)});
+        this.setState({
+            exerciseVariants: exerciseVariants,
+            exercises: this.state.exercises.concat(exercise)
+        });
     }
 
     removeExercise(exerciseId) {
-        let exercises = this.state.exercises;
+        const exercises = this.state.exercises;
         exercises.splice(exerciseId, 1);
         this.setState({exercises: exercises});
     }
@@ -128,32 +124,36 @@ class AdminTheme extends React.Component {
         this.setState({published: !this.state.published});
     }
 
+    getExercises() {
+        return this.state.exercises.map((exercise, index) =>
+            <ListGroup.Item variant="info" key={index}>
+                <span>{exercise.title}</span>
+                <RemoveButton className="float-right" action={() => this.removeExercise(index)}/>
+            </ListGroup.Item>
+        );
+    }
+
+    getExerciseVariants() {
+        const exerciseVariants = this.state.exerciseVariants
+            .filter(e => !this.isExerciseAlreadyAdded(e))
+            .map((exercise, index) =>
+                <ListGroup.Item onClick={() => this.addExercise(index)} key={index}>
+                    {exercise.title}
+                </ListGroup.Item>
+            );
+
+        return exerciseVariants.length > 0 ? exerciseVariants : <span key={0}>Ничего не найдено</span>
+    }
+
     render() {
-        let exercises = [];
-
-        this.state.exercises.map((exercise, index) => {
-            exercises.push(<ListGroupItem variant="info" key={index}>
-                {exercise.title}
-                <RemoveButton className="float-right"
-                              action={() => this.removeExercise(index)}/>
-            </ListGroupItem>);
-        });
-
-        let foundExercises = [];
-
-        if (this.state.foundExercises.length > 0) {
-            this.state.foundExercises.map((exercise, index) => {
-                if (!this.checkExerciseAlreadyAdded(exercise)) {
-                    foundExercises.push(<ListGroupItem onClick={() => this.addExercise(index)} key={index}>
-                        {exercise.title}
-                    </ListGroupItem>);
-                }
-            });
-        } else {
-            foundExercises.push(<span key={0}>Ничего не найдено</span>);
+        if (this.state.loading) {
+            return <Loader/>;
         }
 
-        const body = <Card>
+        const exercises = this.getExercises();
+        const exerciseVariants = this.getExerciseVariants();
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin">
@@ -183,37 +183,30 @@ class AdminTheme extends React.Component {
                             <Card.Body>
                                 <Form.Group>
                                     <Form.Label>Поиск упражнения</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        ref={this.exerciseTitleInput}
-                                        placeholder="Начните вводить данные для выбора"
-                                        onChange={this.searchExercise.bind(this)}
-                                    />
+                                    <Form.Control type="text"
+                                                  ref={this.exerciseTitleInput}
+                                                  placeholder="Начните вводить данные для выбора"
+                                                  onChange={this.searchExercise.bind(this)}/>
                                 </Form.Group>
 
                                 Варианты:
                                 <ListGroup>
-                                    {foundExercises}
+                                    {exerciseVariants}
                                 </ListGroup>
                             </Card.Body>
                         </Card>
 
                         <Form.Group>
-                            <Form.Check type="checkbox" checked={this.state.published}
-                                        onChange={this.togglePublished.bind(this)} label="Опубликовать тему"/>
+                            <Form.Check label="Опубликовать тему"
+                                        checked={this.state.published}
+                                        onChange={this.togglePublished.bind(this)}/>
                         </Form.Group>
-                        <Button onClick={this.saveTheme.bind(this)} className="float-right"
-                                variant="success">Сохранить</Button>
+                        <Button onClick={this.saveTheme.bind(this)}
+                                className="float-right" variant="success">Сохранить</Button>
                     </Form>
                 </Jumbotron>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 
