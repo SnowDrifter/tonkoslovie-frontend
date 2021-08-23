@@ -170,11 +170,11 @@ class AdminTheme extends React.Component {
                 <Jumbotron>
                     <Form>
                         <Form.Group>
-                            <Form.Label><Card.Title>Заголовок</Card.Title></Form.Label>
+                            <Form.Label><h3>Заголовок</h3></Form.Label>
                             <Form.Control ref={this.titleInput}/>
                         </Form.Group>
 
-                        <Card.Title>Добавленные упражнения</Card.Title>
+                        <h3>Добавленные упражнения</h3>
                         <ListGroup>
                             {exercises}
                         </ListGroup>
