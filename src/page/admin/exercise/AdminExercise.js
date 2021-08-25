@@ -1,12 +1,13 @@
 import React, {createRef} from "react";
-import {Breadcrumb, Button, ButtonToolbar, Card, Form, Jumbotron} from "react-bootstrap";
+import {Breadcrumb, Button, Card, InputGroup, Form, Jumbotron} from "react-bootstrap";
 import Client from "/util/Client";
 import {LinkContainer} from "react-router-bootstrap";
 import * as  exerciseTypes from "/page/content/theme/ExerciseTypes";
 import JoditEditor from "jodit-react";
 import Loader from "/component/Loader";
-import "./AdminExercise.less";
+import RemoveButton from "/component/button/RemoveButton";
 import {toast} from "react-toastify";
+import "./AdminExercise.less";
 
 
 class AdminExercise extends React.Component {
@@ -17,24 +18,24 @@ class AdminExercise extends React.Component {
         this.state = {
             id: null,
             type: null,
-            original: "",
-            dictionary: "",
-            // Fix empty default value in first answer input
-            answersCount: this.props.computedMatch.params.exerciseId ? 0 : 1,
-            answers: [],
-            loaded: !this.props.computedMatch.params.exerciseId
+            original: null,
+            dictionary: null,
+            answers: [""],
+            loading: props.computedMatch.params.exerciseId !== undefined
         };
 
-        if (this.props.computedMatch.params.exerciseId) {
-            this.loadExercise(this.props.computedMatch.params.exerciseId)
+        if (props.computedMatch.params.exerciseId) {
+            this.loadExercise(props.computedMatch.params.exerciseId)
         }
 
         this.typeInput = createRef();
         this.titleInput = createRef();
         this.answerRegexInput = createRef();
 
+        this.handleAnswerChange = this.handleAnswerChange.bind(this);
         this.handleOriginalChange = this.handleOriginalChange.bind(this);
         this.handleDictionaryChange = this.handleDictionaryChange.bind(this);
+        this.createAnswerForms = this.createAnswerForms.bind(this);
     }
 
     loadExercise(exerciseId) {
@@ -45,15 +46,12 @@ class AdminExercise extends React.Component {
         }).then(response => {
             const exercise = response.data;
 
-            const answersCount = exercise.answers ? exercise.answers.length : 1;
-
             this.setState({
                 id: exercise.id,
-                answersCount: answersCount,
-                answers: exercise.answers || [],
+                answers: exercise.answers || [""],
                 original: exercise.original,
                 dictionary: exercise.dictionary,
-                loaded: true
+                loading: false
             });
 
             this.typeInput.current.value = exercise.type;
@@ -63,18 +61,12 @@ class AdminExercise extends React.Component {
     }
 
     saveExercise() {
-        const answers = [];
-
-        for (let i = 0; i < this.state.answersCount; i++) {
-            answers.push(this[`answer-${i}`].current.value);
-        }
-
         Client.post("/api/content/exercise", {
             id: this.state.id,
             title: this.titleInput.current.value,
             original: this.state.original,
             dictionary: this.state.dictionary,
-            answers: answers,
+            answers: this.state.answers,
             type: this.typeInput.current.value,
             answerRegex: this.answerRegexInput.current.value
         }).then(response => {
@@ -93,44 +85,45 @@ class AdminExercise extends React.Component {
     }
 
     handleOriginalChange(original) {
-        this.setState({
-            original: original
-        });
+        this.setState({original});
     }
 
     handleDictionaryChange(dictionary) {
+        this.setState({dictionary});
+    }
+
+    handleAnswerChange(e, index) {
+        const answers = this.state.answers.splice(index, 1, e.target.value);
+        this.setState(answers);
+    }
+
+    addAnswer() {
+        this.setState({answers: this.state.answers.concat("")});
+    }
+
+    removeAnswer(key) {
         this.setState({
-            dictionary: dictionary
+            answers: this.state.answers.filter((value, index) => index !== key)
         });
     }
 
-    increaseAnswersCount() {
-        let answersCount = this.state.answersCount;
-        answersCount++;
-        this.setState({answersCount: answersCount})
-    }
-
-    decreaseAnswersCount() {
-        if (this.state.answersCount > 1) {
-            let answersCount = this.state.answersCount;
-            answersCount--;
-            this.setState({answersCount: answersCount});
-        }
+    createAnswerForms() {
+        return this.state.answers.map((answer, index) =>
+            <InputGroup key={index} className="admin-exercise-answer-form">
+                <Form.Control value={answer} onChange={e => this.handleAnswerChange(e, index)}/>
+                <RemoveButton action={() => this.removeAnswer(index)}/>
+            </InputGroup>
+        );
     }
 
     render() {
-        const answerForms = [];
-        const answersCount = this.state.answersCount;
-
-        for (let i = 0; i < answersCount; i++) {
-            this[`answer-${i}`] = createRef();
-
-            answerForms.push(<Form.Control className="admin-exercise-answer-form" key={i} ref={this[`answer-${i}`]}
-                                           defaultValue={this.state.answers[i] || ""}/>
-            );
+        if (this.state.loading) {
+            return <Loader/>;
         }
 
-        const body = <Card>
+        const answerForms = this.createAnswerForms();
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin">
@@ -151,18 +144,14 @@ class AdminExercise extends React.Component {
                     </Form.Group>
 
                     <h3>Оригинал</h3>
-                    <Card>
-                        <JoditEditor value={this.state.original} onBlur={this.handleOriginalChange.bind(this)}/>
-                    </Card>
+                    <JoditEditor value={this.state.original} onBlur={this.handleOriginalChange.bind(this)}/>
 
                     <h3>Словарь</h3>
-                    <Card>
-                        <JoditEditor value={this.state.dictionary} onBlur={this.handleDictionaryChange.bind(this)}/>
-                    </Card>
+                    <JoditEditor value={this.state.dictionary} onBlur={this.handleDictionaryChange.bind(this)}/>
 
                     <Form.Group>
                         <Form.Label><h3>Вариант перевода</h3></Form.Label>
-                        <Form.Control as="select" ref={this["typeInput"]}>
+                        <Form.Control as="select" ref={this.typeInput}>
                             <option value={exerciseTypes.RUSSIAN_TO_POLISH}>С русского на польский</option>
                             <option value={exerciseTypes.POLISH_TO_RUSSIAN}>Z polskiego na rosyjski</option>
                         </Form.Control>
@@ -175,13 +164,10 @@ class AdminExercise extends React.Component {
 
                     <div className="admin-exercise-answer-panel">
                         <Form.Group>
-                            <Form.Label><h3>Ответы</h3></Form.Label>
+                            <Form.Label><h3>Варианты ответов</h3></Form.Label>
                             {answerForms}
                         </Form.Group>
-                        <ButtonToolbar>
-                            <Button onClick={this.increaseAnswersCount.bind(this)}>Добавить ответ</Button>
-                            <Button onClick={this.decreaseAnswersCount.bind(this)}>Удалить ответ</Button>
-                        </ButtonToolbar>
+                        <Button onClick={this.addAnswer.bind(this)}>Добавить ответ</Button>
                     </div>
                 </Jumbotron>
 
@@ -189,12 +175,6 @@ class AdminExercise extends React.Component {
                         onClick={this.saveExercise.bind(this)}>Сохранить</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 
