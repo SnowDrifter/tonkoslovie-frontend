@@ -16,7 +16,7 @@ class AdminTexts extends React.Component {
 
         this.state = {
             texts: [],
-            loaded: false
+            loading: true
         };
 
         this.deleteText = this.deleteText.bind(this);
@@ -34,7 +34,7 @@ class AdminTexts extends React.Component {
                 const texts = response.data;
                 this.setState({
                     texts: texts,
-                    loaded: true
+                    loading: false
                 })
             });
     }
@@ -62,67 +62,47 @@ class AdminTexts extends React.Component {
     }
 
     render() {
-        let texts = this.state.texts;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const texts = this.state.texts;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Тексты</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={texts.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={texts.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={46}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{texts[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{texts[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Название</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {texts[rowIndex].title}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Название</Cell>}
+                            cell={({rowIndex}) => <Cell>{texts[rowIndex].title}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditRemoveButtons
-                                        edit={() => this.editText(texts[rowIndex])}
-                                        remove={() => this.deleteText(texts[rowIndex].id)}
-                                    />
-                                </Cell>
-                            )}
-                            width={100}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditRemoveButtons edit={() => this.editText(texts[rowIndex])}
+                                               remove={() => this.deleteText(texts[rowIndex].id)}/>
+                        </Cell>}
+                            width={100}/>
+                </Table>
 
                 <br/>
                 <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

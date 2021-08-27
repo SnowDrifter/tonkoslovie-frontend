@@ -20,7 +20,7 @@ class AdminWords extends React.Component {
             showModal: false,
             word: {},
             modalTitle: null,
-            loaded: false
+            loading: false
         };
 
         this.showEditWord = this.showEditWord.bind(this);
@@ -38,7 +38,7 @@ class AdminWords extends React.Component {
                 const words = response.data;
                 this.setState({
                     words: words,
-                    loaded: true
+                    loading: false
                 });
             });
     }
@@ -71,67 +71,47 @@ class AdminWords extends React.Component {
     }
 
     render() {
-        let words = this.state.words;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const words = this.state.words;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Слова</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={words.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={words.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={35}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{words[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{words[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Русский текст</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {words[rowIndex].russianText}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Русский текст</Cell>}
+                            cell={({rowIndex}) => <Cell>{words[rowIndex].russianText}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            header={<Cell>Польский текст</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {words[rowIndex].polishText}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Польский текст</Cell>}
+                            cell={({rowIndex}) => <Cell>{words[rowIndex].polishText}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditRemoveButtons
-                                        edit={() => this.showEditWord(words[rowIndex])}
-                                        remove={() => this.deleteWord(words[rowIndex].id)}
-                                    />
-                                </Cell>
-                            )}
-                            width={100}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditRemoveButtons edit={() => this.showEditWord(words[rowIndex])}
+                                               remove={() => this.deleteWord(words[rowIndex].id)}/>
+                        </Cell>}
+                            width={100}/>
+                </Table>
 
                 <br/>
                 <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
@@ -142,12 +122,6 @@ class AdminWords extends React.Component {
                            hideModal={this.hideModal}/>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

@@ -15,10 +15,10 @@ class AdminExercises extends React.Component {
 
         this.state = {
             exercises: [],
-            loaded: false
+            loading: true
         };
 
-        this.deleteLExercise = this.deleteLExercise.bind(this);
+        this.deleteExercise = this.deleteExercise.bind(this);
         this.editExercise = this.editExercise.bind(this);
         this.updateExercises = this.updateExercises.bind(this);
     }
@@ -33,12 +33,12 @@ class AdminExercises extends React.Component {
                 const exercises = response.data;
                 this.setState({
                     exercises: exercises,
-                    loaded: true
+                    loading: false
                 })
             });
     }
 
-    deleteLExercise(exerciseId) {
+    deleteExercise(exerciseId) {
         if (confirm(`Удалить упражнение №${exerciseId}?`)) {
             Client.delete("/api/content/exercise", {
                 params: {
@@ -61,66 +61,47 @@ class AdminExercises extends React.Component {
     }
 
     render() {
-        let exercises = this.state.exercises;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const exercises = this.state.exercises;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Упражнения</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={exercises.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={exercises.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={35}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{exercises[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{exercises[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Заголовок</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {exercises[rowIndex].title}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Заголовок</Cell>}
+                            cell={({rowIndex}) => <Cell>{exercises[rowIndex].title}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditRemoveButtons
-                                        edit={() => this.editExercise(exercises[rowIndex])}
-                                        remove={() => this.deleteLExercise(exercises[rowIndex].id)}/>
-                                </Cell>
-                            )}
-                            width={100}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditRemoveButtons edit={() => this.editExercise(exercises[rowIndex])}
+                                               remove={() => this.deleteExercise(exercises[rowIndex].id)}/>
+                        </Cell>}
+                            width={100}/>
+                </Table>
 
                 <br/>
                 <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

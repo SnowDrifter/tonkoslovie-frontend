@@ -24,9 +24,8 @@ class AdminUsers extends React.Component {
 
         this.state = {
             users: [],
-            loaded: false
+            loading: true
         };
-
     }
 
     componentDidMount() {
@@ -39,7 +38,7 @@ class AdminUsers extends React.Component {
                 const users = response.data;
                 this.setState({
                     users: users,
-                    loaded: true
+                    loading: false
                 })
             });
     }
@@ -49,122 +48,70 @@ class AdminUsers extends React.Component {
     }
 
     formatDate(time) {
-        if (time !== undefined) {
-            return new Date(time).toLocaleString("ru", dateOptions);
-        } else {
-            return "-"
-        }
+        return time ? new Date(time).toLocaleString("ru", dateOptions) : "-";
     }
 
     render() {
-        let users = this.state.users;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const users = this.state.users;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Пользователи</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={users.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={users.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={35}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{users[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{users[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Никнейм</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {users[rowIndex].username || "-"}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Никнейм</Cell>}
+                            cell={({rowIndex}) => <Cell>{users[rowIndex].username || "-"}</Cell>}
                             flexGrow={1}
-                            width={70}
-                        />
+                            width={70}/>
 
-                        <Column
-                            header={<Cell>Имя</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {users[rowIndex].firstName || "-"}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Имя</Cell>}
+                            cell={({rowIndex}) => <Cell>{users[rowIndex].firstName || "-"}</Cell>}
                             flexGrow={1}
-                            width={70}
-                        />
+                            width={70}/>
 
-                        <Column
-                            header={<Cell>Фамилия</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {users[rowIndex].lastName || "-"}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Фамилия</Cell>}
+                            cell={({rowIndex}) => <Cell>{users[rowIndex].lastName || "-"}</Cell>}
                             flexGrow={1}
-                            width={70}
-                        />
+                            width={70}/>
 
-                        <Column
-                            header={<Cell>Дата добавления</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {this.formatDate(users[rowIndex].creationDate)}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Дата добавления</Cell>}
+                            cell={({rowIndex}) => <Cell>{this.formatDate(users[rowIndex].creationDate)}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            header={<Cell>Администратор</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {RoleUtil.isAdmin(users[rowIndex].roles) ? "Да" : "Нет"}
-                                </Cell>
-                            )}
-                            width={120}
-                        />
+                    <Column header={<Cell>Администратор</Cell>}
+                            cell={({rowIndex}) => <Cell>{RoleUtil.isAdmin(users[rowIndex].roles) ? "Да" : "Нет"}</Cell>}
+                            width={120}/>
 
-                        <Column
-                            header={<Cell>Активен</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {users[rowIndex].enabled ? "Да" : "Нет"}
-                                </Cell>
-                            )}
-                            width={80}
-                        />
+                    <Column header={<Cell>Активен</Cell>}
+                            cell={({rowIndex}) => <Cell>{users[rowIndex].enabled ? "Да" : "Нет"}</Cell>}
+                            width={80}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditButton action={() => this.editUser(users[rowIndex])}/>
-                                </Cell>
-                            )}
-                            width={50}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditButton action={() => this.editUser(users[rowIndex])}/>
+                        </Cell>}
+                            width={50}/>
+                </Table>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

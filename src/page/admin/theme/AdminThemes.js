@@ -16,7 +16,7 @@ class AdminThemes extends React.Component {
 
         this.state = {
             themes: [],
-            loaded: false
+            loading: true
         };
 
         this.deleteTheme = this.deleteTheme.bind(this);
@@ -34,7 +34,7 @@ class AdminThemes extends React.Component {
                 const themes = response.data;
                 this.setState({
                     themes: themes,
-                    loaded: true
+                    loading: false
                 })
             });
     }
@@ -62,67 +62,47 @@ class AdminThemes extends React.Component {
     }
 
     render() {
-        let themes = this.state.themes;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const themes = this.state.themes;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Темы упражнений</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={themes.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={themes.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={35}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{themes[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{themes[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Название</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {themes[rowIndex].title}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Название</Cell>}
+                            cell={({rowIndex}) => <Cell>{themes[rowIndex].title}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditRemoveButtons
-                                        edit={() => this.editTheme(themes[rowIndex])}
-                                        remove={() => this.deleteTheme(themes[rowIndex].id)}
-                                    />
-                                </Cell>
-                            )}
-                            width={100}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditRemoveButtons edit={() => this.editTheme(themes[rowIndex])}
+                                               remove={() => this.deleteTheme(themes[rowIndex].id)}/>
+                        </Cell>}
+                            width={100}/>
+                </Table>
 
                 <br/>
                 <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

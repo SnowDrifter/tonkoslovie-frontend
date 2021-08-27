@@ -16,7 +16,7 @@ class AdminLessons extends React.Component {
 
         this.state = {
             lessons: [],
-            loaded: false
+            loading: true
         };
 
         this.deleteLesson = this.deleteLesson.bind(this);
@@ -34,7 +34,7 @@ class AdminLessons extends React.Component {
                 const lessons = response.data;
                 this.setState({
                     lessons: lessons,
-                    loaded: true
+                    loading: false
                 })
             });
     }
@@ -62,77 +62,51 @@ class AdminLessons extends React.Component {
     }
 
     render() {
-        let lessons = this.state.lessons;
+        if (this.state.loading) {
+            return <Loader/>;
+        }
 
-        const body = <Card>
+        const lessons = this.state.lessons;
+
+        return <Card>
             <Card.Body>
                 <Breadcrumb>
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Уроки</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <div style={{overflow: "auto"}}>
-                    <Table
-                        rowHeight={50}
-                        rowsCount={lessons.length}
-                        width={1068}
-                        height={600}
-                        headerHeight={30}>
+                <Table rowHeight={45}
+                       rowsCount={lessons.length}
+                       width={1068}
+                       height={600}
+                       headerHeight={35}>
 
-                        <Column
-                            header={<Cell>№</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>{lessons[rowIndex].id}</Cell>
-                            )}
+                    <Column header={<Cell>№</Cell>}
+                            cell={({rowIndex}) => <Cell>{lessons[rowIndex].id}</Cell>}
                             fixed={true}
-                            width={80}
-                        />
+                            width={80}/>
 
-                        <Column
-                            header={<Cell>Название</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {lessons[rowIndex].title}
-                                </Cell>
-                            )}
+                    <Column header={<Cell>Название</Cell>}
+                            cell={({rowIndex}) => <Cell>{lessons[rowIndex].title}</Cell>}
                             flexGrow={1}
-                            width={100}
-                        />
+                            width={100}/>
 
-                        <Column
-                            header={<Cell>Опубликован</Cell>}
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    {lessons[rowIndex].published ? "Да" : "Нет"}
-                                </Cell>
-                            )}
-                            width={100}
-                        />
+                    <Column header={<Cell>Опубликован</Cell>}
+                            cell={({rowIndex}) => <Cell>{lessons[rowIndex].published ? "Да" : "Нет"}</Cell>}
+                            width={100}/>
 
-                        <Column
-                            cell={({rowIndex}) => (
-                                <Cell>
-                                    <EditRemoveButtons
-                                        edit={() => this.editLesson(lessons[rowIndex])}
-                                        remove={() => this.deleteLesson(lessons[rowIndex].id)}
-                                    />
-                                </Cell>
-                            )}
-                            width={100}
-                        />
-                    </Table>
-                </div>
+                    <Column cell={({rowIndex}) =>
+                        <Cell>
+                            <EditRemoveButtons edit={() => this.editLesson(lessons[rowIndex])}
+                                               remove={() => this.deleteLesson(lessons[rowIndex].id)}/>
+                        </Cell>}
+                            width={100}/>
+                </Table>
 
                 <br/>
                 <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 
