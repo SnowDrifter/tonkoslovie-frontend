@@ -7,6 +7,8 @@ import Loader from "/component/Loader";
 import RoleUtil from "/util/RoleUtil";
 import {Breadcrumb, Card} from "react-bootstrap";
 import EditButton from "/component/button/EditButton"
+import PaginationContainer from "/component/PaginationContainer"
+import {toast} from "react-toastify";
 
 
 const dateOptions = {
@@ -24,23 +26,41 @@ class AdminUsers extends React.Component {
 
         this.state = {
             users: [],
+            currentPage: 0,
+            totalElements: null,
+            maxPage: null,
             loading: true
         };
+
+        this.handleChangePage = this.handleChangePage.bind(this);
     }
 
     componentDidMount() {
-        this.updateUsers();
+        this.updateUsers(0);
     }
 
-    updateUsers() {
-        Client.get("/api/user/users")
+    updateUsers(page) {
+        Client.get("/api/user/users", {
+            params: {
+                page: page
+            }
+        })
             .then(response => {
-                const users = response.data;
                 this.setState({
-                    users: users,
-                    loading: false
+                    loading: false,
+                    users: response.data.content,
+                    currentPage: response.data.number,
+                    maxPage: response.data.totalPages
                 })
-            });
+            })
+            .catch((e) => {
+                this.setState({loading: false});
+                toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
+            })
+    }
+
+    handleChangePage(newPage) {
+        this.updateUsers(newPage);
     }
 
     editUser(user) {
@@ -110,6 +130,11 @@ class AdminUsers extends React.Component {
                         </Cell>}
                             width={50}/>
                 </Table>
+
+                <PaginationContainer style={{marginTop: "15px"}}
+                                     currentPage={this.state.currentPage}
+                                     maxPage={this.state.maxPage}
+                                     handleChangePage={this.handleChangePage}/>
             </Card.Body>
         </Card>;
     }
