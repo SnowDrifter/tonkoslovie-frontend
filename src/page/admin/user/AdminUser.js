@@ -12,7 +12,7 @@ class AdminUser extends React.Component {
         super(props);
 
         this.state = {
-            id: this.props.computedMatch.params.userId,
+            id: props.computedMatch.params.userId,
             enabled: false,
             admin: false,
             loaded: false
@@ -23,7 +23,7 @@ class AdminUser extends React.Component {
         this.usernameInput = createRef();
         this.emailInput = createRef();
 
-        this.loadUser(this.props.computedMatch.params.userId);
+        this.loadUser(props.computedMatch.params.userId);
     }
 
     loadUser(userId) {

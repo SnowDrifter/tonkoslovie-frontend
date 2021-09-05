@@ -43,43 +43,41 @@ class Navigation extends React.Component {
     render() {
         const isAuthenticated = this.state.isAuthenticated;
 
-        return (
-            <Navbar bg="light" expand="lg" expanded={this.state.expandNavbar}>
-                <Navbar.Brand>
-                    <Nav>
-                        <RoutedLinkContainer to="/" text="Главная"/>
-                    </Nav>
-                </Navbar.Brand>
+        return <Navbar bg="light" expand="lg" expanded={this.state.expandNavbar}>
+            <Navbar.Brand>
+                <Nav>
+                    <RoutedLinkContainer to="/" text="Главная"/>
+                </Nav>
+            </Navbar.Brand>
 
-                <button type="button"
-                        className={`navbar-toggler ${this.state.expandNavbar ? "" : "collapsed"}`}
-                        onClick={this.toggleExpandNavbar.bind(this)}>
-                    <span className="icon-bar"/>
-                    <span className="icon-bar"/>
-                    <span className="icon-bar"/>
-                </button>
+            <button type="button"
+                    className={`navbar-toggler ${this.state.expandNavbar ? "" : "collapsed"}`}
+                    onClick={this.toggleExpandNavbar.bind(this)}>
+                <span className="icon-bar"/>
+                <span className="icon-bar"/>
+                <span className="icon-bar"/>
+            </button>
 
-                <Navbar.Collapse>
-                    <Nav>
-                        <RoutedLinkContainer to="/lessons" text="Уроки"/>
-                        <RoutedLinkContainer to="/themes" text="Упражнения"/>
-                        <RoutedLinkContainer to="/about" text="О проекте"/>
-                        <RoutedLinkContainer to="/contacts" text="Контакты"/>
-                    </Nav>
-                </Navbar.Collapse>
+            <Navbar.Collapse>
+                <Nav>
+                    <RoutedLinkContainer to="/lessons" text="Уроки"/>
+                    <RoutedLinkContainer to="/themes" text="Упражнения"/>
+                    <RoutedLinkContainer to="/about" text="О проекте"/>
+                    <RoutedLinkContainer to="/contacts" text="Контакты"/>
+                </Nav>
+            </Navbar.Collapse>
 
-                <Navbar.Collapse className="justify-content-end">
-                    <Nav>
-                        <RoutedLinkContainer to="/registration" text="Регистрация"
-                                             className={isAuthenticated ? "hidden" : ""}/>
-                        <Nav.Link onClick={this.props.actions.showLogin}
-                                  className={isAuthenticated ? "hidden" : ""}>Вход</Nav.Link>
-                        <Nav.Link onClick={this.props.actions.logout}
-                                  className={isAuthenticated ? "" : "hidden"}>Выход</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-        );
+            <Navbar.Collapse className="justify-content-end">
+                <Nav>
+                    <RoutedLinkContainer to="/registration" text="Регистрация"
+                                         className={isAuthenticated ? "hidden" : ""}/>
+                    <Nav.Link onClick={this.props.actions.showLogin}
+                              className={isAuthenticated ? "hidden" : ""}>Вход</Nav.Link>
+                    <Nav.Link onClick={this.props.actions.logout}
+                              className={isAuthenticated ? "" : "hidden"}>Выход</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+        </Navbar>;
     }
 }
 

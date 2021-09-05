@@ -2,7 +2,7 @@ import {HIDE_LOGIN, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, SHOW_LO
 import decode from "jwt-decode";
 
 const initialState = ({
-    user: localStorage.getItem("token")  !== null ? decode(localStorage.getItem("token")) : {},
+    user: localStorage.getItem("token") !== null ? decode(localStorage.getItem("token")) : {},
     isAuthenticated: localStorage.getItem("token") !== null,
     showLogin: false,
     errorMessage: null

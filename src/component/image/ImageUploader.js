@@ -64,7 +64,7 @@ class ImageUploader extends React.Component {
     render() {
         if (this.props.imageFileName) {
             return <>
-                    <h4>Изображение</h4>
+                <h4>Изображение</h4>
                 <img src={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/images/200_200-${this.props.imageFileName}`}
                      alt="image"/>
                 <br/>

@@ -49,8 +49,8 @@ class Lesson extends React.Component {
     createTextList() {
         let texts = this.state.texts.map((text, index) => {
             return <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
-                    <span>{text.title}</span>
-                </LinkContainer>;
+                <span>{text.title}</span>
+            </LinkContainer>;
         });
 
         if (texts.length > 0) {

@@ -6,7 +6,8 @@ class ChoiceElement extends React.Component {
 
     constructor(props) {
         super(props);
-        this[`form-${this.props.index}`] = createRef();
+
+        this[`form-${props.index}`] = createRef();
     }
 
     checkAnswer() {

@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 
 class About extends React.Component {
     render() {
-        return <div>
+        return <>
             <Helmet title="О проекте | Тонкословие"/>
 
             <Jumbotron>
@@ -14,7 +14,7 @@ class About extends React.Component {
                     здесь будут описаны детали проекта
                 </h4>
             </Jumbotron>
-        </div>
+        </>
     }
 }
 

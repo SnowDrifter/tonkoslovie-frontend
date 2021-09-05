@@ -110,7 +110,8 @@ class EditPartModal extends React.Component {
                 return <TextPartModalBody dataInput={this.dataInput} data={textPart.data}/>
             case partTypes.QUESTION:
                 return <QuestionPartModalBody dataInput={this.dataInput} data={textPart.data}
-                                         placeholderInput={this.placeholderInput} placeholder={textPart.placeholder}/>
+                                              placeholderInput={this.placeholderInput}
+                                              placeholder={textPart.placeholder}/>
             case partTypes.CHOICE: {
                 const choiceVariants = textPart.choiceVariants || [{}];
                 const choiceFormsData = choiceVariants.map((value, index) => {
@@ -125,8 +126,8 @@ class EditPartModal extends React.Component {
                 });
 
                 return <ChoicePartModalBody choiceFormsData={choiceFormsData}
-                                       increaseChoicesCount={this.increaseChoicesCount}
-                                       decreaseChoicesCount={this.decreaseChoicesCount}/>
+                                            increaseChoicesCount={this.increaseChoicesCount}
+                                            decreaseChoicesCount={this.decreaseChoicesCount}/>
             }
         }
     }

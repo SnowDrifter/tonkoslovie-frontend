@@ -53,20 +53,8 @@ class ExerciseComponent extends React.Component {
         const exercise = this.state.exercise;
         const answersCount = exercise.answers ? exercise.answers.length : 1;
 
-        let validationClass;
-
-        if (exercise.solved !== undefined) {
-            if (exercise.solved === true) {
-                validationClass = "is-valid";
-            } else {
-                validationClass = "is-invalid";
-            }
-        }
-
-        let answerVariant;
-        if (exercise.answers) {
-            answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
-        }
+        const validationClass = exercise.solved !== undefined ? (exercise.solved ? "is-valid" : "is-invalid") : null;
+        const answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
 
         this.setState({
             id: exercise.id,

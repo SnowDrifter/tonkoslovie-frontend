@@ -100,7 +100,7 @@ class Text extends React.Component {
 
             <Card.Body>
                 <Jumbotron className="text-body" style={{textAlign: "justify"}}>
-                    <Form inline  id="text-body-form" className="text-content">
+                    <Form inline id="text-body-form" className="text-content">
                         {elements}
                     </Form>
                     <Button form="text-body-form" size="lg" type="submit" onClick={this.checkAnswers.bind(this)}

@@ -4,19 +4,17 @@ import {BsPencil, BsX} from "react-icons/bs";
 
 class EditRemoveButtons extends React.Component {
     render() {
-        return <>
-            <ButtonGroup className="button-block">
-                <Button style={{padding: "0.3rem 0.4rem"}}
-                        onClick={this.props.edit}>
-                    <BsPencil size={18}/>
-                </Button>
-                <Button variant="danger"
-                        style={{padding: "0.1rem 0.2rem"}}
-                        onClick={this.props.remove}>
-                    <BsX size={24}/>
-                </Button>
-            </ButtonGroup>
-        </>;
+        return <ButtonGroup className="button-block">
+            <Button style={{padding: "0.3rem 0.4rem"}}
+                    onClick={this.props.edit}>
+                <BsPencil size={18}/>
+            </Button>
+            <Button variant="danger"
+                    style={{padding: "0.1rem 0.2rem"}}
+                    onClick={this.props.remove}>
+                <BsX size={24}/>
+            </Button>
+        </ButtonGroup>;
     }
 }
 

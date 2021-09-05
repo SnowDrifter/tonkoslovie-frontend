@@ -13,7 +13,7 @@ class Registration extends React.Component {
             validated: false,
             disableSubmit: false,
             showModal: false,
-            modalText: "",
+            modalText: null,
             errorModal: false,
 
             password: {
@@ -196,10 +196,10 @@ class Registration extends React.Component {
                             <Col md={2}/>
                             <Col md={8}>
                                 <ValidationForm label="Email"
-                                               inputRef={this.emailInput}
-                                               checked={this.state.checked}
-                                               valid={this.state.email.valid}
-                                               message={this.state.email.message}/>
+                                                inputRef={this.emailInput}
+                                                checked={this.state.checked}
+                                                valid={this.state.email.valid}
+                                                message={this.state.email.message}/>
                             </Col>
                         </Row>
 
@@ -207,11 +207,11 @@ class Registration extends React.Component {
                             <Col md={2}/>
                             <Col md={8}>
                                 <ValidationForm label="Пароль"
-                                               type="password"
-                                               inputRef={this.passwordInput}
-                                               checked={this.state.checked}
-                                               valid={this.state.password.valid}
-                                               message={this.state.password.message}/>
+                                                type="password"
+                                                inputRef={this.passwordInput}
+                                                checked={this.state.checked}
+                                                valid={this.state.password.valid}
+                                                message={this.state.password.message}/>
                             </Col>
                         </Row>
 
@@ -219,11 +219,11 @@ class Registration extends React.Component {
                             <Col md={2}/>
                             <Col md={8}>
                                 <ValidationForm label="Повторите пароль"
-                                               type="password"
-                                               inputRef={this.confirmPasswordInput}
-                                               checked={this.state.checked}
-                                               valid={this.state.confirmPassword.valid}
-                                               message={this.state.confirmPassword.message}/>
+                                                type="password"
+                                                inputRef={this.confirmPasswordInput}
+                                                checked={this.state.checked}
+                                                valid={this.state.confirmPassword.valid}
+                                                message={this.state.confirmPassword.message}/>
                             </Col>
                         </Row>
 

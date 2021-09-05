@@ -7,10 +7,8 @@ class AdminRoute extends React.Component {
     constructor(props) {
         super(props);
 
-        const {user} = this.props;
-
-        if (!this.isAdmin(user)) {
-            this.props.history.push("/access_denied");
+        if (!this.isAdmin(props.user)) {
+            props.history.push("/access_denied");
         }
     }
 

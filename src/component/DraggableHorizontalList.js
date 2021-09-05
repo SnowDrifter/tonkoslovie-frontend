@@ -1,5 +1,5 @@
 import React from "react";
-import {SortableContainer, SortableElement } from "react-sortable-hoc";
+import {SortableContainer, SortableElement} from "react-sortable-hoc";
 import "./DraggableHorizontalList.less";
 
 const SortableItem = SortableElement(({value}) =>
@@ -9,11 +9,11 @@ const SortableItem = SortableElement(({value}) =>
 );
 
 const SortableList = SortableContainer(({items, isDragging}) => {
-    return (<div className={`sortable-horizontal-container ${isDragging ? "dragging" : ""}`}>
-            {items.map((value, index) => (
-                <SortableItem key={`item-${index}`} index={index} value={value}/>
-            ))}
-        </div>);
+    return <div className={`sortable-horizontal-container ${isDragging ? "dragging" : ""}`}>
+        {items.map((value, index) => (
+            <SortableItem key={`item-${index}`} index={index} value={value}/>
+        ))}
+    </div>;
 });
 
 class DraggableHorizontalList extends React.Component {

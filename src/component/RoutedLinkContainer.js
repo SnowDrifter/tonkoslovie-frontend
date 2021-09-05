@@ -5,7 +5,7 @@ import {Nav} from "react-bootstrap";
 class RoutedLinkContainer extends React.Component {
     render() {
         return (
-            <LinkContainer to={this.props.to ? this.props.to : ""}>
+            <LinkContainer to={this.props.to}>
                 <Nav.Link className={this.props.className}>{this.props.text}</Nav.Link>
             </LinkContainer>
         );

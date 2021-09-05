@@ -9,10 +9,10 @@ class SoundPlayer extends React.Component {
         }
 
         return <ReactPlayer
-                width="100%"
-                height={40}
-                controls={true}
-                url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.props.soundFileName}`}/>
+            width="100%"
+            height={40}
+            controls={true}
+            url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.props.soundFileName}`}/>
     }
 }
 

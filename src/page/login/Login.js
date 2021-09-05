@@ -37,39 +37,37 @@ class Login extends React.Component {
     }
 
     render() {
-        return (
-            <Modal centered show={this.state.showLogin}
-                   onHide={this.props.actions.hideLogin} dialogClassName="login-modal">
-                <Modal.Header closeButton>
-                    <Modal.Title>Вход</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <Form.Group controlId="emailForm">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control ref={this.emailInput} type="text" autoFocus/>
-                            </Form.Group>
-
-                            <Form.Group controlId="passwordForm">
-                                <Form.Label>Пароль</Form.Label>
-                                <Form.Control ref={this.passwordInput} type="password"/>
-                            </Form.Group>
+        return <Modal centered show={this.state.showLogin}
+                      onHide={this.props.actions.hideLogin} dialogClassName="login-modal">
+            <Modal.Header closeButton>
+                <Modal.Title>Вход</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group>
+                        <Form.Group controlId="emailForm">
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control ref={this.emailInput} type="text" autoFocus/>
                         </Form.Group>
 
-                        <div className="login-error-message text-center">{this.state.errorMessage}</div>
+                        <Form.Group controlId="passwordForm">
+                            <Form.Label>Пароль</Form.Label>
+                            <Form.Control ref={this.passwordInput} type="password"/>
+                        </Form.Group>
+                    </Form.Group>
 
-                        <Row className="justify-content-center">
-                            <Button type="submit" variant="success" onClick={this.sendLogin.bind(this)}>Войти</Button>
-                        </Row>
-                    </Form>
+                    <div className="login-error-message text-center">{this.state.errorMessage}</div>
 
-                    <hr/>
+                    <Row className="justify-content-center">
+                        <Button type="submit" variant="success" onClick={this.sendLogin.bind(this)}>Войти</Button>
+                    </Row>
+                </Form>
 
-                    <Oauth/>
-                </Modal.Body>
-            </Modal>
-        )
+                <hr/>
+
+                <Oauth/>
+            </Modal.Body>
+        </Modal>
     }
 }
 
