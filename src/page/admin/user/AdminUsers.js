@@ -8,6 +8,7 @@ import RoleUtil from "/util/RoleUtil";
 import {Breadcrumb, Card} from "react-bootstrap";
 import EditButton from "/component/button/EditButton"
 import PaginationContainer from "/component/PaginationContainer"
+import AdminUserFilter from "/page/admin/user/AdminUserFilter"
 import {toast} from "react-toastify";
 
 
@@ -29,20 +30,24 @@ class AdminUsers extends React.Component {
             currentPage: 0,
             totalElements: null,
             maxPage: null,
+            searchParameters: [],
             loading: true
         };
 
         this.handleChangePage = this.handleChangePage.bind(this);
+        this.createSearchQuery = this.createSearchQuery.bind(this);
+        this.applyFilters = this.applyFilters.bind(this);
     }
 
     componentDidMount() {
-        this.updateUsers(0);
+        this.updateUsers();
     }
 
-    updateUsers(page) {
+    updateUsers() {
         Client.get("/api/user/users", {
             params: {
-                page: page
+                page: this.state.currentPage,
+                search: this.createSearchQuery()
             }
         })
             .then(response => {
@@ -59,8 +64,18 @@ class AdminUsers extends React.Component {
             })
     }
 
+    applyFilters(searchParameters) {
+        this.setState({searchParameters: searchParameters}, this.updateUsers);
+    }
+
+    createSearchQuery() {
+        return this.state.searchParameters
+            .map(p => `${p.field}${p.operation}${p.value}`)
+            .join(";")
+    }
+
     handleChangePage(newPage) {
-        this.updateUsers(newPage);
+        this.setState({currentPage: newPage}, this.updateUsers)
     }
 
     editUser(user) {
@@ -84,6 +99,8 @@ class AdminUsers extends React.Component {
                     <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Пользователи</Breadcrumb.Item>
                 </Breadcrumb>
+
+                <AdminUserFilter applyFilters={this.applyFilters} searchParameters={this.state.searchParameters}/>
 
                 <Table rowHeight={45}
                        rowsCount={users.length}
