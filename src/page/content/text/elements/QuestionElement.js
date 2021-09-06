@@ -1,5 +1,6 @@
 import React, {createRef} from "react";
 import {Form} from "react-bootstrap";
+import * as answerStatuses from "/page/content/text/TextPartAnswerStatus";
 
 
 class QuestionElement extends React.Component {
@@ -12,55 +13,34 @@ class QuestionElement extends React.Component {
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = this[`form-${this.props.index}`].current.value;
-        answer = answer.trim().toLowerCase();
+        const answer = this[`form-${this.props.index}`].current.value.trim().toLowerCase();
 
         if (answer === part.data.toLowerCase()) {
-            part.success = true;
+            part.answerStatus = answerStatuses.CORRECT_ANSWER;
         } else {
-            part.error = true;
+            part.answerStatus = answerStatuses.WRONG_ANSWER;
         }
+
+        return part;
     }
 
     calculateInputLength(part) {
-        if (part.data.length > part.placeholder.length) {
-            if (part.data.length <= 3) {
-                return 70;
-            } else {
-                return (part.data.length + 1) * 8 + 10;
-            }
-        } else {
-            if (part.placeholder.length <= 3) {
-                return 70;
-            } else {
-                return (part.placeholder.length + 1) * 8 + 10;
-            }
-        }
+        const maxLength = Math.max(part.data.length, part.placeholder.length);
+        return maxLength <= 3 ? 50 : (maxLength * 8 + 18)
     }
 
     render() {
         const part = this.props.part;
-        let validationClass;
-        let disabled = false;
-
-        if (part.success) {
-            validationClass = "is-valid";
-            disabled = true;
-        } else if (part.error) {
-            validationClass = "is-invalid";
-        }
 
         return <Form.Group className="text-element">
-            <Form.Control
-                ref={this[`form-${this.props.index}`]}
-                style={{width: this.calculateInputLength(part)}}
-                className={validationClass}
-                type="text"
-                size="sm"
-                disabled={disabled}
-                placeholder={part.placeholder}
-                maxLength={part.data.length}
-            />
+            <Form.Control ref={this[`form-${this.props.index}`]}
+                          style={{width: this.calculateInputLength(part)}}
+                          className={part.answerStatus?.validationClass}
+                          type="text"
+                          size="sm"
+                          disabled={part.answerStatus === answerStatuses.CORRECT_ANSWER}
+                          placeholder={part.placeholder}
+                          maxLength={part.data.length}/>
         </Form.Group>;
     }
 }

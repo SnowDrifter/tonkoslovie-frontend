@@ -1,5 +1,6 @@
 import React, {createRef} from "react";
 import {Form} from "react-bootstrap";
+import * as answerStatuses from "/page/content/text/TextPartAnswerStatus";
 
 
 class ChoiceElement extends React.Component {
@@ -12,15 +13,15 @@ class ChoiceElement extends React.Component {
 
     checkAnswer() {
         const part = this.props.part;
-        let answer = this[`form-${this.props.index}`].current.value;
+        const answer = this[`form-${this.props.index}`].current.value;
 
         if (this.checkChoiceVariant(answer, part.choiceVariants)) {
-            part.success = true;
-            return true;
+            part.answerStatus = answerStatuses.CORRECT_ANSWER;
         } else {
-            part.error = true;
-            return false;
+            part.answerStatus = answerStatuses.WRONG_ANSWER;
         }
+
+        return part;
     }
 
     checkChoiceVariant(currentVariant, variants) {
@@ -33,29 +34,17 @@ class ChoiceElement extends React.Component {
 
     render() {
         const part = this.props.part;
-        const variants = [];
-        variants.push(<option key={-1} value="-1" hidden>Выберите правильный вариант</option>);
-
-        part.choiceVariants.map((value, index) => {
-            variants.push(<option key={index} value={value.title}>{value.title}</option>);
+        const variants = part.choiceVariants.map((value, index) => {
+            return <option key={index} value={value.title}>{value.title}</option>
         });
-
-        let validationClass;
-        let disabled = false;
-
-        if (part.success) {
-            validationClass = "is-valid";
-            disabled = true;
-        } else if (part.error) {
-            validationClass = "is-invalid";
-        }
 
         return <Form.Group className="text-element">
             <Form.Control as="select"
-                          className={validationClass}
+                          className={part.answerStatus?.validationClass}
                           size="sm"
-                          disabled={disabled}
+                          disabled={part.answerStatus === answerStatuses.CORRECT_ANSWER}
                           ref={this[`form-${this.props.index}`]}>
+                <option key={-1} value="-1" hidden>Выберите правильный вариант</option>
                 {variants}
             </Form.Control>
         </Form.Group>

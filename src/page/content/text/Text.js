@@ -20,15 +20,13 @@ class Text extends React.Component {
             title: null,
             textParts: [],
             soundFileName: null,
-            loaded: false,
+            loading: false,
             failed: false
         };
 
         this.checkAnswers = this.checkAnswers.bind(this);
 
-        if (props.match.params.textId) {
-            this.loadText(props.match.params.textId)
-        }
+        this.loadText(props.match.params.textId)
     }
 
     loadText(textId) {
@@ -43,63 +41,66 @@ class Text extends React.Component {
                 title: text.title,
                 textParts: text.parts,
                 soundFileName: text.soundFileName,
-                loaded: true
+                loading: false
             });
         }).catch(() => {
             this.setState({
-                failed: true
+                failed: true,
+                loading: false
             });
         })
     }
 
     checkAnswers(event) {
         event.preventDefault();
-        let textParts = this.state.textParts;
 
-        textParts.map((part, index) => {
+        const textParts = this.state.textParts.map((part, index) => {
             if (part.type === partTypes.QUESTION || part.type === partTypes.CHOICE) {
-                this[`element-${index}`].current.checkAnswer();
+                return this[`element-${index}`].current.checkAnswer();
+            } else {
+                return part;
             }
         });
 
-        this.setState({textParts: textParts});
+        this.setState({textParts});
     }
 
-    render() {
-        let elements = [];
-        const title = `${this.state.title} | Тонкословие`;
-
-        this.state.textParts.map((part, index) => {
+    createElements() {
+        return this.state.textParts.map((part, index) => {
             switch (part.type) {
                 case partTypes.TEXT: {
-                    elements.push(<div className="text-element" key={index}>{part.data}</div>);
-                    break;
-                }
-                case partTypes.LINE_BREAK: {
-                    elements.push(<div className="text-content-line-break" key={index}/>);
-                    break;
+                    return <div className="text-element" key={index}>{part.data}</div>;
                 }
                 case partTypes.QUESTION: {
                     this[`element-${index}`] = createRef();
-                    elements.push(<QuestionElement ref={this[`element-${index}`]}
-                                                   part={part} key={index} index={index}/>);
-                    break;
+                    return <QuestionElement ref={this[`element-${index}`]} part={part} key={index} index={index}/>
                 }
                 case partTypes.CHOICE: {
                     this[`element-${index}`] = createRef();
-                    elements.push(<ChoiceElement ref={this[`element-${index}`]}
-                                                 part={part} key={index} index={index}/>);
-                    break;
+                    return <ChoiceElement ref={this[`element-${index}`]} part={part} key={index} index={index}/>
+                }
+                case partTypes.LINE_BREAK: {
+                    return <div className="text-content-line-break" key={index}/>
                 }
             }
         });
+    }
 
-        let body = <Card>
+    render() {
+        if (this.state.loading) {
+            return <Loader/>;
+        } else if (this.state.failed) {
+            return <ErrorPanel text="Текст не найден"/>;
+        }
+
+        const elements = this.createElements();
+
+        return <Card>
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
-            <Helmet title={title}/>
+            <Helmet title={`${this.state.title || ""} | Тонкословие`}/>
 
             <Card.Body>
-                <Jumbotron className="text-body" style={{textAlign: "justify"}}>
+                <Jumbotron className="text-body">
                     <Form inline id="text-body-form" className="text-content">
                         {elements}
                     </Form>
@@ -110,14 +111,6 @@ class Text extends React.Component {
                 <SoundPlayer soundFileName={this.state.soundFileName}/>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else if (this.state.failed) {
-            return <ErrorPanel text="Текст не найден"/>;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 
