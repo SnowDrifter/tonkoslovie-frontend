@@ -7,8 +7,8 @@ class ChoicePartModalBody extends React.Component {
         const choiceForms = this.props.choiceFormsData.map((value, index) => {
             return <InputGroup key={index} className="admin-text-choice-part-input">
                 <InputGroup.Prepend>
-                    <Form.Check name="right-variant" type="radio"
-                                ref={value.rightRef} defaultChecked={value.right}/>
+                    <Form.Check name="correct-variant" type="radio"
+                                ref={value.correctRef} defaultChecked={value.correct}/>
                 </InputGroup.Prepend>
                 <Form.Control ref={value.titleRef} defaultValue={value.title}/>
             </InputGroup>

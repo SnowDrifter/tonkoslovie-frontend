@@ -27,7 +27,7 @@ class ChoiceElement extends React.Component {
     checkChoiceVariant(currentVariant, variants) {
         return variants.some(value => {
             if (value.title === currentVariant) {
-                return !!value.right;
+                return !!value.correct;
             }
         });
     }

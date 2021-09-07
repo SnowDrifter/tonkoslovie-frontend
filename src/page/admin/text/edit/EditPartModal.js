@@ -67,12 +67,12 @@ class EditPartModal extends React.Component {
         }
 
         if (type === partTypes.CHOICE) {
-            if (this.checkRightAnswer()) {
+            if (this.checkCorrectAnswer()) {
                 textPart.choiceVariants = this.state.textPart.choiceVariants
                     .map((value, index) => {
                         return {
                             title: this[`form-${index}`].current.value,
-                            right: this[`right-${index}`].current.checked
+                            correct: this[`correct-${index}`].current.checked
                         }
                     });
             } else {
@@ -88,15 +88,15 @@ class EditPartModal extends React.Component {
     changeType(newType) {
         const textPart = {...this.state.textPart, type: newType}
         if (newType === partTypes.CHOICE && !textPart.choiceVariants) {
-            textPart.choiceVariants = [{title: "", right: true}]
+            textPart.choiceVariants = [{title: "", correct: true}]
         }
         this.props.changeTextPart(textPart)
     }
 
-    checkRightAnswer() {
+    checkCorrectAnswer() {
         const choiceCount = this.state.textPart.choiceVariants.length;
         for (let i = 0; i < choiceCount; i++) {
-            if (this[`right-${i}`].current.checked) {
+            if (this[`correct-${i}`].current.checked) {
                 return true;
             }
         }
@@ -115,13 +115,13 @@ class EditPartModal extends React.Component {
             case partTypes.CHOICE: {
                 const choiceVariants = textPart.choiceVariants || [{}];
                 const choiceFormsData = choiceVariants.map((value, index) => {
-                    this[`right-${index}`] = createRef();
+                    this[`correct-${index}`] = createRef();
                     this[`form-${index}`] = createRef();
                     return {
                         title: value.title,
                         titleRef: this[`form-${index}`],
-                        right: value.right,
-                        rightRef: this[`right-${index}`]
+                        correct: value.correct,
+                        correctRef: this[`correct-${index}`]
                     }
                 });
 
