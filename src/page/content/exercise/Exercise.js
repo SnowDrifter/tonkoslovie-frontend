@@ -190,7 +190,7 @@ class Exercise extends React.Component {
             <SimpleConfirmModal showModal={this.state.showConfirmModal}
                                 hideModal={this.hideModals}
                                 confirmFunction={this.loadNextExercise}
-                                modalTitle="Новые упражнения закончились, начать заново?"/>
+                                modalText="Новые упражнения закончились, начать заново?"/>
 
             <SimpleTextModal showModal={this.state.showDictionaryModal}
                              hideModal={this.hideModals}

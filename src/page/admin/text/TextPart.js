@@ -66,7 +66,7 @@ class TextPart extends React.Component {
                 {buttons}
             </div>
 
-            <SimpleConfirmModal modalTitle="Удалить фрагмент?"
+            <SimpleConfirmModal modalText="Удалить фрагмент?"
                                 showModal={this.state.showConfirmModal}
                                 hideModal={this.hideConfirmModal}
                                 confirmFunction={this.removeTextPart}

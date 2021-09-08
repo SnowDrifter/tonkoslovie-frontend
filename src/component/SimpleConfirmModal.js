@@ -3,17 +3,19 @@ import {Button, Modal} from "react-bootstrap";
 
 class SimpleConfirmModal extends React.Component {
     render() {
-        return <Modal show={this.props.showModal} onHide={this.props.hideModal.bind(this)} centered>
+        const {showModal, modalTitle, modalText, hideModal, confirmFunction, negativeFunction} = this.props;
+
+        return <Modal show={showModal} onHide={() => hideModal()} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Подтверждение</Modal.Title>
+                <Modal.Title>{modalTitle || "Подтверждение"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4 className="text-center">{this.props.modalTitle}</h4>
+                <h4 className="text-center">{modalText}</h4>
 
                 <div className="text-center">
-                    <Button onClick={() => this.props.confirmFunction(true)}>Да</Button>
+                    <Button variant="success" onClick={() => confirmFunction()}>Да</Button>
                     {" "}
-                    <Button onClick={() => this.props.negativeFunction()} variant="danger">Нет</Button>
+                    <Button variant="danger" onClick={() => negativeFunction()}>Нет</Button>
                 </div>
             </Modal.Body>
         </Modal>
