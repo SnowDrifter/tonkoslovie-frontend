@@ -6,6 +6,7 @@ import ErrorPanel from "/component/ErrorPanel";
 import Loader from "/component/Loader";
 import ExerciseComponent from "./ExerciseComponent";
 import SimpleConfirmModal from "/component/SimpleConfirmModal";
+import shuffle from "lodash/shuffle";
 
 class Theme extends React.Component {
 
@@ -16,12 +17,11 @@ class Theme extends React.Component {
             id: null,
             title: null,
             exercises: [],
-            currentExercise: {},
             currentExerciseNumber: 0,
             solvedExerciseCount: 0,
             soundFileName: null,
             showSuccessModal: false,
-            loaded: false,
+            loading: true,
             failed: false
         };
 
@@ -30,7 +30,7 @@ class Theme extends React.Component {
         }
 
         this.nextExercise = this.nextExercise.bind(this);
-        this.addSolvedExercise = this.addSolvedExercise.bind(this);
+        this.markExerciseAsSolved = this.markExerciseAsSolved.bind(this);
         this.hideSuccessModal = this.hideSuccessModal.bind(this);
         this.removeProgress = this.removeProgress.bind(this);
         this.backToThemesPage = this.backToThemesPage.bind(this);
@@ -49,58 +49,39 @@ class Theme extends React.Component {
                 id: theme.id,
                 title: theme.title,
                 exercises: theme.exercises,
-                currentExercise: theme.exercises[0],
-                loaded: true
+                loading: false
             });
         }).catch(() => {
             this.setState({
-                failed: true
+                failed: true,
+                loading: false
             });
         })
     }
 
     removeProgress() {
-        const exercises = this.state.exercises;
-        this.shuffleExercises(exercises);
-        exercises.forEach(exercise => {
-            exercise.solved = undefined;
-            exercise.correctUserAnswer = null;
-        });
+        const exercises = shuffle(this.state.exercises);
+        exercises.forEach(exercise => exercise.solved = undefined);
 
         this.setState({
             exercises: exercises,
-            currentExercise: exercises[0],
             currentExerciseNumber: 0,
             solvedExerciseCount: 0,
             showSuccessModal: false
         })
     }
 
-    shuffleExercises(exercises) {
-        for (let i = exercises.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
-        }
-    }
+    markExerciseAsSolved() {
+        const exercises = this.state.exercises;
+        exercises[this.state.currentExerciseNumber].solved = true;
 
-    addSolvedExercise(correctUserAnswer) {
-        let exercises = this.state.exercises;
-        const solvedExercise = exercises[this.state.currentExerciseNumber];
+        const newSolvedExerciseCount = this.state.solvedExerciseCount + 1;
 
-        if (!solvedExercise.solved) {
-            solvedExercise.solved = true;
-            solvedExercise.correctUserAnswer = correctUserAnswer;
-
-            exercises[this.state.currentExerciseNumber] = solvedExercise;
-
-            const newSolvedExerciseCount = this.state.solvedExerciseCount + 1;
-
-            this.setState({
-                exercises: exercises,
-                solvedExerciseCount: newSolvedExerciseCount,
-                showSuccessModal: newSolvedExerciseCount === this.state.exercises.length
-            });
-        }
+        this.setState({
+            exercises: exercises,
+            solvedExerciseCount: newSolvedExerciseCount,
+            showSuccessModal: newSolvedExerciseCount === this.state.exercises.length
+        });
     }
 
     backToThemesPage() {
@@ -113,12 +94,8 @@ class Theme extends React.Component {
 
     nextExercise() {
         if (this.state.solvedExerciseCount < this.state.exercises.length) {
-            let newExerciseNumber = this.state.currentExerciseNumber + 1;
-            let newExercise = this.state.exercises[newExerciseNumber];
-
             this.setState({
-                currentExercise: newExercise,
-                currentExerciseNumber: newExerciseNumber
+                currentExerciseNumber: this.state.currentExerciseNumber + 1
             })
         } else {
             this.setState({showSuccessModal: true})
@@ -126,33 +103,35 @@ class Theme extends React.Component {
     }
 
     render() {
-        const body = <Card key={this.state.currentExerciseNumber}>
+        if (this.state.loading) {
+            return <Loader/>;
+        } else if (this.state.failed) {
+            return <ErrorPanel text="Тема не найдена"/>;
+        }
+
+        const currentExercise = this.state.exercises[this.state.currentExerciseNumber];
+
+        return <Card key={this.state.currentExerciseNumber}>
+            <Helmet title={`${this.state.title} | Тонкословие`}/>
+
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
 
             <Card.Body>
                 <span className="float-right">
                     {`Выполнено ${this.state.solvedExerciseCount}/${this.state.exercises.length}`}
                 </span>
-                <Helmet title={`${this.state.title} | Тонкословие`}/>
                 <ExerciseComponent nextExercise={this.nextExercise}
-                                   exercise={this.state.currentExercise}
-                                   addSolvedExercise={this.addSolvedExercise}/>
+                                   exercise={currentExercise}
+                                   markExerciseAsSolved={this.markExerciseAsSolved}/>
 
-                <SimpleConfirmModal showModal={this.state.showSuccessModal}
+                <SimpleConfirmModal modalTitle="Тема завершена!"
+                                    modalText="Начать заново?"
+                                    showModal={this.state.showSuccessModal}
                                     hideModal={this.hideSuccessModal}
                                     confirmFunction={this.removeProgress}
-                                    negativeFunction={this.backToThemesPage}
-                                    modalTitle="Новые упражнения закончились, начать заново?"/>
+                                    negativeFunction={this.backToThemesPage}/>
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else if (this.state.failed) {
-            return <ErrorPanel text="Тема не найдена"/>;
-        } else {
-            return <Loader/>;
-        }
     }
 }
 

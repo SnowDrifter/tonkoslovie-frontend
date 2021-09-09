@@ -3,7 +3,9 @@ import {Button, Card, Form} from "react-bootstrap";
 import DOMPurify from "dompurify";
 import * as  exerciseTypes from "./ExerciseTypes";
 import SimpleTextModal from "/component/SimpleTextModal";
+import sample from "lodash/sample";
 import "../exercise/Exercise.less"
+import {WRONG_ANSWER, CORRECT_ANSWER} from "/constant/AnswerStatus";
 
 class ExerciseComponent extends React.Component {
 
@@ -11,25 +13,15 @@ class ExerciseComponent extends React.Component {
         super(props);
 
         const exercise = props.exercise;
-        const answersCount = exercise.answers ? exercise.answers.length : 1;
-
-        let answerVariant;
-        if (exercise.answers) {
-            answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
-        }
 
         this.state = {
             id: exercise.id,
             type: exercise.type,
             original: exercise.original,
             dictionary: exercise.dictionary,
-            answersCount: answersCount,
             answers: exercise.answers,
-            correctUserAnswer: exercise.correctUserAnswer,
-            showAnswerPanel: false,
-            answerVariant: answerVariant,
-            validationState: null,
-            suggestShowAnswer: false,
+            answerStatus: undefined,
+            showPossibleAnswer: false,
             showDictionaryModal: false
         };
 
@@ -40,7 +32,6 @@ class ExerciseComponent extends React.Component {
 
     componentDidMount() {
         this.updateExercise();
-        this.answerInput.current.value = this.state.correctUserAnswer || "";
     }
 
     static getDerivedStateFromProps(props) {
@@ -51,22 +42,15 @@ class ExerciseComponent extends React.Component {
 
     updateExercise() {
         const exercise = this.state.exercise;
-        const answersCount = exercise.answers ? exercise.answers.length : 1;
-
-        const validationClass = exercise.solved !== undefined ? (exercise.solved ? "is-valid" : "is-invalid") : null;
-        const answerVariant = exercise.answers[Math.floor(Math.random() * exercise.answers.length)];
 
         this.setState({
             id: exercise.id,
             type: exercise.type,
             original: exercise.original,
             dictionary: exercise.dictionary,
-            answersCount: answersCount,
             answers: exercise.answers,
-            showAnswerPanel: false,
-            answerVariant: answerVariant,
-            validationClass: validationClass,
-            suggestShowAnswer: false,
+            answerStatus: undefined,
+            showPossibleAnswer: false,
             showDictionaryModal: false
         });
     }
@@ -75,67 +59,66 @@ class ExerciseComponent extends React.Component {
         const rawAnswer = this.answerInput.current.value;
         const currentAnswer = rawAnswer.trim().toLowerCase();
 
-        let answerIsCorrect = false;
+        let answerStatus = WRONG_ANSWER;
 
         // Try check regexp
         if (this.props.exercise.answerRegex) {
             if (new RegExp(this.props.exercise.answerRegex, "gi").test(currentAnswer)) {
-                this.setState({validationClass: "is-valid"});
-                answerIsCorrect = true;
-                this.props.addSolvedExercise(rawAnswer);
+                answerStatus = CORRECT_ANSWER;
             }
         }
 
-        // Try check all hardcode answers
-        this.state.answers.map((answer) => {
+        // Try check all simple answers
+        this.state.answers.forEach(answer => {
             if (answer.toLowerCase() === currentAnswer) {
-                this.setState({validationClass: "is-valid"});
-                answerIsCorrect = true;
-                this.props.addSolvedExercise(rawAnswer);
+                answerStatus = CORRECT_ANSWER;
             }
         });
 
-        if (!answerIsCorrect) {
-            this.setState({validationClass: "is-invalid", suggestShowAnswer: true});
+        this.setState({answerStatus})
+
+        if (answerStatus === CORRECT_ANSWER) {
+            this.props.markExerciseAsSolved();
         }
     }
 
     hideModals() {
-        this.setState({showConfirmModal: false, showDictionaryModal: false});
+        this.setState({showDictionaryModal: false});
     }
 
     showDictionaryModal() {
         this.setState({showDictionaryModal: true});
     }
 
-    render() {
-        let taskText;
-        if (this.state.type) {
-            switch (this.state.type) {
-                case exerciseTypes.RUSSIAN_TO_POLISH: {
-                    taskText = "Переведите на польский фразу:";
-                    break;
-                }
-                case exerciseTypes.POLISH_TO_RUSSIAN: {
-                    taskText = "Переведите на русский фразу:";
-                    break;
-                }
-            }
+    getTaskText() {
+        switch (this.state.type) {
+            case exerciseTypes.RUSSIAN_TO_POLISH:
+                return "Переведите на польский фразу:";
+            case exerciseTypes.POLISH_TO_RUSSIAN:
+                return "Переведите на русский фразу:";
         }
+    }
 
-        const collapseClass = this.state.showAnswerPanel ? "collapse.show" : "collapse";
+    createPossibleAnswerComponent() {
+        if (this.state.answerStatus === WRONG_ANSWER) {
+            const answerVariant = sample(this.state.answers);
+            const collapseClass = this.state.showPossibleAnswer ? "collapse.show" : "collapse";
 
-        let showAnswerComponent;
-        if (this.state.suggestShowAnswer) {
-            showAnswerComponent = <div className="exercise-show-answer-component">
-                <Button onClick={() => this.setState({showAnswerPanel: !this.state.showAnswerPanel})}>
+            return <div className="exercise-show-answer-component">
+                <Button onClick={() => this.setState({showPossibleAnswer: !this.state.showPossibleAnswer})}>
                     Посмотреть возможный вариант ответа
                 </Button>
                 <Card className={`exercise-show-answer-panel ${collapseClass}`}>
-                    {this.state.answerVariant}
+                    {answerVariant}
                 </Card>
             </div>
         }
+    }
+
+    render() {
+        const taskText = this.getTaskText();
+        const possibleAnswerComponent = this.createPossibleAnswerComponent();
+        const validationClass = this.state.answerStatus?.validationClass;
 
         return <>
             <h3>{taskText}</h3>
@@ -144,27 +127,27 @@ class ExerciseComponent extends React.Component {
             </h4>
 
             <Form.Group className="exercise-answer-form">
-                <Form.Control
-                    className={this.state.validationClass}
-                    as="textarea"
-                    ref={this.answerInput}
-                    placeholder="Введите ответ"
-                    rows={4}/>
+                <Form.Control className={validationClass}
+                              as="textarea"
+                              ref={this.answerInput}
+                              placeholder="Введите ответ"
+                              rows={4}/>
             </Form.Group>
 
-            <Button size="lg" onClick={this.checkAnswer.bind(this)} className="exercise-check-answer-button"
-                    variant="success">
+            <Button onClick={this.checkAnswer.bind(this)}
+                    className="exercise-check-answer-button"
+                    size="lg" variant="success">
                 Проверить
             </Button>
-            <Button size="lg" onClick={this.props.nextExercise.bind(this)} className="float-right">
+
+            <Button onClick={this.showDictionaryModal.bind(this)} size="lg">Показать словарь</Button>
+
+            <Button onClick={this.props.nextExercise.bind(this)}
+                    size="lg" className="float-right" disabled={this.state.answerStatus !== CORRECT_ANSWER}>
                 Следующее упражнение
             </Button>
-            <br className="exercise-button-separator"/>
-            <Button size="lg" onClick={this.showDictionaryModal.bind(this)}>
-                Показать словарь
-            </Button>
 
-            {showAnswerComponent}
+            {possibleAnswerComponent}
 
             <SimpleTextModal showModal={this.state.showDictionaryModal}
                              hideModal={this.hideModals}

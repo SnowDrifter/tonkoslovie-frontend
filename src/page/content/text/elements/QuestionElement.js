@@ -1,6 +1,6 @@
 import React, {createRef} from "react";
 import {Form} from "react-bootstrap";
-import * as answerStatuses from "/page/content/text/TextPartAnswerStatus";
+import * as answerStatuses from "/constant/AnswerStatus";
 
 
 class QuestionElement extends React.Component {

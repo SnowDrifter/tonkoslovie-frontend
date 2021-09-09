@@ -13,55 +13,55 @@ class Themes extends React.Component {
 
         this.state = {
             themes: [],
-            loaded: false
+            loading: true
         };
 
-        this.updateThemes = this.updateThemes.bind(this);
+        this.loadThemes = this.loadThemes.bind(this);
     }
 
     componentDidMount() {
-        this.updateThemes();
+        this.loadThemes();
     }
 
-    updateThemes() {
+    loadThemes() {
         Client.get("/api/content/themes")
             .then(response => {
                 const themes = response.data;
-                this.setState({themes: themes, loaded: true})
+                this.setState({themes: themes, loading: false})
             });
     }
 
     createThemePreviews() {
         return this.state.themes
-            .map((theme, index) => {
-                return <LinkContainer exact to={`/theme/${theme.id}`}
-                                      className="theme-title"
-                                      key={index}>
+            .map((theme, index) =>
+                <LinkContainer exact to={`/theme/${theme.id}`}
+                               className="theme-title"
+                               key={index}>
                     <ListGroup.Item>
                         {theme.title}
                     </ListGroup.Item>
                 </LinkContainer>
-            });
+            );
     }
 
     render() {
-        const themePreviews = this.createThemePreviews();
-
-        const body = <Card>
-            <Helmet title="Темы упражнений | Тонкословие"/>
-            <Card.Header>Темы упражнений</Card.Header>
-            <Card.Body>
-                <ListGroup>
-                    {themePreviews}
-                </ListGroup>
-            </Card.Body>
-        </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
+        if (this.state.loading) {
             return <Loader/>;
         }
+
+        const themePreviews = this.createThemePreviews();
+
+        return <>
+            <Helmet title="Темы упражнений | Тонкословие"/>
+            <Card>
+                <Card.Header>Темы упражнений</Card.Header>
+                <Card.Body>
+                    <ListGroup>
+                        {themePreviews}
+                    </ListGroup>
+                </Card.Body>
+            </Card>
+        </>;
     }
 }
 
