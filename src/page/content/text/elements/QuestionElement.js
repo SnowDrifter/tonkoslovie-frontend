@@ -1,6 +1,6 @@
 import React, {createRef} from "react";
 import {Form} from "react-bootstrap";
-import * as answerStatuses from "/constant/AnswerStatus";
+import {WRONG_ANSWER, CORRECT_ANSWER} from "/constant/AnswerStatus";
 
 
 class QuestionElement extends React.Component {
@@ -16,9 +16,9 @@ class QuestionElement extends React.Component {
         const answer = this[`form-${this.props.index}`].current.value.trim().toLowerCase();
 
         if (answer === part.data.toLowerCase()) {
-            part.answerStatus = answerStatuses.CORRECT_ANSWER;
+            part.answerStatus = CORRECT_ANSWER;
         } else {
-            part.answerStatus = answerStatuses.WRONG_ANSWER;
+            part.answerStatus = WRONG_ANSWER;
         }
 
         return part;
@@ -38,7 +38,7 @@ class QuestionElement extends React.Component {
                           className={part.answerStatus?.validationClass}
                           type="text"
                           size="sm"
-                          disabled={part.answerStatus === answerStatuses.CORRECT_ANSWER}
+                          disabled={part.answerStatus === CORRECT_ANSWER}
                           placeholder={part.placeholder}
                           maxLength={part.data.length}/>
         </Form.Group>;

@@ -1,6 +1,6 @@
 import React, {createRef} from "react";
 import {Form} from "react-bootstrap";
-import * as answerStatuses from "/constant/AnswerStatus";
+import {WRONG_ANSWER, CORRECT_ANSWER} from "/constant/AnswerStatus";
 
 
 class ChoiceElement extends React.Component {
@@ -16,9 +16,9 @@ class ChoiceElement extends React.Component {
         const answer = this[`form-${this.props.index}`].current.value;
 
         if (this.checkChoiceVariant(answer, part.choiceVariants)) {
-            part.answerStatus = answerStatuses.CORRECT_ANSWER;
+            part.answerStatus = CORRECT_ANSWER;
         } else {
-            part.answerStatus = answerStatuses.WRONG_ANSWER;
+            part.answerStatus = WRONG_ANSWER;
         }
 
         return part;
@@ -42,7 +42,7 @@ class ChoiceElement extends React.Component {
             <Form.Control as="select"
                           className={part.answerStatus?.validationClass}
                           size="sm"
-                          disabled={part.answerStatus === answerStatuses.CORRECT_ANSWER}
+                          disabled={part.answerStatus === CORRECT_ANSWER}
                           ref={this[`form-${this.props.index}`]}>
                 <option key={-1} value="-1" hidden>Выберите правильный вариант</option>
                 {variants}
