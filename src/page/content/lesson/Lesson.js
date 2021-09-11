@@ -18,7 +18,7 @@ class Lesson extends React.Component {
             title: undefined,
             content: undefined,
             texts: [],
-            loaded: false,
+            loading: true,
             failed: false
         };
 
@@ -37,21 +37,22 @@ class Lesson extends React.Component {
                 title: lesson.title,
                 content: lesson.content,
                 texts: lesson.texts,
-                loaded: true
+                loading: false
             });
         }).catch(() => {
             this.setState({
+                loading: false,
                 failed: true
             });
         })
     }
 
     createTextList() {
-        let texts = this.state.texts.map((text, index) => {
-            return <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
+        const texts = this.state.texts.map((text, index) =>
+            <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
                 <span>{text.title}</span>
-            </LinkContainer>;
-        });
+            </LinkContainer>
+        );
 
         if (texts.length > 0) {
             return <div>
@@ -64,11 +65,16 @@ class Lesson extends React.Component {
     }
 
     render() {
-        const title = `${this.state.title} | Тонкословие`;
+        if (this.state.loading) {
+            return <Loader/>;
+        } else if (this.state.failed) {
+            return <ErrorPanel text="Урок не найден"/>
+        }
+
         const textList = this.createTextList();
 
-        let body = <Card>
-            <Helmet title={title}/>
+        return <Card>
+            <Helmet title={`${this.state.title} | Тонкословие`}/>
             <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
 
             <Card.Body>
@@ -76,14 +82,6 @@ class Lesson extends React.Component {
                 {textList}
             </Card.Body>
         </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else if (this.state.failed) {
-            return <ErrorPanel text="Урок не найден"/>
-        } else {
-            return <Loader/>;
-        }
     }
 }
 
