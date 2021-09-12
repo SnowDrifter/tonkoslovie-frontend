@@ -5,6 +5,8 @@ import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
 import Loader from "/component/Loader";
 import ImageContainer from "/component/image/ImageContainer";
+import InfiniteScroll from "react-infinite-scroll-component";
+import InfinityScrollLoader from "/component/InfinityScrollLoader";
 import "./Lessons.less";
 
 class Lessons extends React.Component {
@@ -14,9 +16,12 @@ class Lessons extends React.Component {
 
         this.state = {
             lessons: [],
+            currentPage: 0,
+            hasMore: true,
             loading: true
         };
 
+        this.loadNewLessons = this.loadNewLessons.bind(this);
         this.updateLessons = this.updateLessons.bind(this);
     }
 
@@ -24,11 +29,22 @@ class Lessons extends React.Component {
         this.updateLessons();
     }
 
+    loadNewLessons() {
+        this.setState({currentPage: this.state.currentPage + 1}, this.updateLessons)
+    }
+
     updateLessons() {
-        Client.get("/api/content/lessons")
+        Client.get("/api/content/lessons", {
+            params: {
+                page: this.state.currentPage
+            }
+        })
             .then(response => {
-                const lessons = response.data;
-                this.setState({lessons: lessons, loading: false})
+                this.setState({
+                    lessons: this.state.lessons.concat(response.data.content),
+                    loading: false,
+                    hasMore: !response.data.last
+                })
             });
     }
 
@@ -53,11 +69,17 @@ class Lessons extends React.Component {
 
         return <Card>
             <Helmet title="Уроки | Тонкословие"/>
+
             <Card.Header>Уроки</Card.Header>
             <Card.Body>
-                <ListGroup>
-                    {lessonPreviews}
-                </ListGroup>
+                <InfiniteScroll dataLength={lessonPreviews.length}
+                                next={this.loadNewLessons}
+                                hasMore={this.state.hasMore}
+                                loader={<InfinityScrollLoader/>}>
+                    <ListGroup>
+                        {lessonPreviews}
+                    </ListGroup>
+                </InfiniteScroll>
             </Card.Body>
         </Card>;
     }

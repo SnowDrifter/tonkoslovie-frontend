@@ -32,9 +32,6 @@ import {Route, Switch} from "react-router-dom"
 import {Container} from "react-bootstrap"
 import Navigation from "/component/Navigation";
 import AdminRoute from "./AdminRoute";
-
-import "react-toastify/dist/ReactToastify.css";
-import "../../static/css/lumen.bootstrap.theme.min.css";
 import "./App.less";
 
 class App extends React.Component {

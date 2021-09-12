@@ -1,7 +1,6 @@
 import React from "react";
 import Spinner from "react-loader-spinner";
 import "./Loader.less"
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 class Loader extends React.Component {
 
