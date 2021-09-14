@@ -7,6 +7,7 @@ import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
 import {toast} from "react-toastify";
+import PaginationContainer from "/component/PaginationContainer";
 
 
 class AdminLessons extends React.Component {
@@ -16,9 +17,13 @@ class AdminLessons extends React.Component {
 
         this.state = {
             lessons: [],
+            currentPage: 0,
+            totalElements: null,
+            maxPage: null,
             loading: true
         };
 
+        this.handleChangePage = this.handleChangePage.bind(this);
         this.deleteLesson = this.deleteLesson.bind(this);
         this.editLesson = this.editLesson.bind(this);
         this.updateLessons = this.updateLessons.bind(this);
@@ -29,13 +34,24 @@ class AdminLessons extends React.Component {
     }
 
     updateLessons() {
-        Client.get("/api/content/lessons?unpublished=true")
+        Client.get("/api/content/lessons", {
+            params: {
+                unpublished: true,
+                page: this.state.currentPage,
+                sortField: "id"
+            }
+        })
             .then(response => {
-                const lessons = response.data;
                 this.setState({
-                    lessons: lessons,
-                    loading: false
+                    loading: false,
+                    lessons: response.data.content,
+                    currentPage: response.data.number,
+                    maxPage: response.data.totalPages
                 })
+            })
+            .catch((e) => {
+                this.setState({loading: false});
+                toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
@@ -51,6 +67,10 @@ class AdminLessons extends React.Component {
                 toast.error(`Ошибка удаления! Код: ${e.response.status}`);
             });
         }
+    }
+
+    handleChangePage(newPage) {
+        this.setState({currentPage: newPage}, this.updateLessons)
     }
 
     addNewLesson() {
@@ -78,7 +98,7 @@ class AdminLessons extends React.Component {
                 <Table rowHeight={45}
                        rowsCount={lessons.length}
                        width={1068}
-                       height={600}
+                       height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
@@ -103,7 +123,11 @@ class AdminLessons extends React.Component {
                             width={100}/>
                 </Table>
 
-                <br/>
+                <PaginationContainer style={{marginTop: "15px"}}
+                                     currentPage={this.state.currentPage}
+                                     maxPage={this.state.maxPage}
+                                     handleChangePage={this.handleChangePage}/>
+
                 <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
             </Card.Body>
         </Card>;
