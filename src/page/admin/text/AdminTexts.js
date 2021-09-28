@@ -7,6 +7,7 @@ import Loader from "/component/Loader";
 import {Breadcrumb, Button, Card} from "react-bootstrap";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
 import {toast} from "react-toastify";
+import PaginationContainer from "/component/PaginationContainer";
 
 
 class AdminTexts extends React.Component {
@@ -16,9 +17,13 @@ class AdminTexts extends React.Component {
 
         this.state = {
             texts: [],
+            currentPage: 0,
+            totalElements: null,
+            maxPage: null,
             loading: true
         };
 
+        this.handleChangePage = this.handleChangePage.bind(this);
         this.deleteText = this.deleteText.bind(this);
         this.editText = this.editText.bind(this);
         this.updateTexts = this.updateTexts.bind(this);
@@ -29,13 +34,23 @@ class AdminTexts extends React.Component {
     }
 
     updateTexts() {
-        Client.get("/api/content/texts")
+        Client.get("/api/content/texts", {
+            params: {
+                page: this.state.currentPage,
+                sortField: "id"
+            }
+        })
             .then(response => {
-                const texts = response.data;
                 this.setState({
-                    texts: texts,
-                    loading: false
+                    loading: false,
+                    texts: response.data.content,
+                    currentPage: response.data.number,
+                    maxPage: response.data.totalPages
                 })
+            })
+            .catch((e) => {
+                this.setState({loading: false});
+                toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
@@ -51,6 +66,10 @@ class AdminTexts extends React.Component {
                 toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
             });
         }
+    }
+
+    handleChangePage(newPage) {
+        this.setState({currentPage: newPage}, this.updateExercises)
     }
 
     addNewText() {
@@ -78,8 +97,8 @@ class AdminTexts extends React.Component {
                 <Table rowHeight={45}
                        rowsCount={texts.length}
                        width={1068}
-                       height={600}
-                       headerHeight={46}>
+                       height={487}
+                       headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{texts[rowIndex].id}</Cell>}
@@ -99,7 +118,11 @@ class AdminTexts extends React.Component {
                             width={100}/>
                 </Table>
 
-                <br/>
+                <PaginationContainer style={{marginTop: "15px"}}
+                                     currentPage={this.state.currentPage}
+                                     maxPage={this.state.maxPage}
+                                     handleChangePage={this.handleChangePage}/>
+
                 <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
             </Card.Body>
         </Card>;
