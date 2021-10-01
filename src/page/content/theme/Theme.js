@@ -40,7 +40,7 @@ class Theme extends React.Component {
         Client.get("/api/content/theme", {
             params: {
                 id: themeId,
-                randomExercises: true
+                shuffleExercises: true
             }
         }).then(response => {
             const theme = response.data;

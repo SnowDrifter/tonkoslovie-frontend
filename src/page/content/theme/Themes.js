@@ -4,6 +4,8 @@ import {Card, ListGroup} from "react-bootstrap";
 import Helmet from "react-helmet";
 import {LinkContainer} from "react-router-bootstrap";
 import Loader from "/component/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
+import InfinityScrollLoader from "/component/InfinityScrollLoader";
 import "./Themes.less"
 
 class Themes extends React.Component {
@@ -13,21 +15,36 @@ class Themes extends React.Component {
 
         this.state = {
             themes: [],
+            currentPage: 0,
+            hasMore: true,
             loading: true
         };
 
         this.loadThemes = this.loadThemes.bind(this);
+        this.loadMoreThemes = this.loadMoreThemes.bind(this);
     }
 
     componentDidMount() {
         this.loadThemes();
     }
 
+    loadMoreThemes() {
+        this.setState({currentPage: this.state.currentPage + 1}, this.loadThemes)
+    }
+
     loadThemes() {
-        Client.get("/api/content/themes")
+        Client.get("/api/content/themes", {
+            params: {
+                page: this.state.currentPage,
+                size: 40
+            }
+        })
             .then(response => {
-                const themes = response.data;
-                this.setState({themes: themes, loading: false})
+                this.setState({
+                    themes: this.state.themes.concat(response.data.content),
+                    loading: false,
+                    hasMore: !response.data.last
+                })
             });
     }
 
@@ -56,9 +73,14 @@ class Themes extends React.Component {
             <Card>
                 <Card.Header>Темы упражнений</Card.Header>
                 <Card.Body>
-                    <ListGroup>
-                        {themePreviews}
-                    </ListGroup>
+                    <InfiniteScroll dataLength={themePreviews.length}
+                                    next={this.loadMoreThemes}
+                                    hasMore={this.state.hasMore}
+                                    loader={<InfinityScrollLoader/>}>
+                        <ListGroup>
+                            {themePreviews}
+                        </ListGroup>
+                    </InfiniteScroll>
                 </Card.Body>
             </Card>
         </>;
