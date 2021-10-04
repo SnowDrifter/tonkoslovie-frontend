@@ -8,6 +8,7 @@ import {Breadcrumb, Button, Card} from "react-bootstrap";
 import AdminWord from "./AdminWord";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
 import {toast} from "react-toastify";
+import PaginationContainer from "/component/PaginationContainer";
 
 
 class AdminWords extends React.Component {
@@ -17,12 +18,16 @@ class AdminWords extends React.Component {
 
         this.state = {
             words: [],
+            currentPage: 0,
+            totalElements: null,
+            maxPage: null,
             showModal: false,
             word: {},
             modalTitle: null,
             loading: false
         };
 
+        this.handleChangePage = this.handleChangePage.bind(this);
         this.showEditWord = this.showEditWord.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.deleteWord = this.deleteWord.bind(this);
@@ -33,14 +38,29 @@ class AdminWords extends React.Component {
     }
 
     updateWords() {
-        Client.get("/api/content/words")
+        Client.get("/api/content/words", {
+            params: {
+                page: this.state.currentPage,
+                sortField: "id",
+                direction: "desc"
+            }
+        })
             .then(response => {
-                const words = response.data;
                 this.setState({
-                    words: words,
-                    loading: false
+                    loading: false,
+                    words: response.data.content,
+                    currentPage: response.data.number,
+                    maxPage: response.data.totalPages
                 });
+            })
+            .catch((e) => {
+                this.setState({loading: false});
+                toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
+    }
+
+    handleChangePage(newPage) {
+        this.setState({currentPage: newPage}, this.updateWords)
     }
 
     showEditWord(word) {
@@ -87,7 +107,7 @@ class AdminWords extends React.Component {
                 <Table rowHeight={45}
                        rowsCount={words.length}
                        width={1068}
-                       height={600}
+                       height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
@@ -113,7 +133,12 @@ class AdminWords extends React.Component {
                             width={100}/>
                 </Table>
 
-                <br/>
+
+                <PaginationContainer style={{marginTop: "15px"}}
+                                     currentPage={this.state.currentPage}
+                                     maxPage={this.state.maxPage}
+                                     handleChangePage={this.handleChangePage}/>
+
                 <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
 
                 <AdminWord showModal={this.state.showModal}
