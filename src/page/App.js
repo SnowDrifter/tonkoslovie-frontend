@@ -20,6 +20,7 @@ import Lessons from "./content/lesson/Lessons";
 import AdminText from "./admin/text/AdminText";
 import AdminLessons from "./admin/lesson/AdminLessons";
 import AdminExercises from "./admin/exercise/AdminExercises";
+import AdminAudits from "./admin/audit/AdminAudits";
 import AdminUsers from "./admin/user/AdminUsers";
 import Lesson from "./content/lesson/Lesson";
 import Exercise from "./content/exercise/Exercise";
@@ -75,6 +76,7 @@ class App extends React.Component {
                     <AdminRoute path="/admin/themes" component={AdminThemes}/>
                     <AdminRoute path="/admin/theme/:themeId" component={AdminTheme}/>
                     <AdminRoute path="/admin/theme" component={AdminTheme}/>
+                    <AdminRoute path="/admin/audits" component={AdminAudits}/>
                     <AdminRoute path="/admin/users" component={AdminUsers}/>
                     <AdminRoute path="/admin/user/:userId" component={AdminUser}/>
 

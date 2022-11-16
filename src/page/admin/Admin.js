@@ -40,6 +40,11 @@ class Admin extends React.Component {
                             Пользователи
                         </ListGroup.Item>
                     </LinkContainer>
+                    <LinkContainer to="/admin/audits">
+                        <ListGroup.Item className="admin-menu-item">
+                            Аудит
+                        </ListGroup.Item>
+                    </LinkContainer>
                 </ListGroup>
             </Card.Body>
         </Card>
