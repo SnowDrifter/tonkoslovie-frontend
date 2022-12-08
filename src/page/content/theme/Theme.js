@@ -7,6 +7,7 @@ import Loader from "/component/Loader";
 import ExerciseComponent from "./ExerciseComponent";
 import SimpleConfirmModal from "/component/SimpleConfirmModal";
 import shuffle from "lodash/shuffle";
+import "./Theme.less"
 
 class Theme extends React.Component {
 
@@ -14,26 +15,15 @@ class Theme extends React.Component {
         super(props);
 
         this.state = {
-            id: null,
-            title: null,
-            exercises: [],
+            theme: {},
             currentExerciseNumber: 0,
             solvedExerciseCount: 0,
-            soundFileName: null,
             showSuccessModal: false,
             loading: true,
             failed: false
         };
 
-        if (props.match.params.themeId) {
-            this.loadTheme(props.match.params.themeId)
-        }
-
-        this.nextExercise = this.nextExercise.bind(this);
-        this.markExerciseAsSolved = this.markExerciseAsSolved.bind(this);
-        this.hideSuccessModal = this.hideSuccessModal.bind(this);
-        this.removeProgress = this.removeProgress.bind(this);
-        this.backToThemesPage = this.backToThemesPage.bind(this);
+        this.loadTheme(props.params.themeId)
     }
 
     loadTheme(themeId) {
@@ -42,25 +32,23 @@ class Theme extends React.Component {
                 id: themeId,
                 shuffleExercises: true
             }
-        }).then(response => {
-            const theme = response.data;
-
-            this.setState({
-                id: theme.id,
-                title: theme.title,
-                exercises: theme.exercises,
-                loading: false
-            });
-        }).catch(() => {
-            this.setState({
-                failed: true,
-                loading: false
-            });
         })
+            .then(response => {
+                this.setState({
+                    theme: response.data,
+                    loading: false
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    failed: true,
+                    loading: false
+                });
+            })
     }
 
-    removeProgress() {
-        const exercises = shuffle(this.state.exercises);
+    removeProgress = () => {
+        const exercises = shuffle(this.state.theme.exercises);
         exercises.forEach(exercise => exercise.solved = undefined);
 
         this.setState({
@@ -71,32 +59,26 @@ class Theme extends React.Component {
         })
     }
 
-    markExerciseAsSolved() {
-        const exercises = this.state.exercises;
-        exercises[this.state.currentExerciseNumber].solved = true;
+    markExerciseAsSolved = () => {
+        const {theme, currentExerciseNumber, solvedExerciseCount} = this.state;
+        theme.exercises[currentExerciseNumber].solved = true;
 
-        const newSolvedExerciseCount = this.state.solvedExerciseCount + 1;
+        const newSolvedExerciseCount = solvedExerciseCount + 1;
 
         this.setState({
-            exercises: exercises,
+            theme: theme,
             solvedExerciseCount: newSolvedExerciseCount,
-            showSuccessModal: newSolvedExerciseCount === this.state.exercises.length
+            showSuccessModal: newSolvedExerciseCount === theme.exercises.length
         });
     }
 
-    backToThemesPage() {
-        this.props.history.push("/themes");
-    }
+    backToThemesPage = () => this.props.navigate("/themes");
 
-    hideSuccessModal() {
-        this.setState({showSuccessModal: false});
-    }
+    hideSuccessModal = () => this.setState({showSuccessModal: false});
 
-    nextExercise() {
-        if (this.state.solvedExerciseCount < this.state.exercises.length) {
-            this.setState({
-                currentExerciseNumber: this.state.currentExerciseNumber + 1
-            })
+    nextExercise = () => {
+        if (this.state.solvedExerciseCount < this.state.theme.exercises.length) {
+            this.setState({currentExerciseNumber: this.state.currentExerciseNumber + 1})
         } else {
             this.setState({showSuccessModal: true})
         }
@@ -109,27 +91,29 @@ class Theme extends React.Component {
             return <ErrorPanel text="Тема не найдена"/>;
         }
 
-        const currentExercise = this.state.exercises[this.state.currentExerciseNumber];
+        const {theme, currentExerciseNumber, solvedExerciseCount, showSuccessModal} = this.state;
+        const currentExercise = theme.exercises[currentExerciseNumber];
 
-        return <Card key={this.state.currentExerciseNumber}>
-            <Helmet title={`${this.state.title} | Тонкословие`}/>
+        return <Card key={currentExerciseNumber}>
+            <Helmet title={`${theme.title} | Тонкословие`}/>
 
-            <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
+            <Card.Header style={{textAlign: "center"}}><h2>{theme.title}</h2></Card.Header>
 
             <Card.Body>
-                <span className="float-right">
-                    {`Выполнено ${this.state.solvedExerciseCount}/${this.state.exercises.length}`}
+                <span className="float-end">
+                    {`Выполнено ${solvedExerciseCount}/${theme.exercises.length}`}
                 </span>
+
                 <ExerciseComponent nextExercise={this.nextExercise}
                                    exercise={currentExercise}
                                    markExerciseAsSolved={this.markExerciseAsSolved}/>
 
-                <SimpleConfirmModal modalTitle="Тема завершена!"
-                                    modalText="Начать заново?"
-                                    showModal={this.state.showSuccessModal}
-                                    hideModal={this.hideSuccessModal}
-                                    confirmFunction={this.removeProgress}
-                                    negativeFunction={this.backToThemesPage}/>
+                <SimpleConfirmModal title="Тема завершена!"
+                                    text="Начать заново?"
+                                    showModal={showSuccessModal}
+                                    onHide={this.hideSuccessModal}
+                                    onConfirm={this.removeProgress}
+                                    onNegative={this.backToThemesPage}/>
             </Card.Body>
         </Card>;
     }

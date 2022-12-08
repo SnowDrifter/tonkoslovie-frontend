@@ -1,9 +1,8 @@
 import React from "react";
-import {Jumbotron} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 
-
-const RegistrationSuccess = () => {
-    return <Jumbotron><h2 style={{textAlign: "center"}}>Регистрация успешно завершена!</h2></Jumbotron>
-};
+function RegistrationSuccess() {
+    return <Card className="jumbotron"><h2 style={{textAlign: "center"}}>Регистрация успешно завершена!</h2></Card>
+}
 
 export default RegistrationSuccess;

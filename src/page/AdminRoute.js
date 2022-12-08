@@ -1,36 +1,25 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import {connect} from "react-redux";
 
-class AdminRoute extends React.Component {
+const AdminRoute = (props) => {
+    const admin = isAdmin(props.user);
+    return admin ? <Outlet /> : <Navigate to="/access_denied" />;
+}
 
-    constructor(props) {
-        super(props);
-
-        if (!this.isAdmin(props.user)) {
-            props.history.push("/access_denied");
-        }
+function isAdmin(user) {
+    if (!user || !user.roles) {
+        return false;
     }
 
-    isAdmin(user) {
-        if (!user || !user.roles) {
-            return false;
-        }
-
-        const roles = user.roles.split(",");
-        return roles.includes("ROLE_ADMIN");
-    }
-
-    render() {
-        const Component = this.props.component;
-        return <Component {...this.props} />
-    }
+    const roles = user.roles.split(",");
+    return roles.includes("ROLE_ADMIN");
 }
 
 function mapStateToProps(state) {
     return {
-        user: state.AuthReducer.user
+        user: state.auth.user
     }
 }
 
-export default withRouter(connect(mapStateToProps)(AdminRoute))
+export default connect(mapStateToProps)(AdminRoute)

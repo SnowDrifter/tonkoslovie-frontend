@@ -1,188 +1,64 @@
-import React, {createRef, Fragment} from "react";
+import React from "react";
 import Client from "/util/Client";
-import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
-import "./Registration.less"
+import {Button, Card, Form, Col, Row} from "react-bootstrap";
 import Oauth from "/component/Oauth";
 import ValidationForm from "/component/ValidationForm";
+import {Formik} from "formik";
+import * as Yup from "yup";
+import RegistrationResultModal from "./RegistrationResultModal";
+import "./Registration.less"
+
+const schema = Yup.object().shape({
+    password: Yup.string()
+        .min(6, "Пароль должен быть длиннее 5 символов")
+        .required("Поле должно быть заполнено"),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Пароли должны совпадать")
+        .required("Поле должно быть заполнено"),
+    email: Yup.string()
+        .email("Неправильный формат электронной почты")
+        .required("Поле должно быть заполнено"),
+});
 
 class Registration extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            validated: false,
-            disableSubmit: false,
             showModal: false,
-            modalText: null,
-            errorModal: false,
-
-            password: {
-                valid: false,
-                message: null
-            },
-
-            confirmPassword: {
-                valid: false,
-                message: null
-            },
-
-            email: {
-                valid: false,
-                message: null
-            }
+            errorMessage: null
         };
-
-        this.usernameInput = createRef();
-        this.emailInput = createRef();
-        this.passwordInput = createRef();
-        this.confirmPasswordInput = createRef();
     }
 
-    validateForm() {
-        let success = true;
+    sendRegistration = (userData, setSubmitting, setFieldError) => {
+        Client.post("/api/user/registration", userData)
+            .then(() => this.setState({ showModal: true }))
+            .catch(e => {
+                const response = e.response.data;
 
-        const email = this.emailInput.current.value;
-        const emailPattern = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-
-        if (email === "") {
-            this.setState({
-                email: {
-                    valid: false,
-                    message: "Поле должно быть заполнено"
-                }
-            });
-            success = false;
-        } else if (!emailPattern.test(email)) {
-            this.setState({
-                email: {
-                    valid: false,
-                    message: "Неправильный формат электронной почты"
-                }
-            });
-            success = false;
-        } else {
-            this.setState({
-                email: {
-                    valid: true
-                }
-            });
-        }
-
-        const password = this.passwordInput.current.value;
-        const confirmPassword = this.confirmPasswordInput.current.value;
-
-        if (password === "") {
-            this.setState({
-                password: {
-                    valid: false,
-                    message: "Поле должно быть заполнено"
-                }
-            });
-            success = false;
-        } else if (confirmPassword !== "" && password !== confirmPassword) {
-            this.setState({
-                password: {
-                    valid: false,
-                    message: "Пароли должны совпадать"
-                }
-            });
-            success = false;
-        } else {
-            this.setState({
-                password: {
-                    valid: true
-                }
-            });
-        }
-
-        if (confirmPassword === "") {
-            this.setState({
-                confirmPassword: {
-                    valid: false,
-                    message: "Поле должно быть заполнено"
-                }
-            });
-            success = false;
-        } else if (password !== "" && password !== confirmPassword) {
-            this.setState({
-                confirmPassword: {
-                    valid: false,
-                    message: "Пароли должны совпадать"
-                }
-            });
-            success = false;
-        } else {
-            this.setState({
-                confirmPassword: {
-                    valid: true
-                }
-            });
-        }
-
-        this.setState({checked: true});
-        return success;
-    }
-
-    sendRegistration(event) {
-        event.preventDefault();
-
-        if (this.validateForm()) {
-            this.setState({disableSubmit: true});
-
-            Client.post("/api/user/registration", {
-                username: this.usernameInput.current.value,
-                password: this.passwordInput.current.value,
-                email: this.emailInput.current.value
-            }).then(() => {
-                this.setState({
-                    disableSubmit: false,
-                    showModal: true,
-                    errorModal: false,
-                    modalText: "Регистрация прошла успешно!\nДля завершения необходимо подтвердить электронную почту."
-                });
-            }).catch((error) => {
-                const response = error.response.data;
-                if (response.validationErrors) {
+                if (response && response.validationErrors) {
                     response.validationErrors.forEach(error => {
                         if (error.field === "email") {
-                            this.setState({
-                                email: {
-                                    valid: false,
-                                    message: error.message
-                                }
-                            });
+                            setFieldError("email", error.message)
                         }
                     });
                 } else {
                     this.setState({
                         showModal: true,
-                        errorModal: true,
-                        modalText: response.message ? response.message : "Неизвестная ошибка \n ¯\\_(ツ)_/¯"
+                        errorMessage: response.message ? response.message : "Неизвестная ошибка \n ¯\\_(ツ)_/¯"
                     });
                 }
 
-                this.setState({disableSubmit: false});
+                setSubmitting(false);
             });
-        }
     }
 
-    hideModal() {
+    hideModal = () => {
         this.setState({showModal: false});
 
         // Complete successful registration
-        if (!this.state.errorModal) {
-            this.props.history.replace("/");
-        }
-    }
-
-    splitTextLines(text) {
-        if (text) {
-            return text.split("\n").map((text, index) => (
-                <Fragment key={`${text}-${index}`}>
-                    {text}
-                    <br/>
-                </Fragment>)
-            )
+        if (!this.state.errorMessage) {
+            this.props.navigate("/", {replace: true});
         }
     }
 
@@ -191,57 +67,50 @@ class Registration extends React.Component {
             <Card>
                 <Card.Header>Регистрация</Card.Header>
                 <Card.Body>
-                    <Form>
-                        <Row>
-                            <Col md={2}/>
-                            <Col md={8}>
-                                <ValidationForm label="Email"
-                                                inputRef={this.emailInput}
-                                                checked={this.state.checked}
-                                                valid={this.state.email.valid}
-                                                message={this.state.email.message}/>
-                            </Col>
-                        </Row>
+                    <Formik initialValues={{password: "", confirmPassword: "", email: "", nickname: ""}}
+                            validationSchema={schema} style={{justifyContent: "center", display: "flex"}}
+                            onSubmit={(values, {setSubmitting, setFieldError}) =>
+                                this.sendRegistration(values, setSubmitting, setFieldError)}>
+                        {({handleSubmit, handleChange, isSubmitting}) => (
+                            <Form onSubmit={handleSubmit}>
+                                <Row className="justify-content-md-center">
+                                    <ValidationForm label="Email"
+                                                    type="email"
+                                                    controlId="email"
+                                                    name="email"
+                                                    as={Col} md={8}/>
+                                </Row>
 
-                        <Row>
-                            <Col md={2}/>
-                            <Col md={8}>
-                                <ValidationForm label="Пароль"
-                                                type="password"
-                                                inputRef={this.passwordInput}
-                                                checked={this.state.checked}
-                                                valid={this.state.password.valid}
-                                                message={this.state.password.message}/>
-                            </Col>
-                        </Row>
+                                <Row className="justify-content-md-center">
+                                    <ValidationForm label="Пароль"
+                                                    type="password"
+                                                    controlId="password"
+                                                    name="password"
+                                                    as={Col} md={8}/>
+                                </Row>
 
-                        <Row>
-                            <Col md={2}/>
-                            <Col md={8}>
-                                <ValidationForm label="Повторите пароль"
-                                                type="password"
-                                                inputRef={this.confirmPasswordInput}
-                                                checked={this.state.checked}
-                                                valid={this.state.confirmPassword.valid}
-                                                message={this.state.confirmPassword.message}/>
-                            </Col>
-                        </Row>
+                                <Row className="justify-content-md-center">
+                                    <ValidationForm label="Повторите пароль"
+                                                    type="password"
+                                                    controlId="confirmPassword"
+                                                    name="confirmPassword"
+                                                    as={Col} md={8}/>
+                                </Row>
 
-                        <Row>
-                            <Col md={2}/>
-                            <Col md={8}>
-                                <Form.Group>
-                                    <Form.Label>Никнейм</Form.Label>
-                                    <Form.Control ref={this.usernameInput} type="text"/>
-                                </Form.Group>
-                            </Col>
-                        </Row>
+                                <Row className="justify-content-md-center">
+                                    <Form.Group as={Col} md={8}>
+                                        <Form.Label>Никнейм</Form.Label>
+                                        <Form.Control onChange={handleChange} id="nickname" type="text"/>
+                                    </Form.Group>
+                                </Row>
 
-                        <Row className="justify-content-center">
-                            <Button disabled={this.state.disableSubmit} type="submit" variant="success"
-                                    onClick={this.sendRegistration.bind(this)}>Отправить</Button>
-                        </Row>
-                    </Form>
+                                <div className="text-center my-3">
+                                    <Button disabled={isSubmitting} type="submit" variant="success">
+                                        Отправить
+                                    </Button>
+                                </div>
+                            </Form>)}
+                    </Formik>
 
                     <hr/>
 
@@ -249,19 +118,9 @@ class Registration extends React.Component {
                 </Card.Body>
             </Card>
 
-            <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{this.state.errorModal ? "Ошибка!" : "Успех!"}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="text-center">{this.splitTextLines(this.state.modalText)}</div>
-                    <br/>
-                    <Row className="justify-content-center">
-                        <Button variant={this.state.errorModal ? "danger" : "success"}
-                                onClick={this.hideModal.bind(this)}>ОК</Button>
-                    </Row>
-                </Modal.Body>
-            </Modal>
+            <RegistrationResultModal showModal={this.state.showModal}
+                                     hideModal={this.hideModal}
+                                     errorMessage={this.state.errorMessage}/>
         </div>
     }
 }

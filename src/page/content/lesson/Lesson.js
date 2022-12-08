@@ -14,43 +14,34 @@ class Lesson extends React.Component {
         super(props);
 
         this.state = {
-            id: undefined,
-            title: undefined,
-            content: undefined,
-            texts: [],
+            lesson: {},
             loading: true,
             failed: false
         };
 
-        this.loadLesson(props.match.params.lessonId);
+        this.loadLesson(props.params.lessonId);
     }
 
     loadLesson(lessonId) {
-        Client.get("/api/content/lesson", {
-            params: {
-                id: lessonId
-            }
-        }).then(response => {
-            const lesson = response.data;
-            this.setState({
-                id: lesson.id,
-                title: lesson.title,
-                content: lesson.content,
-                texts: lesson.texts,
-                loading: false
-            });
-        }).catch(() => {
-            this.setState({
-                loading: false,
-                failed: true
-            });
-        })
+        Client.get("/api/content/lesson", {params: {id: lessonId}})
+            .then(response => {
+                this.setState({
+                    lesson: response.data,
+                    loading: false
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    loading: false,
+                    failed: true
+                });
+            })
     }
 
     createTextList() {
-        const texts = this.state.texts.map((text, index) =>
-            <LinkContainer key={index} className="list-group-item" to={`/text/${text.id}`}>
-                <span>{text.title}</span>
+        const texts = this.state.lesson.texts?.map((text, index) =>
+            <LinkContainer key={index} to={`/text/${text.id}`}>
+                <ListGroup.Item action>{text.title}</ListGroup.Item>
             </LinkContainer>
         );
 
@@ -71,15 +62,15 @@ class Lesson extends React.Component {
             return <ErrorPanel text="Урок не найден"/>
         }
 
-        const textList = this.createTextList();
+        const {lesson} = this.state;
 
         return <Card>
-            <Helmet title={`${this.state.title} | Тонкословие`}/>
-            <Card.Header style={{textAlign: "center"}}><h2>{this.state.title}</h2></Card.Header>
+            <Helmet title={`${lesson.title} | Тонкословие`}/>
+            <Card.Header style={{textAlign: "center"}}><h2>{lesson.title}</h2></Card.Header>
 
             <Card.Body>
-                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(this.state.content)}}/>
-                {textList}
+                <div className="content" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(lesson.content)}}/>
+                {this.createTextList()}
             </Card.Body>
         </Card>;
     }

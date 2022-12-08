@@ -18,15 +18,9 @@ class AdminTexts extends React.Component {
         this.state = {
             texts: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             loading: true
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.deleteText = this.deleteText.bind(this);
-        this.editText = this.editText.bind(this);
-        this.updateTexts = this.updateTexts.bind(this);
     }
 
     componentDidMount() {
@@ -37,7 +31,8 @@ class AdminTexts extends React.Component {
         Client.get("/api/content/texts", {
             params: {
                 page: this.state.currentPage,
-                sortField: "id"
+                sortField: "id",
+                direction: "desc"
             }
         })
             .then(response => {
@@ -48,62 +43,53 @@ class AdminTexts extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    deleteText(textId) {
+    deleteText = (textId) => {
         if (confirm(`Удалить текст №${textId}?`)) {
             Client.delete("/api/content/text", {
                 params: {
                     id: textId
                 }
-            }).then(() => {
-                this.updateTexts();
-            }).catch((e) => {
-                toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
-            });
+            })
+                .then(this.updateTexts)
+                .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`));
         }
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateExercises)
-    }
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateTexts)
 
-    addNewText() {
-        this.props.history.push("/admin/text")
-    }
+    addNewText = () => this.props.navigate("/admin/text")
 
-    editText(text) {
-        this.props.history.push(`/admin/text/${text.id}`);
-    }
+    editText = (textId) => this.props.navigate(`/admin/text/${textId}`)
 
     render() {
         if (this.state.loading) {
             return <Loader/>;
         }
 
-        const texts = this.state.texts;
+        const {texts} = this.state;
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Тексты</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Table rowHeight={45}
                        rowsCount={texts.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{texts[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
                     <Column header={<Cell>Название</Cell>}
                             cell={({rowIndex}) => <Cell>{texts[rowIndex].title}</Cell>}
@@ -112,7 +98,7 @@ class AdminTexts extends React.Component {
 
                     <Column cell={({rowIndex}) =>
                         <Cell>
-                            <EditRemoveButtons edit={() => this.editText(texts[rowIndex])}
+                            <EditRemoveButtons edit={() => this.editText(texts[rowIndex].id)}
                                                remove={() => this.deleteText(texts[rowIndex].id)}/>
                         </Cell>}
                             width={100}/>
@@ -123,7 +109,7 @@ class AdminTexts extends React.Component {
                                      maxPage={this.state.maxPage}
                                      handleChangePage={this.handleChangePage}/>
 
-                <Button onClick={this.addNewText.bind(this)}>Добавить новый текст</Button>
+                <Button onClick={this.addNewText}>Добавить новый текст</Button>
             </Card.Body>
         </Card>;
     }

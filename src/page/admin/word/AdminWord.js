@@ -1,87 +1,40 @@
-import React, {createRef} from "react";
+import React from "react";
 import Client from "/util/Client";
-import {FormGroup, Row, Col, FormLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
-import "./AdminWord.less"
+import {FormLabel, FormControl, Button, Modal, Form} from "react-bootstrap";
 import {toast} from "react-toastify";
+import "./AdminWord.less"
 
+function AdminWord({word, showModal, hideModal, modalTitle, changeCurrentWord}) {
 
-class AdminWord extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            showModal: props.showModal
-        };
-
-        this.russianTextInput = createRef();
-        this.polishTextInput = createRef();
+    function saveWord() {
+        Client.post("/api/content/word", word)
+            .then(hideModal)
+            .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 
-    saveWord() {
-        const russianText = this.russianTextInput.current.value;
-        const polishText = this.polishTextInput.current.value;
-
-        Client.post("/api/content/word", {
-            id: this.props.word.id,
-            russianText: russianText,
-            polishText: polishText
-        }).then(() => {
-            this.props.hideModal();
-        }).catch((e) => {
-            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
-        })
+    function updateWord(field, value) {
+        changeCurrentWord({...word, [field]: value});
     }
 
-    static getDerivedStateFromProps(props, state) {
-        if (props.showModal !== state.showModal) {
-            return {
-                showModal: props.showModal
-            };
-        }
+    return <Modal show={showModal} onHide={hideModal}>
+        <Modal.Header closeButton>
+            <Modal.Title>{modalTitle}</Modal.Title>
+        </Modal.Header>
 
-        return null;
-    }
+        <Modal.Body className="admin-word-modal-body">
+            <Form>
+                <FormLabel>Русский текст</FormLabel>
+                <FormControl defaultValue={word.russianText}
+                             onChange={e => updateWord("russianText", e.target.value)}/>
 
-    render() {
-        return (
-            <Modal show={this.state.showModal} onHide={this.props.hideModal.bind(this)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{this.props.modalTitle}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="admin-word-modal-body">
-                    <Form>
-                        <FormGroup>
-                            <Row>
-                                <Col md={12}>
-                                    <FormGroup controlId="russianTextForm">
-                                        <FormLabel>Русский текст</FormLabel>
-                                        <FormControl
-                                            ref={this.russianTextInput}
-                                            defaultValue={this.props.word.russianText}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                <FormLabel className="mt-3">Польский текст</FormLabel>
+                <FormControl defaultValue={word.polishText}
+                             onChange={e => updateWord("polishText", e.target.value)}/>
 
-                            <Row>
-                                <Col md={12}>
-                                    <FormGroup controlId="polishTextForm">
-                                        <FormLabel>Польский текст</FormLabel>
-                                        <FormControl ref={this.polishTextInput}
-                                                     defaultValue={this.props.word.polishText}/>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                        </FormGroup>
-
-                        <Button onClick={this.saveWord.bind(this)} className="float-right"
-                                variant="success">Сохранить</Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-        );
-    }
+                <Button onClick={saveWord} className="mt-3 float-end" variant="success">Сохранить</Button>
+            </Form>
+        </Modal.Body>
+    </Modal>
 }
 
 export default AdminWord;

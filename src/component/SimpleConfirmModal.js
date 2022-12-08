@@ -1,25 +1,21 @@
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
 
-class SimpleConfirmModal extends React.Component {
-    render() {
-        const {showModal, modalTitle, modalText, hideModal, confirmFunction, negativeFunction} = this.props;
+function SimpleConfirmModal({showModal, title, text, onHide, onConfirm, onNegative}) {
 
-        return <Modal show={showModal} onHide={() => hideModal()} centered>
+        return <Modal show={showModal} onHide={onHide} centered>
             <Modal.Header closeButton>
-                <Modal.Title>{modalTitle || "Подтверждение"}</Modal.Title>
+                <Modal.Title>{title || "Подтверждение"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4 className="text-center">{modalText}</h4>
+                <h4 className="text-center">{text}</h4>
 
                 <div className="text-center">
-                    <Button variant="success" onClick={() => confirmFunction()}>Да</Button>
-                    {" "}
-                    <Button variant="danger" onClick={() => negativeFunction()}>Нет</Button>
+                    <Button variant="success" onClick={onConfirm}>Да</Button>{" "}
+                    <Button variant="danger" onClick={onNegative}>Нет</Button>
                 </div>
             </Modal.Body>
         </Modal>
-    }
 }
 
 export default SimpleConfirmModal;

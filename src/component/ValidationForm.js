@@ -1,18 +1,23 @@
 import React from "react";
 import {Form} from "react-bootstrap";
+import {Field} from "formik";
 
-class ValidationForm extends React.Component {
+function ValidationForm({as, md, controlId, label, name, type}) {
 
-    render() {
-        const {label, inputRef, checked, valid, message, type} = this.props;
-        const className = checked ? (valid ? "is-valid" : "is-invalid") : null;
+    return <Field name={name}>
+        {({field, form}) => {
+            const isValid = !form.errors[field.name];
+            const isInvalid = form.touched[field.name] && !isValid;
 
-        return <Form.Group>
-            <Form.Label>{label}<span style={{color: "red"}}> *</span></Form.Label>
-            <Form.Control ref={inputRef} className={className} type={type}/>
-            <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
-        </Form.Group>
-    }
+            return <Form.Group as={as} md={md} controlId={controlId}>
+                <Form.Label>{label}<span style={{color: "red"}}> *</span></Form.Label>
+                <Form.Control {...field} type={type}
+                              isInvalid={isInvalid}
+                              isValid={form.touched[field.name] && isValid}/>
+                <Form.Control.Feedback type="invalid">{form.errors[field.name]}</Form.Control.Feedback>
+            </Form.Group>
+        }}
+    </Field>
 }
 
 export default ValidationForm;

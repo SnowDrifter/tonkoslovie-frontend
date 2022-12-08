@@ -19,9 +19,6 @@ class Themes extends React.Component {
             hasMore: true,
             loading: true
         };
-
-        this.loadThemes = this.loadThemes.bind(this);
-        this.loadMoreThemes = this.loadMoreThemes.bind(this);
     }
 
     componentDidMount() {
@@ -49,16 +46,15 @@ class Themes extends React.Component {
     }
 
     createThemePreviews() {
-        return this.state.themes
-            .map((theme, index) =>
-                <LinkContainer exact to={`/theme/${theme.id}`}
-                               className="theme-title"
-                               key={index}>
-                    <ListGroup.Item>
-                        {theme.title}
-                    </ListGroup.Item>
-                </LinkContainer>
-            );
+        return this.state.themes.map((theme, index) =>
+            <LinkContainer to={`/theme/${theme.id}`}
+                           className="theme-title"
+                           key={index}>
+                <ListGroup.Item action>
+                    {theme.title}
+                </ListGroup.Item>
+            </LinkContainer>
+        );
     }
 
     render() {

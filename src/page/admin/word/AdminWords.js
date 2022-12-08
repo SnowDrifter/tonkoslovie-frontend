@@ -19,18 +19,12 @@ class AdminWords extends React.Component {
         this.state = {
             words: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             showModal: false,
-            word: {},
+            currentWord: {},
             modalTitle: null,
             loading: false
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.showEditWord = this.showEditWord.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-        this.deleteWord = this.deleteWord.bind(this);
     }
 
     componentDidMount() {
@@ -53,41 +47,46 @@ class AdminWords extends React.Component {
                     maxPage: response.data.totalPages
                 });
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateWords)
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateWords)
+
+    showEditWord = (word) => this.setState({showModal: true, currentWord: word, modalTitle: "Редактирование"});
+
+    changeCurrentWord = (word) => this.setState({currentWord: word})
+
+    saveWord = () => {
+        Client.post("/api/content/word", this.state.currentWord)
+            .then(this.hideModal)
+            .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 
-    showEditWord(word) {
-        this.setState({showModal: true, word: word, modalTitle: "Редактирование"});
-    }
-
-    hideModal() {
+    hideModal = () => {
         this.updateWords();
-        this.setState({showModal: false, word: {}});
+        this.setState({showModal: false});
     }
 
-    deleteWord(wordId) {
+    deleteWord = (wordId) => {
         if (confirm(`Удалить слово №${wordId}?`)) {
-            Client.delete("/api/content/word", {
-                params: {
-                    id: wordId
-                }
-            }).then(() => {
-                this.updateWords();
-            }).catch((e) => {
-                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
-            });
+            Client.delete("/api/content/word", {params: {id: wordId}})
+                .then(() => this.updateWords())
+                .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }
 
-    showAddWord() {
-        this.setState({showModal: true, modalTitle: "Добавление"});
+    showAddWord = () => this.setState({showModal: true, currentWord: {}, modalTitle: "Добавление"})
+
+    createWordModal = () => {
+        return <AdminWord showModal={this.state.showModal}
+                   modalTitle={this.state.modalTitle}
+                   word={this.state.currentWord}
+                   saveWord={this.saveWord}
+                   changeCurrentWord={this.changeCurrentWord}
+                   hideModal={this.hideModal}/>
     }
 
     render() {
@@ -95,25 +94,24 @@ class AdminWords extends React.Component {
             return <Loader/>;
         }
 
-        const words = this.state.words;
+        const {words} = this.state;
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Слова</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Table rowHeight={45}
                        rowsCount={words.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{words[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
                     <Column header={<Cell>Русский текст</Cell>}
                             cell={({rowIndex}) => <Cell>{words[rowIndex].russianText}</Cell>}
@@ -125,26 +123,21 @@ class AdminWords extends React.Component {
                             flexGrow={1}
                             width={100}/>
 
-                    <Column cell={({rowIndex}) =>
+                    <Column width={100} cell={({rowIndex}) =>
                         <Cell>
                             <EditRemoveButtons edit={() => this.showEditWord(words[rowIndex])}
                                                remove={() => this.deleteWord(words[rowIndex].id)}/>
-                        </Cell>}
-                            width={100}/>
+                        </Cell>}/>
                 </Table>
-
 
                 <PaginationContainer style={{marginTop: "15px"}}
                                      currentPage={this.state.currentPage}
                                      maxPage={this.state.maxPage}
                                      handleChangePage={this.handleChangePage}/>
 
-                <Button onClick={this.showAddWord.bind(this)}>Добавить слово</Button>
+                <Button onClick={this.showAddWord}>Добавить слово</Button>
 
-                <AdminWord showModal={this.state.showModal}
-                           modalTitle={this.state.modalTitle}
-                           word={this.state.word}
-                           hideModal={this.hideModal}/>
+                {this.state.showModal && this.createWordModal() }
             </Card.Body>
         </Card>;
     }

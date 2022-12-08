@@ -1,49 +1,25 @@
-import React, {createRef} from "react";
+import React from "react";
 import {Form} from "react-bootstrap";
-import {WRONG_ANSWER, CORRECT_ANSWER} from "/constant/AnswerStatus";
+import {CORRECT_ANSWER} from "/constant/AnswerStatus";
 
 
-class QuestionElement extends React.Component {
+function QuestionElement({part, index, changeUserAnswer}) {
 
-    constructor(props) {
-        super(props);
-
-        this[`form-${props.index}`] = createRef();
-    }
-
-    checkAnswer() {
-        const part = this.props.part;
-        const answer = this[`form-${this.props.index}`].current.value.trim().toLowerCase();
-
-        if (answer === part.data.toLowerCase()) {
-            part.answerStatus = CORRECT_ANSWER;
-        } else {
-            part.answerStatus = WRONG_ANSWER;
-        }
-
-        return part;
-    }
-
-    calculateInputLength(part) {
+    function calculateInputLength(part) {
         const maxLength = Math.max(part.data.length, part.placeholder.length);
         return maxLength <= 3 ? 50 : (maxLength * 8 + 18)
     }
 
-    render() {
-        const part = this.props.part;
-
-        return <Form.Group className="text-element">
-            <Form.Control ref={this[`form-${this.props.index}`]}
-                          style={{width: this.calculateInputLength(part)}}
-                          className={part.answerStatus?.validationClass}
-                          type="text"
-                          size="sm"
-                          disabled={part.answerStatus === CORRECT_ANSWER}
-                          placeholder={part.placeholder}
-                          maxLength={part.data.length}/>
-        </Form.Group>;
-    }
+    return <Form.Group className="text-element">
+        <Form.Control onChange={e => changeUserAnswer(index, e.target.value)}
+                      style={{width: calculateInputLength(part)}}
+                      className={part.answerStatus?.validationClass}
+                      type="text"
+                      size="sm"
+                      disabled={part.answerStatus === CORRECT_ANSWER}
+                      placeholder={part.placeholder}
+                      maxLength={part.data.length}/>
+    </Form.Group>;
 }
-
 
 export default QuestionElement;

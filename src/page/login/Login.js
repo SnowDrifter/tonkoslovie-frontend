@@ -1,23 +1,23 @@
-import React, {createRef} from "react";
+import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {Button, Form, Modal, Row} from "react-bootstrap";
-import * as UserActions from "/action/Auth";
-import "./Login.less";
+import {Button, Form, Modal} from "react-bootstrap";
+import * as AuthActions from "/action/AuthActions";
 import Oauth from "/component/Oauth";
-
+import "./Login.less";
 
 class Login extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            userData: {
+                email: "",
+                password: "",
+            },
             showLogin: false,
             errorMessage: undefined
         };
-
-        this.emailInput = createRef();
-        this.passwordInput = createRef();
     }
 
     static getDerivedStateFromProps(props) {
@@ -27,14 +27,13 @@ class Login extends React.Component {
         };
     }
 
-    sendLogin(event) {
+    sendLogin = (event) => {
         event.preventDefault();
 
-        const email = this.emailInput.current.value;
-        const password = this.passwordInput.current.value;
-
-        this.props.actions.login({email: email, password: password});
+        this.props.actions.login(this.state.userData);
     }
+
+    updateUserData = (field, value) => this.setState({userData: {...this.state.userData, [field]: value}});
 
     render() {
         return <Modal centered show={this.state.showLogin}
@@ -47,20 +46,22 @@ class Login extends React.Component {
                     <Form.Group>
                         <Form.Group controlId="emailForm">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control ref={this.emailInput} type="text" autoFocus/>
+                            <Form.Control type="text" autoFocus
+                                          onChange={e => this.updateUserData("email", e.target.value)}/>
                         </Form.Group>
 
                         <Form.Group controlId="passwordForm">
                             <Form.Label>Пароль</Form.Label>
-                            <Form.Control ref={this.passwordInput} type="password"/>
+                            <Form.Control ref={this.passwordInput} type="password"
+                                          onChange={e => this.updateUserData("password", e.target.value)}/>
                         </Form.Group>
                     </Form.Group>
 
-                    <div className="login-error-message text-center">{this.state.errorMessage}</div>
+                    <div className="login-error-message text-center">{this.props.errorMessage}</div>
 
-                    <Row className="justify-content-center">
-                        <Button type="submit" variant="success" onClick={this.sendLogin.bind(this)}>Войти</Button>
-                    </Row>
+                    <div className="text-center my-3">
+                        <Button type="submit" variant="success" onClick={this.sendLogin}>Войти</Button>
+                    </div>
                 </Form>
 
                 <hr/>
@@ -73,14 +74,14 @@ class Login extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        showLogin: state.AuthReducer.showLogin,
-        errorMessage: state.AuthReducer.errorMessage,
+        showLogin: state.auth.showLogin,
+        errorMessage: state.auth.errorMessage,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserActions, dispatch)
+        actions: bindActionCreators(AuthActions, dispatch)
     }
 }
 

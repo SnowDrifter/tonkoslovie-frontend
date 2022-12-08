@@ -18,15 +18,9 @@ class AdminLessons extends React.Component {
         this.state = {
             lessons: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             loading: true
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.deleteLesson = this.deleteLesson.bind(this);
-        this.editLesson = this.editLesson.bind(this);
-        this.updateLessons = this.updateLessons.bind(this);
     }
 
     componentDidMount() {
@@ -38,7 +32,8 @@ class AdminLessons extends React.Component {
             params: {
                 unpublished: true,
                 page: this.state.currentPage,
-                sortField: "id"
+                sortField: "id",
+                direction: "desc"
             }
         })
             .then(response => {
@@ -49,62 +44,49 @@ class AdminLessons extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    deleteLesson(lessonId) {
+    deleteLesson = (lessonId) => {
         if (confirm(`Удалить урок №${lessonId}?`)) {
-            Client.delete("/api/content/lesson", {
-                params: {
-                    id: lessonId
-                }
-            }).then(() => {
-                this.updateLessons();
-            }).catch((e) => {
-                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
-            });
+            Client.delete("/api/content/lesson", {params: {id: lessonId}})
+                .then(this.updateLessons)
+                .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateLessons)
-    }
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateLessons)
 
-    addNewLesson() {
-        this.props.history.push("/admin/lesson")
-    }
+    addNewLesson = () => this.props.navigate("/admin/lesson")
 
-    editLesson(lesson) {
-        this.props.history.push(`/admin/lesson/${lesson.id}`);
-    }
+    editLesson = (lessonId) => this.props.navigate(`/admin/lesson/${lessonId}`)
 
     render() {
         if (this.state.loading) {
             return <Loader/>;
         }
 
-        const lessons = this.state.lessons;
+        const {lessons} = this.state;
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Уроки</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Table rowHeight={45}
                        rowsCount={lessons.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{lessons[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
                     <Column header={<Cell>Название</Cell>}
                             cell={({rowIndex}) => <Cell>{lessons[rowIndex].title}</Cell>}
@@ -113,11 +95,11 @@ class AdminLessons extends React.Component {
 
                     <Column header={<Cell>Опубликован</Cell>}
                             cell={({rowIndex}) => <Cell>{lessons[rowIndex].published ? "Да" : "Нет"}</Cell>}
-                            width={100}/>
+                            width={115}/>
 
                     <Column cell={({rowIndex}) =>
                         <Cell>
-                            <EditRemoveButtons edit={() => this.editLesson(lessons[rowIndex])}
+                            <EditRemoveButtons edit={() => this.editLesson(lessons[rowIndex].id)}
                                                remove={() => this.deleteLesson(lessons[rowIndex].id)}/>
                         </Cell>}
                             width={100}/>
@@ -128,7 +110,7 @@ class AdminLessons extends React.Component {
                                      maxPage={this.state.maxPage}
                                      handleChangePage={this.handleChangePage}/>
 
-                <Button onClick={this.addNewLesson.bind(this)}>Добавить новый урок</Button>
+                <Button onClick={this.addNewLesson}>Добавить новый урок</Button>
             </Card.Body>
         </Card>;
     }

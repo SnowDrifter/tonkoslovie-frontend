@@ -1,19 +1,14 @@
 import React from "react";
 import ReactPlayer from "react-player";
 
-class SoundPlayer extends React.Component {
+function SoundPlayer({soundFileName}) {
 
-    render() {
-        if (!this.props.soundFileName) {
-            return null;
-        }
-
-        return <ReactPlayer
-            width="100%"
-            height={40}
-            controls={true}
-            url={`${process.env.MEDIA_ENDPOINT}/tonkoslovie/sounds/${this.props.soundFileName}`}/>
+    if (!soundFileName) {
+        return null;
     }
+
+    return <ReactPlayer url={`${process.env.API_ENDPOINT}/api/media/sound/${soundFileName}`}
+                        width="100%" height={40} controls/>
 }
 
 export default SoundPlayer;

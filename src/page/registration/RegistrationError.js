@@ -1,8 +1,8 @@
 import React from "react";
-import {Jumbotron} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 
-const RegistrationError = () => {
-    return <Jumbotron><h2 className="error-message">Регистрация не удалась</h2></Jumbotron>
-};
+function RegistrationError() {
+    return <Card className="jumbotron"><h2 className="error-message">Регистрация не удалась</h2></Card>
+}
 
 export default RegistrationError;

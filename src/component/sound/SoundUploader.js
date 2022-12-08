@@ -1,26 +1,14 @@
-import React, {createRef} from "react";
+import React, {useState} from "react";
 import {Button, Form, ProgressBar} from "react-bootstrap";
 import SoundPlayer from "./SoundPlayer";
 import {toast} from "react-toastify";
 import Client from "/util/Client";
 
-class SoundUploader extends React.Component {
+function SoundUploader({soundFileName, saveSoundFileName}) {
 
-    constructor(props) {
-        super(props);
+    const [progressUploadFile, setProgressUploadFile] = useState(0);
 
-        this.state = {
-            progressUploadFile: null
-        };
-
-        this.uploadSound = this.uploadSound.bind(this);
-        this.deleteSoundFile = this.deleteSoundFile.bind(this);
-
-        this.soundInput = createRef();
-    }
-
-    uploadSound() {
-        const sound = this.soundInput.current.files[0];
+    function uploadSound(sound) {
         if (!sound) {
             toast.error("Выберите файл");
             return;
@@ -30,59 +18,45 @@ class SoundUploader extends React.Component {
         data.append("file", sound);
 
         const config = {
-            onUploadProgress: (progressEvent) => {
-                this.setState({progressUploadFile: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
-            }
+            onUploadProgress: (e) => setProgressUploadFile(Math.round((e.loaded * 100) / e.total))
         };
 
         Client.post("/api/media/sound", data, config)
-            .then((response) => {
-                this.setState({progressUploadFile: null});
-                this.props.saveSoundFileName(response.data.fileName);
-            })
-            .catch(() => {
-                this.setState({progressUploadFile: null});
-                toast.error("Произошла ошибка во время загрузки");
-            });
+            .then(response => saveSoundFileName(response.data.fileName))
+            .catch(e => toast.error(`Произошла ошибка во время загрузки! Код: ${e.response.status}`));
+
+        setProgressUploadFile(0)
     }
 
-    deleteSoundFile() {
+    function deleteSoundFile() {
         if (confirm("Удалить звуковую дорожку?")) {
-            Client.delete("/api/media/sound", {
-                params: {
-                    fileName: this.props.soundFileName
-                }
-            })
-                .then(() => {
-                    this.props.saveSoundFileName(null);
-                })
-                .catch((e) => {
-                    toast.error(`Ошибка удаления! Код: ${e.response.status}`);
-                });
+            Client.delete("/api/media/sound", {params: {fileName: soundFileName}})
+                .then(() => saveSoundFileName(null))
+                .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
+
+            setProgressUploadFile(0)
         }
     }
 
-    render() {
-        if (this.props.soundFileName) {
-            return <>
-                <h3>Звуковая дорожка</h3>
-                <SoundPlayer soundFileName={this.props.soundFileName}/>
-                <Button variant="warning" onClick={this.deleteSoundFile}>Удалить дорожку</Button>
-            </>
-        } else {
-            return <>
-                <Form.Group>
-                    <Form.Label><h4>Звуковая дорожка</h4></Form.Label>
-                    <Form.File ref={this.soundInput} onChange={this.uploadSound}/>
-                </Form.Group>
-                <ProgressBar striped
-                             className="admin-text-progressbar"
-                             style={{visibility: this.state.progressUploadFile ? "visible " : "hidden"}}
-                             variant="success"
-                             now={this.state.progressUploadFile}
-                             label={`${this.state.progressUploadFile}%`}/>
-            </>
-        }
+    if (soundFileName) {
+        return <div>
+            <h3>Звуковая дорожка</h3>
+            <SoundPlayer soundFileName={soundFileName}/>
+            <Button className="mt-1" variant="warning" onClick={deleteSoundFile}>Удалить дорожку</Button>
+        </div>
+    } else {
+        return <>
+            <Form.Group>
+                <Form.Label><h4>Звуковая дорожка</h4></Form.Label>
+                <Form.Control type="file" onChange={e => uploadSound(e.target.files[0])} accept=".mp3"/>
+            </Form.Group>
+            <ProgressBar striped
+                         className="admin-text-progressbar"
+                         style={{visibility: progressUploadFile ? "visible " : "hidden"}}
+                         variant="success"
+                         now={progressUploadFile}
+                         label={`${progressUploadFile}%`}/>
+        </>
     }
 }
 

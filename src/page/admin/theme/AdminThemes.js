@@ -18,15 +18,9 @@ class AdminThemes extends React.Component {
         this.state = {
             themes: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             loading: true
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.deleteTheme = this.deleteTheme.bind(this);
-        this.editTheme = this.editTheme.bind(this);
-        this.updateThemes = this.updateThemes.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +32,7 @@ class AdminThemes extends React.Component {
             params: {
                 page: this.state.currentPage,
                 sortField: "id",
+                direction: "desc",
                 unpublished: true
             }
         })
@@ -49,37 +44,25 @@ class AdminThemes extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    deleteTheme(themeId) {
+    deleteTheme = (themeId) => {
         if (confirm(`Удалить тему №${themeId}?`)) {
-            Client.delete("/api/content/theme", {
-                params: {
-                    id: themeId
-                }
-            }).then(() => {
-                this.updateThemes();
-            }).catch((e) => {
-                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
-            });
+            Client.delete("/api/content/theme", {params: {id: themeId}})
+                .then(this.updateThemes)
+                .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateThemes)
-    }
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateThemes)
 
-    addNewTheme() {
-        this.props.history.push("/admin/theme")
-    }
+    addNewTheme = () => this.props.navigate("/admin/theme")
 
-    editTheme(theme) {
-        this.props.history.push(`/admin/theme/${theme.id}`);
-    }
+    editTheme = (themeId) => this.props.navigate(`/admin/theme/${themeId}`);
 
     render() {
         if (this.state.loading) {
@@ -91,32 +74,30 @@ class AdminThemes extends React.Component {
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Темы упражнений</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Table rowHeight={45}
                        rowsCount={themes.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{themes[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
                     <Column header={<Cell>Название</Cell>}
                             cell={({rowIndex}) => <Cell>{themes[rowIndex].title}</Cell>}
                             flexGrow={1}
                             width={100}/>
 
-                    <Column cell={({rowIndex}) =>
+                    <Column width={100} cell={({rowIndex}) =>
                         <Cell>
-                            <EditRemoveButtons edit={() => this.editTheme(themes[rowIndex])}
+                            <EditRemoveButtons edit={() => this.editTheme(themes[rowIndex].id)}
                                                remove={() => this.deleteTheme(themes[rowIndex].id)}/>
-                        </Cell>}
-                            width={100}/>
+                        </Cell>}/>
                 </Table>
 
                 <PaginationContainer style={{marginTop: "15px"}}
@@ -124,7 +105,7 @@ class AdminThemes extends React.Component {
                                      maxPage={this.state.maxPage}
                                      handleChangePage={this.handleChangePage}/>
 
-                <Button onClick={this.addNewTheme.bind(this)}>Добавить новую тему</Button>
+                <Button onClick={this.addNewTheme}>Добавить новую тему</Button>
             </Card.Body>
         </Card>;
     }

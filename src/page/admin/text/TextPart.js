@@ -2,7 +2,7 @@ import React from "react";
 import RemoveButton from "/component/button/RemoveButton";
 import EditRemoveButtons from "/component/button/EditRemoveButtons";
 import SimpleConfirmModal from "/component/SimpleConfirmModal";
-import * as partTypes from "/page/content/text/TextPartTypes";
+import {TEXT, QUESTION, CHOICE, LINE_BREAK} from "/page/content/text/TextPartTypes";
 
 class TextPart extends React.Component {
 
@@ -12,27 +12,19 @@ class TextPart extends React.Component {
         this.state = {
             showConfirmModal: false,
         };
-
-        this.showConfirmDeleteModal = this.showConfirmDeleteModal.bind(this);
-        this.hideConfirmModal = this.hideConfirmModal.bind(this);
-        this.removeTextPart = this.removeTextPart.bind(this);
     }
 
-    showConfirmDeleteModal() {
-        this.setState({showConfirmModal: true});
-    }
+    showConfirmDeleteModal = () => this.setState({showConfirmModal: true})
 
-    hideConfirmModal() {
-        this.setState({showConfirmModal: false});
-    }
+    hideConfirmModal = () => this.setState({showConfirmModal: false})
 
-    removeTextPart() {
+    removeTextPart = () => {
         this.hideConfirmModal();
         this.props.removePart(this.props.index)
     }
 
-    createButtons() {
-        if (this.props.part.type === partTypes.LINE_BREAK) {
+    createButtons = () => {
+        if (this.props.part.type === LINE_BREAK) {
             return <RemoveButton action={() => this.props.removePart(this.props.index)}/>
         } else {
             return <EditRemoveButtons edit={() => this.props.editPart(this.props.index)}
@@ -40,17 +32,16 @@ class TextPart extends React.Component {
         }
     }
 
-    createData() {
+    createData = () => {
         switch (this.props.part.type) {
-            case partTypes.TEXT:
-            case partTypes.QUESTION:
+            case TEXT:
+            case QUESTION:
                 return this.props.part.data;
-            case partTypes.CHOICE:
+            case CHOICE:
                 return this.props.part.choiceVariants
-                    .map(variant => {
-                        return variant.title;
-                    }).join(", ")
-            case partTypes.LINE_BREAK:
+                    .map(variant => variant.title)
+                    .join(", ")
+            case LINE_BREAK:
                 return "¶";
         }
     }
@@ -66,11 +57,11 @@ class TextPart extends React.Component {
                 {buttons}
             </div>
 
-            <SimpleConfirmModal modalText="Удалить фрагмент?"
+            <SimpleConfirmModal text="Удалить фрагмент?"
                                 showModal={this.state.showConfirmModal}
-                                hideModal={this.hideConfirmModal}
-                                confirmFunction={this.removeTextPart}
-                                negativeFunction={this.hideConfirmModal}/>
+                                onHide={this.hideConfirmModal}
+                                onConfirm={this.removeTextPart}
+                                onNegative={this.hideConfirmModal}/>
         </>
     }
 }

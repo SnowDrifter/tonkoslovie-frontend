@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {SortableContainer, SortableElement} from "react-sortable-hoc";
 import "./DraggableHorizontalList.less";
 
@@ -16,36 +16,22 @@ const SortableList = SortableContainer(({items, isDragging}) => {
     </div>;
 });
 
-class DraggableHorizontalList extends React.Component {
+function DraggableHorizontalList({elements, changeElements}) {
 
-    constructor(props) {
-        super(props);
+    const [isDragging, setIsDragging] = useState(false)
 
-        this.state = {
-            isDragging: false,
-        };
-
-        this.onSortStart = this.onSortStart.bind(this);
-        this.onSortEnd = this.onSortEnd.bind(this);
+    function onSortEnd(args) {
+        setIsDragging(false)
+        changeElements(args)
     }
 
-    onSortStart() {
-        this.setState({isDragging: true})
-    }
-
-    onSortEnd(args) {
-        this.setState({isDragging: false})
-        this.props.onSortEnd(args)
-    }
-
-    render() {
-        return <SortableList items={this.props.elements}
-                             isDragging={this.state.isDragging}
-                             onSortStart={this.onSortStart}
-                             onSortEnd={this.onSortEnd}
-                             distance={1}
-                             axis="xy"/>;
-    }
+    return <SortableList style={{padding: "20px", minHeight: "20px"}}
+                         items={elements}
+                         isDragging={isDragging}
+                         onSortStart={() => setIsDragging(true)}
+                         onSortEnd={onSortEnd}
+                         distance={1}
+                         axis="xy"/>;
 }
 
 export default DraggableHorizontalList;

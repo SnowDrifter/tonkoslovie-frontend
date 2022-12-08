@@ -33,13 +33,6 @@ class AdminAudits extends React.Component {
             showModal: false,
             currentAudit: {}
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
-        this.updateAudits = this.updateAudits.bind(this);
-        this.showAuditModal = this.showAuditModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-        this.formatDate = this.formatDate.bind(this);
     }
 
     componentDidMount() {
@@ -61,34 +54,28 @@ class AdminAudits extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateAudits)
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateAudits)
+
+    applyFilters = (searchParameters) => {
+        this.setState({searchParameters: searchParameters, currentPage: 0}, this.updateAudits)
     }
 
-    applyFilters(searchParameters) {
-        this.setState({searchParameters: searchParameters, currentPage: 0}, this.updateAudits);
-    }
+    showAuditModal = (index) => this.setState({showModal: true, currentAudit: this.state.audits[index]})
 
-    showAuditModal(index) {
-        this.setState({showModal: true, currentAudit: this.state.audits[index]});
-    }
+    hideModal = () => this.setState({showModal: false, currentAudit: {}})
 
-    hideModal() {
-        this.setState({showModal: false, currentAudit: {}});
-    }
-
-    formatDate(rawDate) {
+    formatDate = (rawDate) => {
         const timeMillis = Date.parse(rawDate);
         return new Date(timeMillis).toLocaleString()
     }
 
-    createOperationElement(operation) {
+    createOperationElement = (operation) => {
         switch (operation) {
             case CREATE:
                 return <span className="text-success">Создание</span>
@@ -101,9 +88,7 @@ class AdminAudits extends React.Component {
         }
     }
 
-    getTableTitle(table) {
-        return auditTableNames.get(table) ?? table;
-    }
+    getTableTitle = (table) => auditTableNames.get(table) || table;
 
     render() {
         if (this.state.loading) {
@@ -115,22 +100,21 @@ class AdminAudits extends React.Component {
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Аудит</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <AdminAuditFilter applyFilters={this.applyFilters} searchParameters={this.state.searchParameters}/>
+                <AdminAuditFilter applyFilters={this.applyFilters}/>
 
                 <Table rowHeight={45}
                        rowsCount={audits.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
                     <Column header={<Cell style={{backgroundColor: "#f0f0f0"}}>ID</Cell>}
                             cell={({rowIndex}) => <Cell>{audits[rowIndex].entityId}</Cell>}
-                            fixed={true}
-                            width={60}/>
+                            width={60} fixed/>
 
                     <Column header={<Cell style={{backgroundColor: "#f0f0f0"}}>Таблица</Cell>}
                             cell={({rowIndex}) => <Cell>{this.getTableTitle(audits[rowIndex].table)}</Cell>}

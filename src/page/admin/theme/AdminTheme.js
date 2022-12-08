@@ -1,7 +1,6 @@
-import React, {createRef} from "react";
-import {withRouter} from "react-router-dom";
+import React from "react";
 import {LinkContainer} from "react-router-bootstrap";
-import {Breadcrumb, Button, Card, Form, Jumbotron, ListGroup} from "react-bootstrap";
+import {Breadcrumb, Button, Card, Form, ListGroup} from "react-bootstrap";
 import Loader from "/component/Loader";
 import Client from "/util/Client";
 import {toast} from "react-toastify";
@@ -13,201 +12,140 @@ class AdminTheme extends React.Component {
         super(props);
 
         this.state = {
-            id: null,
-            published: false,
-            exercises: [],
+            theme: {},
             exerciseVariants: [],
-            loading: props.computedMatch.params.themeId !== undefined,
-            themeId: props.computedMatch.params.themeId,
-            exerciseTitle: null
+            loading: props.params.themeId !== undefined
         };
 
-        if (this.state.themeId) {
-            this.loadTheme(this.state.themeId)
+        if (props.params.themeId) {
+            this.loadTheme(props.params.themeId)
         }
-
-        this.titleInput = createRef();
-        this.exerciseTitleInput = createRef();
-
-        this.removeExercise = this.removeExercise.bind(this);
-        this.addExercise = this.addExercise.bind(this);
-        this.handExerciseChange = this.handExerciseChange.bind(this);
-        this.getExercises = this.getExercises.bind(this);
-        this.getExerciseVariants = this.getExerciseVariants.bind(this);
     }
 
     loadTheme(themeId) {
-        Client.get("/api/content/theme", {
-            params: {
-                id: themeId
-            }
-        }).then(response => {
-            const theme = response.data;
-
-            this.setState({
-                id: theme.id,
-                exercises: theme.exercises,
-                published: theme.published,
-                loading: false
-            });
-
-            this.titleInput.current.value = theme.title;
-        })
+        Client.get("/api/content/theme", {params: {id: themeId}})
+            .then(response => {
+                this.setState({
+                    theme: response.data,
+                    loading: false
+                });
+            })
     }
 
-    saveTheme() {
-        Client.post("/api/content/theme", {
-            id: this.state.id,
-            title: this.titleInput.current.value,
-            published: this.state.published,
-            exercises: this.state.exercises || []
-        }).then((response) => {
-            this.setState({
-                id: response.data.id
-            });
+    saveTheme = () => {
+        Client.post("/api/content/theme", this.state.theme)
+            .then(response => {
+                this.updateTheme("id", response.data.id)
 
-            if (!this.state.themeId) {
-                this.props.history.push(`/admin/theme/${response.data.id}`);
-            }
+                if (!this.props.params.themeId) {
+                    this.props.navigate(`/admin/theme/${response.data.id}`);
+                }
 
-            toast.success("Сохранено");
-        }).catch((e) => {
-            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
-        })
+                toast.success("Сохранено");
+            })
+            .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 
-    searchExercise() {
-        const searchTitle = this.exerciseTitleInput.current.value;
-
-        Client.get("/api/content/exercises/find", {
-            params: {
-                title: searchTitle
-            }
-        }).then(response => {
-            const exerciseVariants = response.data;
-            this.setState({
-                exerciseVariants: exerciseVariants
-            });
-        }).catch((e) => {
-            toast.error(`Ошибка поиска! Код: ${e.response.status}`);
-        })
+    searchExercise = (searchTitle) => {
+        Client.get("/api/content/exercises/find", {params: {title: searchTitle}})
+            .then(response => {
+                this.setState({
+                    exerciseVariants: response.data
+                });
+            })
+            .catch(e => toast.error(`Ошибка поиска! Код: ${e.response.status}`))
     }
 
-    isExerciseAlreadyAdded(exerciseVariant) {
-        return this.state.exercises.some(e => e.id === exerciseVariant.id)
-    }
-
-    addExercise(index) {
-        const exercise = this.state.exerciseVariants[index];
-        const exerciseVariants = this.state.exerciseVariants;
+    addExercise = (index) => {
+        const {exerciseVariants} = this.state;
+        const exercise = exerciseVariants[index];
         exerciseVariants.splice(index, 1);
 
-        this.setState({
-            exerciseVariants: exerciseVariants,
-            exercises: this.state.exercises.concat(exercise)
-        });
+        this.setState({exerciseVariants});
+        this.updateTheme("exercises", [...this.state.theme.exercises || [], exercise])
     }
 
-    removeExercise(exerciseId) {
-        const exercises = this.state.exercises;
+    removeExercise = (exerciseId) => {
+        const {exercises} = this.state.theme
         exercises.splice(exerciseId, 1);
-        this.setState({exercises: exercises});
+        this.updateTheme("exercises", exercises)
     }
 
-    handExerciseChange(exercise) {
-        this.setState({
-            exercise: exercise
-        });
-    }
-
-    togglePublished() {
-        this.setState({published: !this.state.published});
-    }
-
-    getExercises() {
-        return this.state.exercises.map((exercise, index) =>
+    createExercises = () => {
+        return this.state.theme.exercises?.map((exercise, index) =>
             <ListGroup.Item variant="info" key={index}>
                 <span>{exercise.title}</span>
-                <RemoveButton className="float-right" action={() => this.removeExercise(index)}/>
+                <RemoveButton className="float-end" action={() => this.removeExercise(index)}/>
             </ListGroup.Item>
         );
     }
 
-    getExerciseVariants() {
-        const exerciseVariants = this.state.exerciseVariants
-            .filter(e => !this.isExerciseAlreadyAdded(e))
+    canShowExerciseVariant = (exerciseVariant) => !this.state.theme.exercises?.some(e => e.id === exerciseVariant.id)
+
+    createExerciseVariants = () => {
+        return this.state.exerciseVariants
+            .filter(this.canShowExerciseVariant)
             .map((exercise, index) =>
-                <ListGroup.Item onClick={() => this.addExercise(index)} key={index}>
+                <ListGroup.Item key={index} onClick={() => this.addExercise(index)}>
                     {exercise.title}
                 </ListGroup.Item>
             );
-
-        return exerciseVariants.length > 0 ? exerciseVariants : <span key={0}>Ничего не найдено</span>
     }
+
+    updateTheme = (field, value) => this.setState({theme: {...this.state.theme, [field]: value}});
 
     render() {
         if (this.state.loading) {
             return <Loader/>;
         }
 
-        const exercises = this.getExercises();
-        const exerciseVariants = this.getExerciseVariants();
+        const {theme} = this.state;
+        const exerciseVariants = this.createExerciseVariants();
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin">
-                        <Breadcrumb.Item>Главная</Breadcrumb.Item>
-                    </LinkContainer>
-                    <LinkContainer exact to="/admin/themes">
-                        <Breadcrumb.Item>Темы упражнений</Breadcrumb.Item>
-                    </LinkContainer>
-                    <Breadcrumb.Item active>
-                        {(this.state.id) ? `Тема №${this.state.id}` : "Новая тема"}
-                    </Breadcrumb.Item>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin/themes"><Breadcrumb.Item>Темы упражнений</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>{(theme.id) ? `Тема №${theme.id}` : "Новая тема"}</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Jumbotron>
+                <Card className="jumbotron">
                     <Form>
-                        <Form.Group>
-                            <Form.Label><h3>Заголовок</h3></Form.Label>
-                            <Form.Control ref={this.titleInput}/>
-                        </Form.Group>
+                        <h3>Заголовок</h3>
+                        <Form.Control defaultValue={theme.title}
+                                      onChange={e => this.updateTheme("title", e.target.value)}/>
 
-                        <h3>Добавленные упражнения</h3>
+                        <h3 className="mt-3">Добавленные упражнения</h3>
                         <ListGroup>
-                            {exercises}
+                            {this.createExercises()}
                         </ListGroup>
 
                         <Card>
                             <Card.Body>
-                                <Form.Group>
+                                <Form.Group className="mb-2">
                                     <Form.Label>Поиск упражнения</Form.Label>
-                                    <Form.Control type="text"
-                                                  ref={this.exerciseTitleInput}
-                                                  placeholder="Начните вводить данные для выбора"
-                                                  onChange={this.searchExercise.bind(this)}/>
+                                    <Form.Control placeholder="Начните вводить данные для выбора"
+                                                  onChange={e => this.searchExercise(e.target.value)}/>
                                 </Form.Group>
 
                                 Варианты:
                                 <ListGroup>
-                                    {exerciseVariants}
+                                    {exerciseVariants.length ? exerciseVariants :
+                                        <span key={0}>Ничего не найдено</span>}
                                 </ListGroup>
                             </Card.Body>
                         </Card>
 
-                        <Form.Group>
-                            <Form.Check label="Опубликовать тему"
-                                        checked={this.state.published}
-                                        onChange={this.togglePublished.bind(this)}/>
-                        </Form.Group>
-                        <Button onClick={this.saveTheme.bind(this)}
-                                className="float-right" variant="success">Сохранить</Button>
+                        <Form.Check className="mt-3" label="Опубликовать тему" checked={theme.published}
+                                    onChange={e => this.updateTheme("published", e.target.checked)}/>
+                        <Button onClick={this.saveTheme}
+                                className="float-end" variant="success">Сохранить</Button>
                     </Form>
-                </Jumbotron>
+                </Card>
             </Card.Body>
         </Card>;
     }
 }
 
-export default withRouter(AdminTheme);
+export default AdminTheme;

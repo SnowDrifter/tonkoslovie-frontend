@@ -1,16 +1,17 @@
-import React, {createRef} from "react";
-import {Breadcrumb, Button, ButtonGroup, Card, Form, Jumbotron} from "react-bootstrap";
+import React from "react";
+import {Breadcrumb, Button, ButtonGroup, Card, Form} from "react-bootstrap";
 import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
 import Client from "/util/Client";
 import EditPartModal from "/page/admin/text/edit/EditPartModal";
 import TextPart from "/page/admin/text/TextPart";
-import * as partTypes from "/page/content/text/TextPartTypes";
-import "./AdminText.less";
+import {TEXT, LINE_BREAK} from "/page/content/text/TextPartTypes";
 import {toast} from "react-toastify";
-import {arrayMove} from "react-sortable-hoc";
+import {arrayMoveImmutable} from "array-move";
 import DraggableHorizontalList from "/component/DraggableHorizontalList";
 import SoundUploader from "/component/sound/SoundUploader";
+import "./AdminText.less";
+
 
 class AdminText extends React.Component {
 
@@ -18,74 +19,49 @@ class AdminText extends React.Component {
         super(props);
 
         this.state = {
-            id: null,
+            text: {},
             showEditPartModal: false,
             showConfirmModal: false,
             modalTitle: null,
             currentPart: null,
             currentPartIndex: null,
-            textParts: [],
-            soundFileName: null,
-            loading: props.computedMatch.params.textId !== undefined
+            loading: props.params.textId !== undefined
         };
 
-        this.hideModal = this.hideModal.bind(this);
-        this.editTextPart = this.editTextPart.bind(this);
-        this.removeTextPart = this.removeTextPart.bind(this);
-        this.changeTextPart = this.changeTextPart.bind(this);
-        this.saveTextPartChanges = this.saveTextPartChanges.bind(this);
-        this.onSortEnd = this.onSortEnd.bind(this);
-        this.createElements = this.createElements.bind(this);
-        this.saveSoundFileName = this.saveSoundFileName.bind(this);
-
-        this.titleInput = createRef();
-
-        if (props.computedMatch.params.textId) {
-            this.loadText(this.props.computedMatch.params.textId)
+        if (props.params.textId) {
+            this.loadText(this.props.params.textId)
         }
     }
 
     loadText(textId) {
-        Client.get("/api/content/text", {
-            params: {
-                id: textId
-            }
-        }).then(response => {
-            const text = response.data;
-            this.setState({
-                id: text.id,
-                textParts: text.parts,
-                soundFileName: text.soundFileName,
-                loading: false
-            });
-
-            this.titleInput.current.value = text.title;
-        }).catch((e) => {
-            this.setState({loading: false});
-            toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
-        })
+        Client.get("/api/content/text", {params: {id: textId}})
+            .then(response => {
+                this.setState({
+                    text: response.data,
+                    loading: false
+                });
+            })
+            .catch(e => {
+                this.setState({loading: false});
+                toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
+            })
     }
 
-    saveText() {
-        Client.post("/api/content/text", {
-            id: this.state.id,
-            title: this.titleInput.current.value,
-            parts: this.state.textParts || [],
-            soundFileName: this.state.soundFileName
-        }).then((response) => {
-            this.setState({id: response.data.id});
+    saveText = () => {
+        Client.post("/api/content/text", this.state.text)
+            .then((response) => {
+                this.setState({id: response.data.id});
 
-            if (!this.props.computedMatch.params.textId) {
-                this.props.history.push(`/admin/text/${response.data.id}`)
-            }
+                if (!this.props.params.textId) {
+                    this.props.navigate(`/admin/text/${response.data.id}`)
+                }
 
-            toast.success("Сохранено");
-        }).catch((e) => {
-            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
-        })
+                toast.success("Сохранено");
+            })
+            .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 
-    hideModal() {
+    hideModal = () => {
         this.setState({
             showEditPartModal: false,
             currentPart: null,
@@ -93,106 +69,112 @@ class AdminText extends React.Component {
         });
     }
 
-    addLineBreak() {
-        this.setState({
-            textParts: this.state.textParts.concat({
-                type: partTypes.LINE_BREAK
-            })
-        });
+    addLineBreak = () => {
+        const parts = [...this.state.text.parts || [], {type: LINE_BREAK}]
+        this.updateText("parts", parts)
     }
 
-    editTextPart(key) {
-        const textPart = this.state.textParts[key];
+    editTextPart = (index) => {
+        const textPart = this.state.text.parts[index];
         this.setState({
             showEditPartModal: true,
             modalTitle: "Редактирование",
             currentPart: textPart,
-            currentPartIndex: key
+            currentPartIndex: index
         });
     }
 
-    removeTextPart(key) {
-        this.setState({textParts: this.state.textParts.filter((value, index) => index !== key)});
+    removeTextPart = (index) => {
+        const newParts = this.state.text.parts?.filter((v, i) => i !== index);
+        this.updateText("parts", newParts)
     }
 
-    showCreatePartModal() {
+    showCreatePartModal = () => {
         this.setState({
             showEditPartModal: true,
             modalTitle: "Добавление текста",
             currentPartIndex: null,
-            currentPart: {type: partTypes.TEXT}
+            currentPart: {type: TEXT}
         });
     }
 
-    changeTextPart(textPart) {
+    changeTextPart = (textPart) => {
         this.setState({currentPart: textPart})
     }
 
-    saveTextPartChanges(textPart) {
-        if (this.state.currentPartIndex !== null) {
-            this.setState(prevState => ({
-                textParts: prevState.textParts.map(
-                    (part, index) => {
-                        return index === this.state.currentPartIndex ? textPart : part
-                    }
-                )
-            }))
+    saveTextPartChanges = (newPart) => {
+        const {currentPartIndex, text} = this.state;
+        const parts = text.parts || []
+
+        if (currentPartIndex !== null) {
+            const newParts = parts.map((part, index) => index === currentPartIndex ? newPart : part)
+            this.updateText("parts", newParts)
         } else {
-            this.setState({textParts: this.state.textParts.concat(textPart)});
+            this.updateText("parts", parts.concat(newPart))
         }
+
+        this.hideModal()
     }
 
-    saveSoundFileName(soundFileName) {
-        this.setState({soundFileName});
-        this.saveText()
+    saveSoundFileName = (soundFileName) => {
+        this.updateText("soundFileName", soundFileName, this.saveText)
     }
 
-    onSortEnd(args) {
-        this.setState({
-            textParts: arrayMove(this.state.textParts, args.oldIndex, args.newIndex)
-        });
+    onSortEnd = (args) => {
+        const newParts = arrayMoveImmutable(this.state.text.parts, args.oldIndex, args.newIndex);
+        this.updateText("parts", newParts)
     }
 
-    createElements() {
-        return this.state.textParts
-            .map((part, index) =>
-                <TextPart key={index}
-                          index={index}
-                          part={part}
-                          removePart={this.removeTextPart}
-                          editPart={this.editTextPart}/>
-            );
+    createElements = () => {
+        return this.state.text.parts?.map((part, index) =>
+            <TextPart key={index}
+                      index={index}
+                      part={part}
+                      removePart={this.removeTextPart}
+                      editPart={this.editTextPart}/>
+        );
     }
+
+    updateText = (field, value, callback) => this.setState({text: {...this.state.text, [field]: value}}, callback);
 
     render() {
         if (this.state.loading) {
             return <Loader/>;
         }
 
+        const {text} = this.state;
         const elements = this.createElements();
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
-                    <LinkContainer exact to="/admin/texts"><Breadcrumb.Item>Тексты</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin/texts"><Breadcrumb.Item>Тексты</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>
                         {(this.state.id) ? `Текст №${this.state.id}` : "Новый текст"}
                     </Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Jumbotron>
-                    <Form.Group>
-                        <Form.Label><h3>Заголовок</h3></Form.Label>
-                        <Form.Control ref={this.titleInput}/>
+                <Card className="jumbotron" style={{padding: "2rem"}}>
+                    <Form.Group className="mb-3">
+                        <h3>Заголовок</h3>
+                        <Form.Control defaultValue={text.title}
+                                      onChange={e => this.updateText("title", e.target.value)}/>
                     </Form.Group>
 
-                    <SoundUploader soundFileName={this.state.soundFileName}
+                    <SoundUploader soundFileName={text.soundFileName}
                                    saveSoundFileName={this.saveSoundFileName}/>
 
-                    <h3>Элементы текста</h3>
-                    <DraggableHorizontalList elements={elements} onSortEnd={this.onSortEnd}/>
-                </Jumbotron>
+                    <h3 className="mt-2">Элементы текста</h3>
+                    <DraggableHorizontalList elements={elements || []} changeElements={this.onSortEnd}/>
+
+                    <div className="mt-2">
+                        <ButtonGroup>
+                            <Button onClick={this.showCreatePartModal}>Добавить элемент</Button>
+                            <Button onClick={this.addLineBreak}>Добавить перенос строки</Button>
+                        </ButtonGroup>
+                    </div>
+                </Card>
 
                 <EditPartModal showModal={this.state.showEditPartModal}
                                modalTitle={this.state.modalTitle}
@@ -201,11 +183,7 @@ class AdminText extends React.Component {
                                changeTextPart={this.changeTextPart}
                                saveTextPartChanges={this.saveTextPartChanges}/>
 
-                <ButtonGroup>
-                    <Button onClick={this.showCreatePartModal.bind(this)}>Добавить элемент</Button>
-                    <Button onClick={this.addLineBreak.bind(this)}>Добавить перенос строки</Button>
-                </ButtonGroup>
-                <Button onClick={this.saveText.bind(this)} className="float-right" variant="success">Сохранить</Button>
+                <Button onClick={this.saveText} className="float-end" variant="success">Сохранить</Button>
             </Card.Body>
         </Card>;
     }

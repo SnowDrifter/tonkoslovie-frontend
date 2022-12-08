@@ -1,7 +1,7 @@
 import axios from "axios";
 import history from "./History";
 
-const apiEndpoint = process.env.API_ENDPOINT || "";
+const apiEndpoint = process.env.API_ENDPOINT;
 
 const client = axios.create({
     baseURL: apiEndpoint
@@ -17,9 +17,11 @@ client.interceptors.request.use(function (config) {
 
 client.interceptors.response.use(null, function (error) {
     if (!error.status && !error.response) {
-        history.push("/not_available");
+        history.push("/not_available")
+        history.go(0)
     } else if (error.response.status === 403) {
-        history.push("/access_denied");
+        history.push("/access_denied")
+        history.go(0)
     }
 
     return Promise.reject(error);

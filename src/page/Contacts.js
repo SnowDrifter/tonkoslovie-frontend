@@ -1,5 +1,5 @@
 import React from "react";
-import {Jumbotron} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import Helmet from "react-helmet";
 
 class Contacts extends React.Component {
@@ -7,9 +7,9 @@ class Contacts extends React.Component {
         return <>
             <Helmet title="Контакты | Тонкословие"/>
 
-            <Jumbotron>
+            <Card className="jumbotron">
                 <h2 style={{textAlign: "center"}}>Страница находится в разработке</h2>
-            </Jumbotron>
+            </Card>
         </>
     }
 }

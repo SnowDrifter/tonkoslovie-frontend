@@ -7,16 +7,20 @@ module.exports = merge(common, {
     devtool: "inline-source-map",
     devServer: {
         historyApiFallback: true,
-        contentBase: path.join(__dirname, "../dist"),
+        static: {
+            directory: path.join(__dirname, "../dist")
+        },
         port: 3000,
-        stats: {
-            assets: false,
-            children: false,
-            chunks: false,
-            chunkModules: false,
-            modules: false,
-            reasons: false,
-            useExports: false
+        devMiddleware: {
+            stats: {
+                assets: false,
+                children: false,
+                chunks: false,
+                chunkModules: false,
+                modules: false,
+                reasons: false,
+                useExports: false
+            }
         }
     }
 });

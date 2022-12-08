@@ -17,26 +17,20 @@ class AdminExercises extends React.Component {
         this.state = {
             exercises: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             loading: true
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.deleteExercise = this.deleteExercise.bind(this);
-        this.editExercise = this.editExercise.bind(this);
-        this.updateExercises = this.updateExercises.bind(this);
     }
 
     componentDidMount() {
         this.updateExercises();
     }
 
-    updateExercises() {
+    updateExercises = () => {
         Client.get("/api/content/exercises", {
             params: {
                 page: this.state.currentPage,
-                sortField: "id"
+                direction: "desc"
             }
         })
             .then(response => {
@@ -47,37 +41,27 @@ class AdminExercises extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             });
     }
 
-    deleteExercise(exerciseId) {
+    deleteExercise = (exerciseId) => {
         if (confirm(`Удалить упражнение №${exerciseId}?`)) {
-            Client.delete("/api/content/exercise", {
-                params: {
-                    id: exerciseId
-                }
-            }).then(() => {
-                this.updateExercises();
-            }).catch((e) => {
-                toast.error(`Ошибка удаления! Код: ${e.response.status}`);
-            });
+            Client.delete("/api/content/exercise", {params: {id: exerciseId}})
+                .then(() => {
+                    this.updateExercises();
+                })
+                .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateExercises)
-    }
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateExercises)
 
-    addNewExercise() {
-        this.props.history.push("/admin/exercise")
-    }
+    addNewExercise = () => this.props.navigate("/admin/exercise")
 
-    editExercise(exercise) {
-        this.props.history.push(`/admin/exercise/${exercise.id}`);
-    }
+    editExercise = (exerciseId) => this.props.navigate(`/admin/exercise/${exerciseId}`);
 
     render() {
         if (this.state.loading) {
@@ -89,31 +73,31 @@ class AdminExercises extends React.Component {
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Упражнения</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Table rowHeight={45}
                        rowsCount={exercises.length}
-                       width={1068}
+                       width={1262}
                        height={487}
                        headerHeight={35}>
 
-                    <Column header={<Cell>№</Cell>}
+                    <Column header={<Cell style={{backgroundColor: "#f0f0f0"}}>№</Cell>}
                             cell={({rowIndex}) => <Cell>{exercises[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
-                    <Column header={<Cell>Заголовок</Cell>}
+                    <Column header={<Cell style={{backgroundColor: "#f0f0f0"}}>Заголовок</Cell>}
                             cell={({rowIndex}) => <Cell>{exercises[rowIndex].title}</Cell>}
                             flexGrow={1}
                             width={100}/>
 
-                    <Column cell={({rowIndex}) =>
-                        <Cell>
-                            <EditRemoveButtons edit={() => this.editExercise(exercises[rowIndex])}
-                                               remove={() => this.deleteExercise(exercises[rowIndex].id)}/>
-                        </Cell>}
+                    <Column header={<Cell style={{backgroundColor: "#f0f0f0"}}/>}
+                            cell={({rowIndex}) =>
+                                <Cell>
+                                    <EditRemoveButtons edit={() => this.editExercise(exercises[rowIndex].id)}
+                                                       remove={() => this.deleteExercise(exercises[rowIndex].id)}/>
+                                </Cell>}
                             width={100}/>
                 </Table>
 
@@ -122,7 +106,7 @@ class AdminExercises extends React.Component {
                                      maxPage={this.state.maxPage}
                                      handleChangePage={this.handleChangePage}/>
 
-                <Button onClick={this.addNewExercise.bind(this)}>Добавить новое упражнение</Button>
+                <Button onClick={this.addNewExercise}>Добавить новое упражнение</Button>
             </Card.Body>
         </Card>;
     }

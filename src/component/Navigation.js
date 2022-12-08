@@ -1,96 +1,73 @@
-import React from "react";
-import {withRouter} from "react-router-dom";
+import React, {useState} from "react";
+import {useLocation} from "react-router-dom";
 import * as QueryString from "query-string"
 import {connect} from "react-redux";
-import {Nav, Navbar} from "react-bootstrap";
+import {Container, Nav, Navbar} from "react-bootstrap";
 import {bindActionCreators} from "redux";
-import * as UserActions from "/action/Auth";
-import "./Navigation.less";
+import * as AuthActions from "/action/AuthActions";
 import RoutedLinkContainer from "./RoutedLinkContainer";
+import RoleUtil from "/util/RoleUtil";
+import "./Navigation.less";
 
+function Navigation({user, isAuthenticated, actions}) {
 
-class Navigation extends React.Component {
+    const [expandNavbar, setExpandNavbar] = useState(false);
+    const location = useLocation();
 
-    constructor(props) {
-        super(props);
+    const token = QueryString.parse(location.search).token;
 
-        this.state = {
-            expandNavbar: false,
-            isAuthenticated: props.isAuthenticated
-        };
-
-        this.checkToken();
+    if (token) {
+        actions.saveToken(token);
     }
 
-    static getDerivedStateFromProps(props) {
-        return {
-            isAuthenticated: props.isAuthenticated
-        };
-    }
+    return <Navbar bg="light" expand="lg" expanded={expandNavbar}>
+        <Container>
+        <Navbar.Brand>
+            <Nav>
+                <RoutedLinkContainer to="/" text="Главная"/>
+            </Nav>
+        </Navbar.Brand>
 
-    checkToken() {
-        const token = QueryString.parse(this.props.location.search).token;
+        <button type="button"
+                className={`navbar-toggler ${expandNavbar ? "" : "collapsed"}`}
+                onClick={() => setExpandNavbar(!expandNavbar)}>
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
+        </button>
 
-        if (token) {
-            this.props.actions.saveToken(token);
-        }
-    }
+        <Navbar.Collapse>
+            <Nav>
+                <RoutedLinkContainer to="/lessons" text="Уроки"/>
+                <RoutedLinkContainer to="/themes" text="Упражнения"/>
+                <RoutedLinkContainer to="/about" text="О проекте"/>
+                <RoutedLinkContainer to="/contacts" text="Контакты"/>
+                {RoleUtil.isAdmin(user.roles) && <RoutedLinkContainer to="/admin" text="Администрирование"/>}
+            </Nav>
+        </Navbar.Collapse>
 
-    toggleExpandNavbar() {
-        this.setState({expandNavbar: !this.state.expandNavbar});
-    }
-
-    render() {
-        const isAuthenticated = this.state.isAuthenticated;
-
-        return <Navbar bg="light" expand="lg" expanded={this.state.expandNavbar}>
-            <Navbar.Brand>
-                <Nav>
-                    <RoutedLinkContainer to="/" text="Главная"/>
-                </Nav>
-            </Navbar.Brand>
-
-            <button type="button"
-                    className={`navbar-toggler ${this.state.expandNavbar ? "" : "collapsed"}`}
-                    onClick={this.toggleExpandNavbar.bind(this)}>
-                <span className="icon-bar"/>
-                <span className="icon-bar"/>
-                <span className="icon-bar"/>
-            </button>
-
-            <Navbar.Collapse>
-                <Nav>
-                    <RoutedLinkContainer to="/lessons" text="Уроки"/>
-                    <RoutedLinkContainer to="/themes" text="Упражнения"/>
-                    <RoutedLinkContainer to="/about" text="О проекте"/>
-                    <RoutedLinkContainer to="/contacts" text="Контакты"/>
-                </Nav>
-            </Navbar.Collapse>
-
-            <Navbar.Collapse className="justify-content-end">
-                <Nav>
-                    <RoutedLinkContainer to="/registration" text="Регистрация"
-                                         className={isAuthenticated ? "hidden" : ""}/>
-                    <Nav.Link onClick={this.props.actions.showLogin}
-                              className={isAuthenticated ? "hidden" : ""}>Вход</Nav.Link>
-                    <Nav.Link onClick={this.props.actions.logout}
-                              className={isAuthenticated ? "" : "hidden"}>Выход</Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>;
-    }
+        <Navbar.Collapse className="justify-content-end">
+            <Nav>
+                <RoutedLinkContainer to="/registration" text="Регистрация" className={isAuthenticated ? "hidden" : ""}/>
+                <Nav.Link onClick={actions.showLogin} className={isAuthenticated ? "hidden" : ""}>Вход</Nav.Link>
+                <Nav.Link onClick={actions.logout} className={isAuthenticated ? "" : "hidden"}>Выход</Nav.Link>
+            </Nav>
+        </Navbar.Collapse>
+        </Container>
+    </Navbar>;
 }
 
 function mapStateToProps(state) {
     return {
-        isAuthenticated: state.AuthReducer.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        user: state.auth.user
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserActions, dispatch)
+        actions: bindActionCreators(AuthActions, dispatch)
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navigation))
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation)

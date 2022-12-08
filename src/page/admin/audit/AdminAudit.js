@@ -13,7 +13,7 @@ class AdminAudit extends React.Component {
         const newValue = JSON.stringify(audit.after, null, 2)
 
         return (
-            <Modal show={showModal} onHide={hideModal.bind(this)} size="xl" centered animation={false}>
+            <Modal show={showModal} onHide={hideModal} size="xl" centered animation={false}>
                 <Modal.Body>
                     <ReactDiffViewer oldValue={oldValue} newValue={newValue}
                                      compareMethod={DiffMethod.WORDS} splitView/>

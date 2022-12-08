@@ -20,20 +20,17 @@ class Lessons extends React.Component {
             hasMore: true,
             loading: true
         };
-
-        this.loadNewLessons = this.loadNewLessons.bind(this);
-        this.updateLessons = this.updateLessons.bind(this);
     }
 
     componentDidMount() {
-        this.updateLessons();
+        this.loadLessons();
     }
 
-    loadNewLessons() {
-        this.setState({currentPage: this.state.currentPage + 1}, this.updateLessons)
+    loadMoreLessons = () => {
+        this.setState({currentPage: this.state.currentPage + 1}, this.loadLessons)
     }
 
-    updateLessons() {
+    loadLessons() {
         Client.get("/api/content/lessons", {
             params: {
                 page: this.state.currentPage
@@ -51,8 +48,8 @@ class Lessons extends React.Component {
     createLessonPreviews() {
         return this.state.lessons.map((lesson, index) =>
             <LinkContainer to={`/lesson/${lesson.id}`} key={index}>
-                <ListGroup.Item>
-                    <ImageContainer imageFileName={lesson.previewImage} className="lesson-preview" size="200_200"/>
+                <ListGroup.Item action>
+                    <ImageContainer imageFileName={lesson.previewImage} className="lesson-preview" size="200-200"/>
                     <h3 className="lesson-title">{lesson.title}</h3>
                     <p className="lesson-annotation">{lesson.annotation}</p>
                 </ListGroup.Item>
@@ -73,7 +70,7 @@ class Lessons extends React.Component {
             <Card.Header>Уроки</Card.Header>
             <Card.Body>
                 <InfiniteScroll dataLength={lessonPreviews.length}
-                                next={this.loadNewLessons}
+                                next={this.loadMoreLessons}
                                 hasMore={this.state.hasMore}
                                 loader={<InfinityScrollLoader/>}>
                     <ListGroup>

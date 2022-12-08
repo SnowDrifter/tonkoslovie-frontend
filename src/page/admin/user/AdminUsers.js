@@ -28,15 +28,10 @@ class AdminUsers extends React.Component {
         this.state = {
             users: [],
             currentPage: 0,
-            totalElements: null,
-            maxPage: null,
+            maxPage: 0,
             searchParameters: [],
             loading: true
         };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.createSearchQuery = this.createSearchQuery.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
     }
 
     componentDidMount() {
@@ -58,60 +53,53 @@ class AdminUsers extends React.Component {
                     maxPage: response.data.totalPages
                 })
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({loading: false});
                 toast.error(`Ошибка загрузки! Код: ${e.response.status}`);
             })
     }
 
-    applyFilters(searchParameters) {
-        this.setState({searchParameters: searchParameters}, this.updateUsers);
+    applyFilters = (searchParameters) => {
+        this.setState({searchParameters: searchParameters, currentPage: 0}, this.updateUsers);
     }
 
-    createSearchQuery() {
+    createSearchQuery = () => {
         return this.state.searchParameters
             .map(p => `${p.field}${p.operation}${p.value}`)
             .join(";")
     }
 
-    handleChangePage(newPage) {
-        this.setState({currentPage: newPage}, this.updateUsers)
-    }
+    handleChangePage = (newPage) => this.setState({currentPage: newPage}, this.updateUsers)
 
-    editUser(user) {
-        this.props.history.push(`/admin/user/${user.id}`);
-    }
+    editUser = (userId) => this.props.navigate(`/admin/user/${userId}`);
 
-    formatDate(time) {
-        return time ? new Date(time).toLocaleString("ru", dateOptions) : "-";
-    }
+    formatDate = (time) => time ? new Date(time).toLocaleString("ru", dateOptions) : "-";
 
     render() {
         if (this.state.loading) {
             return <Loader/>;
         }
 
-        const users = this.state.users;
+        const {users} = this.state;
 
         return <Card>
             <Card.Body>
                 <Breadcrumb>
-                    <LinkContainer exact to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
                     <Breadcrumb.Item active>Пользователи</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <AdminUserFilter applyFilters={this.applyFilters} searchParameters={this.state.searchParameters}/>
+                <AdminUserFilter applyFilters={this.applyFilters}/>
 
                 <Table rowHeight={45}
                        rowsCount={users.length}
-                       width={1068}
+                       width={1262}
                        height={600}
                        headerHeight={35}>
 
                     <Column header={<Cell>№</Cell>}
                             cell={({rowIndex}) => <Cell>{users[rowIndex].id}</Cell>}
-                            fixed={true}
-                            width={80}/>
+                            width={80} fixed/>
 
                     <Column header={<Cell>Никнейм</Cell>}
                             cell={({rowIndex}) => <Cell>{users[rowIndex].username || "-"}</Cell>}
@@ -135,17 +123,16 @@ class AdminUsers extends React.Component {
 
                     <Column header={<Cell>Администратор</Cell>}
                             cell={({rowIndex}) => <Cell>{RoleUtil.isAdmin(users[rowIndex].roles) ? "Да" : "Нет"}</Cell>}
-                            width={120}/>
+                            width={130}/>
 
                     <Column header={<Cell>Активен</Cell>}
                             cell={({rowIndex}) => <Cell>{users[rowIndex].enabled ? "Да" : "Нет"}</Cell>}
                             width={80}/>
 
-                    <Column cell={({rowIndex}) =>
+                    <Column width={50} cell={({rowIndex}) =>
                         <Cell>
-                            <EditButton action={() => this.editUser(users[rowIndex])}/>
-                        </Cell>}
-                            width={50}/>
+                            <EditButton action={() => this.editUser(users[rowIndex].id)}/>
+                        </Cell>}/>
                 </Table>
 
                 <PaginationContainer style={{marginTop: "15px"}}

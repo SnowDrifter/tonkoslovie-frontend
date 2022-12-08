@@ -23,16 +23,16 @@ import AdminExercises from "./admin/exercise/AdminExercises";
 import AdminAudits from "./admin/audit/AdminAudits";
 import AdminUsers from "./admin/user/AdminUsers";
 import Lesson from "./content/lesson/Lesson";
-import Exercise from "./content/exercise/Exercise";
 import Themes from "./content/theme/Themes";
 import Registration from "./registration/Registration";
 import Home from "./Home";
 import AdminLesson from "./admin/lesson/AdminLesson";
 import Text from "./content/text/Text";
-import {Route, Switch} from "react-router-dom"
+import {Route, Routes} from "react-router-dom"
 import {Container} from "react-bootstrap"
 import Navigation from "/component/Navigation";
 import AdminRoute from "./AdminRoute";
+import RouterWrapper from "/component/router/RouterWrapper";
 import "./App.less";
 
 class App extends React.Component {
@@ -45,45 +45,47 @@ class App extends React.Component {
 
                 <ToastContainer autoClose={3000}
                                 position={toast.POSITION.BOTTOM_LEFT}
-                                hideProgressBar={true}/>
+                                hideProgressBar
+                                theme="colored"/>
 
-                <Switch>
-                    <Route path="/" component={Home} exact/>
-                    <Route path="/lessons" component={Lessons}/>
-                    <Route path="/lesson/:lessonId" component={Lesson}/>
-                    <Route path="/text/:textId" component={Text}/>
-                    <Route path="/themes" component={Themes}/>
-                    <Route path="/theme/:themeId" component={Theme}/>
-                    <Route path="/exercise/:exerciseId" component={Exercise}/>
-                    <Route path="/contacts" component={Contacts}/>
-                    <Route path="/about" component={About}/>
+                <Routes>
+                    <Route path="/" element={<Home/>} end/>
+                    <Route path="lessons" element={<Lessons/>}/>
+                    <Route path="lesson/:lessonId" element={<RouterWrapper element={Lesson}/>}/>
+                    <Route path="text/:textId" element={<RouterWrapper element={Text}/>}/>
+                    <Route path="themes" element={<Themes/>}/>
+                    <Route path="theme/:themeId" element={<RouterWrapper element={Theme}/>}/>
+                    <Route path="contacts" element={<Contacts/>}/>
+                    <Route path="about" element={<About/>}/>
 
-                    <Route path="/registration" component={Registration}/>
-                    <Route path="/registration/success" component={RegistrationSuccess}/>
-                    <Route path="/registration/error" component={RegistrationError}/>
+                    <Route path="registration" element={<RouterWrapper element={Registration}/>}/>
+                    <Route path="registration/success" element={<RouterWrapper element={RegistrationSuccess}/>}/>
+                    <Route path="registration/error" element={<RegistrationError/>}/>
 
-                    <AdminRoute path="/admin" component={Admin} exact/>
-                    <AdminRoute path="/admin/words" component={AdminWords}/>
-                    <AdminRoute path="/admin/texts" component={AdminTexts}/>
-                    <AdminRoute path="/admin/text/:textId" component={AdminText}/>
-                    <AdminRoute path="/admin/text" component={AdminText}/>
-                    <AdminRoute path="/admin/lessons" component={AdminLessons}/>
-                    <AdminRoute path="/admin/lesson/:lessonId" component={AdminLesson}/>
-                    <AdminRoute path="/admin/lesson" component={AdminLesson}/>
-                    <AdminRoute path="/admin/exercises" component={AdminExercises}/>
-                    <AdminRoute path="/admin/exercise/:exerciseId" component={AdminExercise}/>
-                    <AdminRoute path="/admin/exercise" component={AdminExercise}/>
-                    <AdminRoute path="/admin/themes" component={AdminThemes}/>
-                    <AdminRoute path="/admin/theme/:themeId" component={AdminTheme}/>
-                    <AdminRoute path="/admin/theme" component={AdminTheme}/>
-                    <AdminRoute path="/admin/audits" component={AdminAudits}/>
-                    <AdminRoute path="/admin/users" component={AdminUsers}/>
-                    <AdminRoute path="/admin/user/:userId" component={AdminUser}/>
+                    <Route path="admin" element={<RouterWrapper element={AdminRoute}/>}>
+                        <Route path="" element={<RouterWrapper element={Admin}/>}/>
+                        <Route path="words" element={<RouterWrapper element={AdminWords}/>}/>
+                        <Route path="texts" element={<RouterWrapper element={AdminTexts}/>}/>
+                        <Route path="text/:textId" element={<RouterWrapper element={AdminText}/>}/>
+                        <Route path="text" element={<RouterWrapper element={AdminText}/>}/>
+                        <Route path="lessons" element={<RouterWrapper element={AdminLessons}/>}/>
+                        <Route path="lesson/:lessonId" element={<RouterWrapper element={AdminLesson}/>}/>
+                        <Route path="lesson" element={<RouterWrapper element={AdminLesson}/>}/>
+                        <Route path="exercises" element={<RouterWrapper element={AdminExercises}/>}/>
+                        <Route path="exercise/:exerciseId" element={<RouterWrapper element={AdminExercise}/>}/>
+                        <Route path="exercise" element={<RouterWrapper element={AdminExercise}/>}/>
+                        <Route path="themes" element={<RouterWrapper element={AdminThemes}/>}/>
+                        <Route path="theme/:themeId" element={<RouterWrapper element={AdminTheme}/>}/>
+                        <Route path="theme" element={<RouterWrapper element={AdminTheme}/>}/>
+                        <Route path="audits" element={<RouterWrapper element={AdminAudits}/>}/>
+                        <Route path="users" element={<RouterWrapper element={AdminUsers}/>}/>
+                        <Route path="user/:userId" element={<RouterWrapper element={AdminUser}/>}/>
+                    </Route>
 
-                    <Route path="/access_denied" component={Err403} status={403}/>
-                    <Route path="/not_available" component={Err500}/>
-                    <Route path="*" component={Err404} status={404}/>
-                </Switch>
+                    <Route path="access_denied" element={<Err403/>} status={403}/>
+                    <Route path="not_available" element={<Err500/>}/>
+                    <Route path="*" element={<Err404/>} status={404}/>
+                </Routes>
             </Container>
         )
     }

@@ -1,5 +1,5 @@
-import React, {createRef} from "react";
-import {Breadcrumb, Button, Form, Jumbotron, Card} from "react-bootstrap";
+import React from "react";
+import {Breadcrumb, Button, Form, Card} from "react-bootstrap";
 import Loader from "/component/Loader";
 import {LinkContainer} from "react-router-bootstrap";
 import Client from "/util/Client";
@@ -12,55 +12,34 @@ class AdminUser extends React.Component {
         super(props);
 
         this.state = {
-            id: props.computedMatch.params.userId,
-            enabled: false,
+            user: {},
             admin: false,
-            loaded: false
+            loading: true
         };
+    }
 
-        this.firstNameInput = createRef();
-        this.lastNameInput = createRef();
-        this.usernameInput = createRef();
-        this.emailInput = createRef();
-
-        this.loadUser(props.computedMatch.params.userId);
+    componentDidMount() {
+        this.loadUser(this.props.params.userId);
     }
 
     loadUser(userId) {
-        Client.get("/api/user/", {
-            params: {
-                id: userId
-            }
-        }).then(response => {
-            const user = response.data;
-
-            this.setState({
-                enabled: user.enabled,
-                admin: RoleUtil.isAdmin(user.roles),
-                loaded: true
-            });
-
-            this.firstNameInput.current.value = user.firstName || "";
-            this.lastNameInput.current.value = user.lastName || "";
-            this.usernameInput.current.value = user.username || "";
-            this.emailInput.current.value = user.email;
-        })
+        Client.get("/api/user/", {params: {id: userId}})
+            .then(response => {
+                this.setState({
+                    user: response.data,
+                    admin: RoleUtil.isAdmin(response.data.roles),
+                    loading: false
+                });
+            })
     }
 
-    saveUser() {
+    saveUser = () => {
         Client.post("/api/user/update", {
-            id: this.state.id,
-            firstName: this.firstNameInput.current.value,
-            lastName: this.lastNameInput.current.value,
-            username: this.usernameInput.current.value,
-            email: this.emailInput.current.value,
-            roles: this.createRoles(),
-            enabled: this.state.enabled
-        }).then(() => {
-            toast.success("Сохранено");
-        }).catch((e) => {
-            toast.error(`Ошибка сохранения! Код: ${e.response.status}`);
+            ...this.state.user,
+            roles: this.createRoles()
         })
+            .then(() => toast.success("Сохранено"))
+            .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 
     createRoles() {
@@ -73,66 +52,52 @@ class AdminUser extends React.Component {
         return roles;
     }
 
-    toggleAdmin() {
-        this.setState({admin: !this.state.admin});
-    }
+    setAdmin = (value) => this.setState({admin: value});
 
-    toggleEnabled() {
-        this.setState({enabled: !this.state.enabled});
-    }
+    updateUser = (field, value) => this.setState({user: {...this.state.user, [field]: value}});
 
     render() {
-        const body = <Card>
-            <Card.Body>
-                <Breadcrumb>
-                    <LinkContainer exact to="/admin">
-                        <Breadcrumb.Item>Главная</Breadcrumb.Item>
-                    </LinkContainer>
-                    <LinkContainer exactm to="/admin/users">
-                        <Breadcrumb.Item>Пользователи</Breadcrumb.Item>
-                    </LinkContainer>
-                    <Breadcrumb.Item active>
-                        {`Пользователь №${this.state.id}`}
-                    </Breadcrumb.Item>
-                </Breadcrumb>
-
-                <Jumbotron>
-                    <Form.Group>
-                        <Form.Label><h4>Имя</h4></Form.Label>
-                        <Form.Control ref={this.firstNameInput}/>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label><h4>Фамилия</h4></Form.Label>
-                        <Form.Control ref={this.lastNameInput}/>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label><h4>Никнейм</h4></Form.Label>
-                        <Form.Control ref={this.usernameInput}/>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label><h4>Почта</h4></Form.Label>
-                        <Form.Control ref={this.emailInput}/>
-                    </Form.Group>
-
-                    <Form.Check type="checkbox" checked={this.state.admin}
-                                onChange={this.toggleAdmin.bind(this)} label="Администратор"/>
-
-                    <Form.Check type="checkbox" checked={this.state.enabled}
-                                onChange={this.toggleEnabled.bind(this)} label="Активный"/>
-                </Jumbotron>
-
-                <Button onClick={this.saveUser.bind(this)} className="float-right" variant="success">Сохранить</Button>
-            </Card.Body>
-        </Card>;
-
-        if (this.state.loaded) {
-            return body;
-        } else {
+        if (this.state.loading) {
             return <Loader/>;
         }
+
+        const {user} = this.state;
+
+        return <Card>
+            <Card.Body>
+                <Breadcrumb>
+                    <LinkContainer to="/admin"><Breadcrumb.Item>Главная</Breadcrumb.Item></LinkContainer>
+                    <LinkContainer to="/admin/users"><Breadcrumb.Item>Пользователи</Breadcrumb.Item></LinkContainer>
+                    <Breadcrumb.Item active>{`Пользователь №${user.id}`}</Breadcrumb.Item>
+                </Breadcrumb>
+
+                <Card className="jumbotron">
+                    <h4>Имя</h4>
+                    <Form.Control defaultValue={user.firstName}
+                                  onChange={e => this.updateUser("firstName", e.target.value)}/>
+
+                    <h4 className="mt-3">Фамилия</h4>
+                    <Form.Control defaultValue={user.lastName}
+                                  onChange={e => this.updateUser("lastName", e.target.value)}/>
+
+                    <h4 className="mt-3">Никнейм</h4>
+                    <Form.Control defaultValue={user.username}
+                                  onChange={e => this.updateUser("username", e.target.value)}/>
+
+                    <h4 className="mt-3">Почта</h4>
+                    <Form.Control defaultValue={user.email}
+                                  onChange={e => this.updateUser("email", e.target.value)}/>
+
+                    <Form.Check className="mt-3" label="Администратор" type="checkbox" checked={RoleUtil.isAdmin(user.roles)}
+                                onChange={e => this.setAdmin(e.target.checked)}/>
+
+                    <Form.Check label="Активный" type="checkbox" checked={user.enabled}
+                                onChange={e => this.updateUser("enabled", e.target.checked)}/>
+                </Card>
+
+                <Button onClick={this.saveUser} className="float-end" variant="success">Сохранить</Button>
+            </Card.Body>
+        </Card>;
     }
 }
 

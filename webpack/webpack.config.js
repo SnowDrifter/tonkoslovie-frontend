@@ -27,23 +27,15 @@ module.exports = {
                 use: ["babel-loader"]
             },
             {
-                test: /\.less$/,
-                use: ["style-loader", "css-loader", "less-loader"]
-            },
-            {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
-            },
-            {
-                test: /\.(png|jpg|gif|ico|svg)$/,
-                loader: "file-loader",
-                options: {
-                    name: "img/img-[hash:6].[ext]"
-                }
-            },
-            {
-                test: /\.(eot|otf|webp|ttf|woff|woff2)$/,
-                use: "file-loader"
+                test: /\.(less|css)$/i,
+                use: ["style-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: false
+                        }
+                    },
+                    "less-loader"]
             }
         ]
     },
@@ -73,7 +65,6 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env": {
                 "API_ENDPOINT": JSON.stringify(properties.apiHost),
-                "MEDIA_ENDPOINT": JSON.stringify(properties.mediaHost),
                 "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
             }
         }),

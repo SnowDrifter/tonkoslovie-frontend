@@ -1,13 +1,11 @@
 const environments = {
     development: {
         isDev: true,
-        apiHost: "http://localhost:8080",
-        mediaHost: "http://localhost"
+        apiHost: "http://localhost:8080"
     },
     production: {
         isDev: false,
-        apiHost: "https://tonkoslovie.ru",
-        mediaHost: "https://tonkoslovie.ru"
+        apiHost: "https://tonkoslovie.ru"
     }
 };
 

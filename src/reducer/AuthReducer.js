@@ -1,4 +1,4 @@
-import {HIDE_LOGIN, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, SHOW_LOGIN} from "/constant/User"
+import {HIDE_LOGIN, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT, SHOW_LOGIN} from "/constant/User"
 import decode from "jwt-decode";
 
 const initialState = ({
@@ -8,26 +8,23 @@ const initialState = ({
     errorMessage: null
 });
 
-export default function userstate(state = initialState, action) {
+export function authReducer(state = initialState, action) {
 
     switch (action.type) {
         case SHOW_LOGIN:
-            return {...state, showLogin: action.payload.showLogin};
+            return {...state, showLogin: true};
 
         case HIDE_LOGIN:
-            return {...state, showLogin: action.payload.showLogin, errorMessage: null};
-
-        case LOGIN_REQUEST:
-            return state;
+            return {...state, showLogin: false, errorMessage: null};
 
         case LOGIN_SUCCESS:
-            return {...state, showLogin: action.payload.showLogin, isAuthenticated: action.payload.isAuthenticated};
+            return {...state, showLogin: false, isAuthenticated: true};
 
         case LOGIN_FAILURE:
             return {...state, errorMessage: action.payload.errorMessage};
 
         case LOGOUT:
-            return {...state, isAuthenticated: action.payload.isAuthenticated};
+            return {...state, isAuthenticated: false};
 
         default:
             return state

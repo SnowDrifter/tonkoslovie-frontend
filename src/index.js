@@ -1,18 +1,21 @@
 import React from "react";
-import {render} from "react-dom";
+import {createRoot} from "react-dom/client";
 import {Provider} from "react-redux";
-import {Router} from "react-router-dom"
+import {BrowserRouter} from "react-router-dom"
+
 import ConfigureStore from "./store/ConfigureStore"
 
-import history from "./util/History";
 import App from "./page/App";
 
 const store = ConfigureStore();
 
-render((
+const container = document.getElementById("main");
+const root = createRoot(container);
+
+root.render(
     <Provider store={store}>
-        <Router history={history}>
+        <BrowserRouter>
             <App/>
-        </Router>
+        </BrowserRouter>
     </Provider>
-), document.getElementById("main"));
+);

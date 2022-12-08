@@ -1,4 +1,4 @@
-import React, {createRef} from "react";
+import React from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import "./AdminAuditFilter.less"
 
@@ -8,13 +8,13 @@ class AdminAuditFilter extends React.Component {
     constructor(props) {
         super(props);
 
-        this.tableInput = createRef();
-        this.entityIdInput = createRef();
-
-        this.applyFilters = this.applyFilters.bind(this);
+        this.state = {
+            table: "",
+            entityId: ""
+        };
     }
 
-    applyFilters(event) {
+    applyFilters = (event) => {
         event.preventDefault();
 
         this.props.applyFilters(this.createSearchParameters())
@@ -22,8 +22,8 @@ class AdminAuditFilter extends React.Component {
 
     createSearchParameters() {
         return {
-            table: this.tableInput.current.value,
-            entityId: this.entityIdInput.current.value
+            table: this.state.table,
+            entityId: this.state.entityId
         };
     }
 
@@ -33,28 +33,24 @@ class AdminAuditFilter extends React.Component {
 
             <Form>
                 <Row>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Таблица</Form.Label>
-                            <Form.Control as="select" ref={this.tableInput}>
-                                <option value="">Все</option>
-                                <option value="lesson">Уроки</option>
-                                <option value="exercise">Упражнения</option>
-                                <option value="theme">Темы упражнений</option>
-                                <option value="text">Тексты</option>
-                                <option value="word">Слова</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>ID</Form.Label>
-                            <Form.Control ref={this.entityIdInput}/>
-                        </Form.Group>
-                    </Col>
+                    <Form.Group as={Col} md={6}>
+                        <Form.Label>Таблица</Form.Label>
+                        <Form.Control as="select" onChange={e => this.setState({table: e.target.value})}>
+                            <option value="">Все</option>
+                            <option value="lesson">Уроки</option>
+                            <option value="exercise">Упражнения</option>
+                            <option value="theme">Темы упражнений</option>
+                            <option value="text">Тексты</option>
+                            <option value="word">Слова</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group as={Col} md={6}>
+                        <Form.Label>ID</Form.Label>
+                        <Form.Control onChange={e => this.setState({entityId: e.target.value})}/>
+                    </Form.Group>
                 </Row>
 
-                <Button type="submit" onClick={this.applyFilters}>Применить</Button>
+                <Button className="my-2" type="submit" onClick={this.applyFilters}>Применить</Button>
             </Form>
         </Container>
     }
