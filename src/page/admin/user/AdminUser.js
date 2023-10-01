@@ -23,7 +23,7 @@ class AdminUser extends React.Component {
     }
 
     loadUser(userId) {
-        Client.get("/api/user/", {params: {id: userId}})
+        Client.get("/api/user", {params: {id: userId}})
             .then(response => {
                 this.setState({
                     user: response.data,

@@ -59,7 +59,7 @@ class AdminUserFilter extends React.Component {
                             </Form.Control>
 
                             <Form.Control type="date" defaultValue={null}
-                                          onChange={e => this.setState({creationDate: e.target.value})}/>
+                                          onChange={e => this.setState({creationDate: new Date(e.target.value).getTime()})}/>
                         </InputGroup>
                     </Form.Group>
                     <Form.Group as={Col} md={2}>

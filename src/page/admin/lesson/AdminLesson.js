@@ -155,7 +155,7 @@ class AdminLesson extends React.Component {
                     </Card>
 
                     <Form.Check className="mt-3" name="published" label="Опубликовать урок"
-                                defaultChecked={lesson.published} onChange={this.onChange}/>
+                                defaultChecked={lesson.published} onChange={e => this.updateLesson("published", e.target.checked)}/>
                 </Card>
                 <Button onClick={this.saveLesson} className="float-end"
                         variant="success">Сохранить</Button>
