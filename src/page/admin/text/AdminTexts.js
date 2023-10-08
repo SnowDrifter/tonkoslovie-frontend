@@ -56,7 +56,7 @@ class AdminTexts extends React.Component {
                     id: textId
                 }
             })
-                .then(this.updateTexts)
+                .then(() => this.updateTexts())
                 .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`));
         }
     }

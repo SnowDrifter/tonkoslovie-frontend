@@ -61,7 +61,7 @@ class AdminWords extends React.Component {
 
     saveWord = () => {
         Client.post("/api/content/word", this.state.currentWord)
-            .then(this.hideModal)
+            .then(() => this.hideModal())
             .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 

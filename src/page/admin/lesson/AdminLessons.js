@@ -53,7 +53,7 @@ class AdminLessons extends React.Component {
     deleteLesson = (lessonId) => {
         if (confirm(`Удалить урок №${lessonId}?`)) {
             Client.delete("/api/content/lesson", {params: {id: lessonId}})
-                .then(this.updateLessons)
+                .then(() => this.updateLessons())
                 .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }

@@ -50,9 +50,7 @@ class AdminExercises extends React.Component {
     deleteExercise = (exerciseId) => {
         if (confirm(`Удалить упражнение №${exerciseId}?`)) {
             Client.delete("/api/content/exercise", {params: {id: exerciseId}})
-                .then(() => {
-                    this.updateExercises();
-                })
+                .then(() => this.updateExercises())
                 .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }

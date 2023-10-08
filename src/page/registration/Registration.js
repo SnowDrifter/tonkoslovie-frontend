@@ -36,7 +36,7 @@ class Registration extends React.Component {
             .catch(e => {
                 const response = e.response.data;
 
-                if (response && response.validationErrors) {
+                if (response?.validationErrors) {
                     response.validationErrors.forEach(error => {
                         if (error.field === "email") {
                             setFieldError("email", error.message)

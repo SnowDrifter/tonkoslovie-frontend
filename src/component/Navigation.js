@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useLocation} from "react-router-dom";
-import * as QueryString from "query-string"
+import queryString from "query-string";
 import {connect} from "react-redux";
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {bindActionCreators} from "redux";
@@ -14,7 +14,7 @@ function Navigation({user, isAuthenticated, actions}) {
     const [expandNavbar, setExpandNavbar] = useState(false);
     const location = useLocation();
 
-    const token = QueryString.parse(location.search).token;
+    const token = queryString.parse(location.search).token;
 
     if (token) {
         actions.saveToken(token);

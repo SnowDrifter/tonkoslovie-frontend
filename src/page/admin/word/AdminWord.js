@@ -8,7 +8,7 @@ function AdminWord({word, showModal, hideModal, modalTitle, changeCurrentWord}) 
 
     function saveWord() {
         Client.post("/api/content/word", word)
-            .then(hideModal)
+            .then(() => hideModal())
             .catch(e => toast.error(`Ошибка сохранения! Код: ${e.response.status}`))
     }
 

@@ -8,11 +8,7 @@ const AdminRoute = (props) => {
 }
 
 function isAdmin(user) {
-    if (!user || !user.roles) {
-        return false;
-    }
-
-    const roles = user.roles.split(",");
+    const roles = user?.roles?.split(",") || [];
     return roles.includes("ROLE_ADMIN");
 }
 

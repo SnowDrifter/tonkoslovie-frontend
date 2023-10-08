@@ -53,7 +53,7 @@ class AdminThemes extends React.Component {
     deleteTheme = (themeId) => {
         if (confirm(`Удалить тему №${themeId}?`)) {
             Client.delete("/api/content/theme", {params: {id: themeId}})
-                .then(this.updateThemes)
+                .then(() => this.updateThemes())
                 .catch(e => toast.error(`Ошибка удаления! Код: ${e.response.status}`));
         }
     }
